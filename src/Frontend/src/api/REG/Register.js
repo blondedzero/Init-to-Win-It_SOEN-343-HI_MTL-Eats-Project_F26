@@ -1,5 +1,5 @@
-import { ROLE } from './EnumRoles'
-import { BACKEND_ROUTE } from './Helpers'
+import { ROLE } from '../EnumRoles'
+import { BACKEND_ROUTE } from '../Helpers'
 
 export async function register(role, email, password, firstName, lastName, userDetails = {}) {
   if (!role || !email || !password || !firstName || !lastName) {
@@ -10,14 +10,15 @@ export async function register(role, email, password, firstName, lastName, userD
 
   let endpoint = ''
   let payload = basePayload
+  console.log(userDetails)
 
   switch (role) {
     case ROLE[0]: // CUSTOMER
-      if (!userDetails.address) {
-        throw new Error('Address is required for customers.')
+      if (!userDetails.address || !userDetails.cardNumber || !userDetails.cardExpMonth || !userDetails.cardExpYear || !userDetails.cardCVV) {
+        throw new Error('Please fill all required fields.')
       }
       endpoint = `${BACKEND_ROUTE}/api/users/register/customer`
-      payload = { ...basePayload, address: userDetails.address }
+      payload = { ...basePayload, address: userDetails.address, cardNumber: userDetails.cardNumber, cardExpMonth: userDetails.cardExpMonth, cardExpYear: userDetails.cardExpYear, cardCVV: userDetails.cardCVV}
       break
 
     case ROLE[1]: // STORE
@@ -51,7 +52,7 @@ export async function register(role, email, password, firstName, lastName, userD
       throw new Error('Invalid role selected.')
   }
 
-  const response = await fetch(endpoint, {
+  const res = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -59,10 +60,10 @@ export async function register(role, email, password, firstName, lastName, userD
     body: JSON.stringify(payload),
   })
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(errorText || 'Registration failed. Please try again.')
+  if (!res.ok) {
+    const resBody = await res.json()
+    throw new Error(resBody.error || 'Registration failed. Please try again.')
   }
 
-  return response
+  return res
 }

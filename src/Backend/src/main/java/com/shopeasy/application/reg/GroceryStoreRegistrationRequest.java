@@ -1,4 +1,4 @@
-package com.shopeasy.application;
+package com.shopeasy.application.reg;
 
 public record GroceryStoreRegistrationRequest(
         String email,

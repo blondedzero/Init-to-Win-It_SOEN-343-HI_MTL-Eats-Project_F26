@@ -1,7 +1,11 @@
 import { useState } from 'react'
-import { register } from '../api/Register.js'
-import { ROLE } from '../api/EnumRoles.js'
+import { register } from '../../api/REG/Register.js'
+import { ROLE } from '../../api/EnumRoles.js'
 import './register-page.css'
+import { Link, useNavigate } from 'react-router-dom'
+import CustomerDetails from './CustomerDetails.jsx'
+import StoreDetails from './StoreDetails.jsx'
+import CourierDetails from './CourierDetails.jsx'
 
 const initialForm = {
   firstName: '',
@@ -11,6 +15,10 @@ const initialForm = {
   confirmPassword: '',
   role: ROLE[0],
   address: '',
+  cardNumber:'',
+  cardExpMonth:'',
+  cardExpYear:'',
+  cardCVV:'',
   storeName: '',
   carMake: '',
   carModel: '',
@@ -19,10 +27,12 @@ const initialForm = {
 }
 
 export default function RegisterPage() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState(initialForm)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   const roleOptions = Object.values(ROLE)
   const selectedRole = formData.role
@@ -36,6 +46,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (isRedirecting) return
 
     if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.password) {
       setError('Please complete all required fields.')
@@ -51,17 +62,28 @@ export default function RegisterPage() {
       setIsSubmitting(true)
       setError('')
 
-      await register(selectedRole, formData.email.trim(), formData.password, formData.firstName.trim(), formData.lastName.trim(), {
+      const res = await register(selectedRole, formData.email.trim(), formData.password, formData.firstName.trim(), formData.lastName.trim(), {
         address: formData.address.trim(),
         storeName: formData.storeName.trim(),
         carMake: formData.carMake.trim(),
         carModel: formData.carModel.trim(),
         carYear: formData.carYear.trim(),
         carColor: formData.carColor.trim(),
+        cardNumber: formData.cardNumber.trim(),
+        cardExpMonth: formData.cardExpMonth.trim(),
+        cardExpYear: formData.cardExpYear.trim(),
+        cardCVV: formData.cardCVV.trim()
       })
 
-      setSuccess('Registration successful! Welcome aboard.')
+      console.log(res)
+
+      setSuccess('Registration successful! Redirecting to login page...')
       setFormData(initialForm)
+      setIsRedirecting(true)
+      setTimeout(() => {
+        navigate('/')
+      }, 2500)
+
     } catch (submitError) {
       setError(submitError.message || 'Registration failed. Please try again.')
     } finally {
@@ -153,108 +175,28 @@ export default function RegisterPage() {
             </select>
           </label>
 
-          {selectedRole === ROLE[0] && (
-            <label className="input-label">
-              <span>Address</span>
-              <input
-                className="register-input"
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                placeholder="123 Street, City, Province, Zip"
-              />
-            </label>
-          )}
 
-          {selectedRole === ROLE[1] && (
-            <>
-              <label className="input-label">
-                <span>Store address</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Enter the store address"
-                />
-              </label>
+          <div className='user-details'>
+            
+            {selectedRole === ROLE[0] && <CustomerDetails formData={formData} handleChange={handleChange}/>}
 
-              <label className="input-label">
-                <span>Store name</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="storeName"
-                  value={formData.storeName}
-                  onChange={handleChange}
-                  placeholder="Enter the store name"
-                />
-              </label>
-            </>
-          )}
+            {selectedRole === ROLE[1] && <StoreDetails formData={formData} handleChange={handleChange} />}
 
-          {selectedRole === ROLE[2] && (
-            <div className="form-grid">
-              <label className="input-label">
-                <span>Car make</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="carMake"
-                  value={formData.carMake}
-                  onChange={handleChange}
-                  placeholder="Enter car make"
-                />
-              </label>
-
-              <label className="input-label">
-                <span>Car model</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="carModel"
-                  value={formData.carModel}
-                  onChange={handleChange}
-                  placeholder="Enter car model"
-                />
-              </label>
-
-              <label className="input-label">
-                <span>Car year</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="carYear"
-                  value={formData.carYear}
-                  onChange={handleChange}
-                  placeholder="Enter car year"
-                />
-              </label>
-
-              <label className="input-label">
-                <span>Car color</span>
-                <input
-                  className="register-input"
-                  type="text"
-                  name="carColor"
-                  value={formData.carColor}
-                  onChange={handleChange}
-                  placeholder="Enter car color"
-                />
-              </label>
-            </div>
-          )}
-
+            {selectedRole === ROLE[2] && <CourierDetails formData={formData} handleChange={handleChange} />}
+          </div>
+          
           {error && <p className="register-message register-error">{error}</p>}
           {success && <p className="register-message register-success">{success}</p>}
 
           <button className="register-submit" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Creating account...' : 'Create account'}
           </button>
+
+          <span>Already have an account? <Link to="/">Login</Link></span>
+
         </form>
       </div>
     </main>
   )
 }
+

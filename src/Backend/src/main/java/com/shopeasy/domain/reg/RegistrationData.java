@@ -1,7 +1,5 @@
 package com.shopeasy.domain.reg;
 
-import com.shopeasy.foundation.entities.Role;
-
 public interface RegistrationData {
         String email();
         String passwordHash();
@@ -14,7 +12,13 @@ record CustomerData(
         String passwordHash,
         String firstName,
         String lastName,
-        String address
+        String address,
+        String cardBrand,
+        String cardLast4Digits,
+        int cardExpMonth,
+        int cardExpYear,
+        String paymentProcessorToken,
+        String stripeCustomerId
 ) implements RegistrationData {}
 
 record GroceryStoreData(
@@ -33,7 +37,13 @@ record CourierData(
         String lastName,
         String carMake,
         String carModel,
-        String carYear,
+        int carYear,
         String carColor
 ) implements RegistrationData {}
 
+record OperatorData(
+        String email,
+        String passwordHash,
+        String firstName,
+        String lastName
+) implements RegistrationData {}

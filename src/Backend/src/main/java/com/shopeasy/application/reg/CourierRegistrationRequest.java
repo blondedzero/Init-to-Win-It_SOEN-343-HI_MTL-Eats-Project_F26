@@ -1,4 +1,4 @@
-package com.shopeasy.application;
+package com.shopeasy.application.reg;
 
 public record CourierRegistrationRequest(
         String email,
@@ -7,6 +7,6 @@ public record CourierRegistrationRequest(
         String lastName,
         String carMake,
         String carModel,
-        String carYear,
+        int carYear,
         String carColor
 ) implements RegistrationRequest {}

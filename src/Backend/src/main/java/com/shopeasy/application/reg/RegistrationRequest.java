@@ -1,6 +1,4 @@
-package com.shopeasy.application;
-
-import com.shopeasy.domain.reg.RegistrationData;
+package com.shopeasy.application.reg;
 
 public interface RegistrationRequest {
     String email();
