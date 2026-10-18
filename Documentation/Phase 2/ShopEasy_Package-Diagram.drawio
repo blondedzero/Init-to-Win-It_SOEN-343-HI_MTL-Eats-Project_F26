@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram id="UCMphuqoPG-iLUfnsl-4" name="Page-1">
-    <mxGraphModel dx="857" dy="591" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="934" dy="644" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -24,10 +24,10 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="ZRDQUMmFTR-N06FtXcZl-15" parent="ZRDQUMmFTR-N06FtXcZl-7" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#cdeb8b;strokeColor=#36393d;" value="Application" vertex="1">
-          <mxGeometry height="152" width="285.75" x="305" y="52" as="geometry" />
+          <mxGeometry height="113" width="184" x="310" y="52" as="geometry" />
         </mxCell>
-        <mxCell id="ZRDQUMmFTR-N06FtXcZl-16" parent="ZRDQUMmFTR-N06FtXcZl-15" style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" value="" vertex="1">
-          <mxGeometry height="102.08794326241137" relative="1" width="281.82216494845363" as="geometry">
+        <mxCell id="ZRDQUMmFTR-N06FtXcZl-16" parent="ZRDQUMmFTR-N06FtXcZl-15" style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" value="SessionManager&lt;div&gt;OrderController&lt;/div&gt;&lt;div&gt;StoreController&lt;/div&gt;&lt;div&gt;AuthController&lt;/div&gt;" vertex="1">
+          <mxGeometry height="75.89432624113478" relative="1" width="181.4707903780069" as="geometry">
             <mxPoint x="4" y="34" as="offset" />
           </mxGeometry>
         </mxCell>
@@ -37,7 +37,7 @@
             <mxPoint x="290.21" y="114.21000000000001" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="ZRDQUMmFTR-N06FtXcZl-21" edge="1" parent="ZRDQUMmFTR-N06FtXcZl-7" source="ZRDQUMmFTR-N06FtXcZl-15" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0;entryDx=163.5;entryDy=30;entryPerimeter=0;" target="ZRDQUMmFTR-N06FtXcZl-17" value="Use">
+        <mxCell id="ZRDQUMmFTR-N06FtXcZl-21" edge="1" parent="ZRDQUMmFTR-N06FtXcZl-7" source="ZRDQUMmFTR-N06FtXcZl-15" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.75;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0;entryDx=163.5;entryDy=30;entryPerimeter=0;" target="ZRDQUMmFTR-N06FtXcZl-17" value="Use">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint x="294" y="322" as="sourcePoint" />
             <mxPoint x="454" y="322" as="targetPoint" />
