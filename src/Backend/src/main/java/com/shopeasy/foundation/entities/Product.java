@@ -2,7 +2,6 @@ package com.shopeasy.foundation.entities;
 
 import jakarta.persistence.*;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity

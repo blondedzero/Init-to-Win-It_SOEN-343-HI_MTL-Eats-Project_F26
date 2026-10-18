@@ -64,11 +64,13 @@ public class Order {
     }
 
     public void markAccepted () {
+        if (this.status != OrderStatus.PLACED) throw new IllegalStateException();
         this.acceptedAt = Instant.now();
         this.status = OrderStatus.PREPARING;
     }
 
     public void markRejected () {
+        if (this.status != OrderStatus.PLACED) throw new IllegalStateException();
         this.cancelledAt = Instant.now();
         this.status = OrderStatus.REJECTED;
     }
@@ -79,17 +81,76 @@ public class Order {
     }
 
     public void markReady () {
+        if  (this.status != OrderStatus.PREPARING) throw new IllegalStateException();
         this.readyAt = Instant.now();
         this.status = OrderStatus.READY;
     }
 
     public void markPickedUp () {
+        if  (this.status != OrderStatus.READY) throw new IllegalStateException();
         this.pickedUpAt = Instant.now();
         this.status = OrderStatus.PICKED_UP;
     }
 
     public void markDelivered () {
+        if   (this.status != OrderStatus.PICKED_UP) throw new IllegalStateException();
         this.deliveredAt = Instant.now();
         this.status = OrderStatus.DELIVERED;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public GroceryStore getStore() {
+        return store;
+    }
+
+    public Courier getCourier() {
+        return courier;
+    }
+
+    public void setCourier(Courier courier) {
+        this.courier = courier;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public Instant getPlacedAt() {
+        return placedAt;
+    }
+
+    public Instant getAcceptedAt() {
+        return acceptedAt;
+    }
+
+    public Instant getReadyAt() {
+        return readyAt;
+    }
+
+    public Instant getPickedUpAt() {
+        return pickedUpAt;
+    }
+
+    public Instant getCancelledAt() {
+        return cancelledAt;
+    }
+
+    public Instant getDeliveredAt() {
+        return deliveredAt;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
     }
 }
