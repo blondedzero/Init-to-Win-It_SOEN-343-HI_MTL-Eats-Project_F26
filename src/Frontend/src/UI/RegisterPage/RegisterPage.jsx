@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { register } from '../../api/REG/Register.js'
 import { ROLE } from '../../api/EnumRoles.js'
 import './register-page.css'
@@ -36,6 +36,13 @@ export default function RegisterPage() {
 
   const roleOptions = Object.values(ROLE)
   const selectedRole = formData.role
+
+  useEffect(() => {
+    //if user opens register page, redirect to login page and authenticate if user has a token
+    const token = localStorage.getItem('token')
+    if (!token) return
+    navigate("/")
+  }, [])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -76,8 +83,9 @@ export default function RegisterPage() {
       })
 
       console.log(res)
+      const resBody = await res.json()
+      setSuccess(resBody.message)
 
-      setSuccess('Registration successful! Redirecting to login page...')
       setFormData(initialForm)
       setIsRedirecting(true)
       setTimeout(() => {

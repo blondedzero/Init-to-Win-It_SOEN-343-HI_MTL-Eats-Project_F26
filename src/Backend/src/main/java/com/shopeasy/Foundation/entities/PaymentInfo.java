@@ -21,10 +21,10 @@ public class PaymentInfo {
     private String cardLast4Digits;
 
     @Column(nullable = false)
-    private String cardExpMonth;
+    private int cardExpMonth;
 
     @Column(nullable = false)
-    private String cardExpYear;
+    private int cardExpYear;
 
     @Column(nullable = false)
     private String paymentProcessorToken;
@@ -34,7 +34,7 @@ public class PaymentInfo {
 
     protected PaymentInfo() {}
 
-    public PaymentInfo(Customer customer, String cardBrand, String cardLast4Digits, String cardExpMonth, String cardExpYear, String paymentProcessorToken, String stripeCustomerId) {
+    public PaymentInfo(Customer customer, String cardBrand, String cardLast4Digits, int cardExpMonth, int cardExpYear, String paymentProcessorToken, String stripeCustomerId) {
         this.customer = customer;
         this.cardBrand = cardBrand;
         this.cardLast4Digits = cardLast4Digits;

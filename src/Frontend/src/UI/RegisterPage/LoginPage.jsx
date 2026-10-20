@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { login } from '../../api/REG/Login.js'
 import './register-page.css'
 import { Link } from 'react-router-dom'
+import { validateToken } from '../../api/REG/Auth.js'
 
 const initialForm = {
   email: '',
@@ -13,6 +14,31 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+    async function validateTokenOnLauch(token) {
+        try {
+          setIsSubmitting(true)
+          setError('')
+          const res = await validateToken(token)
+          const resBody = await res.json()
+          console.log(resBody)
+          setSuccess(resBody.message)
+
+          //navigate to ...
+
+        } catch (invalidTokenError) {
+            setError(invalidTokenError.message || 'Authentication failed. Please login again.')
+            localStorage.removeItem('token')
+        } finally {
+            setIsSubmitting(false)
+        }  
+    } 
+
+    validateTokenOnLauch(token)
+  }, [])
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -34,9 +60,12 @@ export default function LoginPage() {
       setError('')
 
       const res = await login(formData.email.trim(), formData.password)
-      const data = await res.json()
-      setSuccess(data.token)
+      const resBody = await res.json()
+      console.log(resBody)
+      setSuccess(resBody.message)
+      localStorage.setItem('token', resBody.token)
       setFormData(initialForm)
+
     } catch (submitError) {
         setError(submitError.message || 'Login failed. Please try again.')
     } finally {

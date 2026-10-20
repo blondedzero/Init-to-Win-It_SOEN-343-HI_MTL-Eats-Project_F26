@@ -1,17 +1,14 @@
 package com.shopeasy.Domain.REG;
 
-import com.shopeasy.Application.reg.CustomerRegistrationRequest;
-import com.shopeasy.Application.reg.CourierRegistrationRequest;
-import com.shopeasy.Application.reg.GroceryStoreRegistrationRequest;
-import com.shopeasy.Application.reg.RegistrationRequest;
-import com.shopeasy.Domain.REG.exceptions.UserAlreadyExistsException;
-import com.shopeasy.Domain.REG.exceptions.UserNotFoundException;
-import com.shopeasy.Foundation.entities.Courier;
-import com.shopeasy.Foundation.entities.Vehicle;
-import com.shopeasy.Foundation.entities.Role;
-import com.shopeasy.Foundation.entities.User;
-import com.shopeasy.Foundation.repositories.UserRepository;
-import com.shopeasy.Foundation.repositories.VehicleRepository;
+import com.shopeasy.Domain.REG.exceptions.*;
+import com.shopeasy.Domain.REG.registrationRequests.CourierRegistrationRequest;
+import com.shopeasy.Domain.REG.registrationRequests.CustomerRegistrationRequest;
+import com.shopeasy.Domain.REG.registrationRequests.GroceryStoreRegistrationRequest;
+import com.shopeasy.Domain.REG.registrationRequests.RegistrationRequest;
+import com.shopeasy.Foundation.entities.*;
+import com.shopeasy.Foundation.repositories.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +20,18 @@ public class REGModule {
 
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+    private final GroceryStoreRepository groceryStoreRepository;
+    private final PaymentInfoRepository paymentInfoRepository;
     private final PasswordEncoder encoder;
+    private final AuthTokenUtil authTokenUtil;
 
-    public REGModule(UserRepository userRepository, VehicleRepository vehicleRepository) {
+    public REGModule(UserRepository userRepository, VehicleRepository vehicleRepository, AuthTokenUtil authTokenUtil, GroceryStoreRepository groceryStoreRepository, PaymentInfoRepository paymentInfoRepository) {
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
+        this.groceryStoreRepository = groceryStoreRepository;
+        this.paymentInfoRepository = paymentInfoRepository;
         this.encoder = new PasswordEncoder();
+        this.authTokenUtil = authTokenUtil;
     }
 
     public RegistrationData createRegistrationData(Role role, RegistrationRequest req) {
@@ -37,17 +40,17 @@ public class REGModule {
 
         switch (role) {
             case CUSTOMER -> {
-                if (!(req instanceof CustomerRegistrationRequest)) {
+                if (!(req instanceof CustomerRegistrationRequest customerRequest)) {
                     throw new IllegalArgumentException("Invalid Request");
                 }
 
                 //Add card validation with Stripe API later
                 //Mock payment info validation
                 String cardBrand = "VISA";
-                String cardLast4Digits = ((CustomerRegistrationRequest) req).cardNumber().substring(11);
-                int cardExpMonth = ((CustomerRegistrationRequest) req).cardExpMonth();
-                int cardExpYear = ((CustomerRegistrationRequest) req).cardExpYear();
-                String paymentProcessorToken = "this is a placeholder token";
+                String cardLast4Digits = customerRequest.cardNumber().substring(12);
+                int cardExpMonth = customerRequest.cardExpMonth();
+                int cardExpYear = customerRequest.cardExpYear();
+                String paymentProcessorToken = UUID.randomUUID().toString();
                 String stripeCustomerId = UUID.randomUUID().toString();
 
                 registrationData = new CustomerData(
@@ -55,7 +58,7 @@ public class REGModule {
                         passwordHash,
                         req.firstName(),
                         req.lastName(),
-                        ((CustomerRegistrationRequest) req).address(),
+                        customerRequest.address(),
                         cardBrand,
                         cardLast4Digits,
                         cardExpMonth,
@@ -108,7 +111,7 @@ public class REGModule {
     @Transactional
     public User register(Role role, RegistrationRequest req) {
         if (userRepository.existsByEmail(req.email())) {
-            throw new UserAlreadyExistsException(req.email());
+            throw new UserAlreadyExistsException();
         }
 
         UserFactory factory;
@@ -123,7 +126,26 @@ public class REGModule {
         }
 
         User user = factory.createUser(registrationData);
+
+        if (user instanceof GroceryStore store && groceryStoreRepository.existsByAddressAndStoreName(store.getAddress(), store.getStoreName())) {
+            throw new StoreAlreadyExistsException();
+        }
+
         User savedUser = userRepository.save(user);
+
+        if (savedUser instanceof Customer customer) {
+            CustomerData customerData = (CustomerData) registrationData;
+            paymentInfoRepository.save(new PaymentInfo(
+                    customer,
+                    customerData.cardBrand(),
+                    customerData.cardLast4Digits(),
+                    customerData.cardExpMonth(),
+                    customerData.cardExpYear(),
+                    customerData.paymentProcessorToken(),
+                    customerData.stripeCustomerId()
+                    ));
+        }
+
         if (savedUser instanceof Courier courier) {
             CourierData courierData = (CourierData) registrationData;
             vehicleRepository.save(new Vehicle(
@@ -142,9 +164,15 @@ public class REGModule {
             User user = userEntry.get();
             if (encoder.checkPassword(password, user.getPasswordHash())) {
                 return user;
-            } else return null;
+            } else throw  new InvalidCredentialsException();
         } else {
-            throw new UserNotFoundException(email);
+            throw new InvalidCredentialsException();
         }
+    }
+
+    public Boolean isTokenValid(String token) {
+        Claims claims = authTokenUtil.parseToken(token);
+        Optional<User> userEntry = userRepository.findByEmail(claims.get("email", String.class));
+        return userEntry.isPresent();
     }
 }

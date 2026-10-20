@@ -3,7 +3,11 @@ package com.shopeasy.Foundation.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "grocery_stores")
+@Table(
+        name = "grocery_stores",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_store_name_address",
+                columnNames = {"store_name", "address"}))
 @PrimaryKeyJoinColumn(name = "account_id")
 public class GroceryStore extends User {
 

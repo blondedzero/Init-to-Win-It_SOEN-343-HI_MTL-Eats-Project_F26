@@ -1,4 +1,4 @@
-package com.shopeasy.Application.reg;
+package com.shopeasy.Domain.REG.registrationRequests;
 
 public record CourierRegistrationRequest(
         String email,
