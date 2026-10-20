@@ -23,3 +23,8 @@ export async function login(email, password) {
 
   return res
 }
+
+export function logout() {
+  localStorage.removeItem('authToken')
+  sessionStorage.removeItem('authToken')
+}

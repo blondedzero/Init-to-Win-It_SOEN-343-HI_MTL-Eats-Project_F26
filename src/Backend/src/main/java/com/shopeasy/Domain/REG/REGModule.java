@@ -170,9 +170,14 @@ public class REGModule {
         }
     }
 
-    public Boolean isTokenValid(String token) {
+    public Optional<User> getAuthenticatedUserData(ParsedToken token) {
+        Long accountId = Long.valueOf(token.claims().getSubject());
+        return userRepository.findById(accountId);
+    }
+
+    public ParsedToken validateToken(String token) {
         Claims claims = authTokenUtil.parseToken(token);
-        Optional<User> userEntry = userRepository.findByEmail(claims.get("email", String.class));
-        return userEntry.isPresent();
+        Optional<User> userEntry = userRepository.findById(Long.valueOf(claims.getSubject()));
+        return new ParsedToken(userEntry.isPresent(), claims);
     }
 }

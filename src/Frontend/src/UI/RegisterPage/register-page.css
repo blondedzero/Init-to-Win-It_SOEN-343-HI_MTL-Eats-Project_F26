@@ -4,7 +4,6 @@
   align-items: center;
   justify-content: center;
   padding: 32px 20px;
-  background: white;
 }
 
 .register-card {
@@ -124,6 +123,12 @@
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
+}
+
+.remember-me {
+  display: flex;
+  width: fit-content;
+  align-items: center;
 }
 
 @media (max-width: 640px) {
