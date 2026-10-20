@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { login } from '../../api/REG/Login.js'
 import './register-page.css'
-import { Link } from 'react-router-dom'
-import { validateToken } from '../../api/REG/Auth.js'
+import { Link, useNavigate } from 'react-router-dom'
+import { validateAuthToken } from '../../api/REG/Auth.js'
 
 const initialForm = {
   email: '',
@@ -14,30 +14,34 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
     if (!token) return
-    async function validateTokenOnLauch(token) {
+    async function validateAuthTokenOnLauch(token) {
         try {
           setIsSubmitting(true)
           setError('')
-          const res = await validateToken(token)
+          const res = await validateAuthToken(token)
           const resBody = await res.json()
           console.log(resBody)
           setSuccess(resBody.message)
 
-          //navigate to ...
+          navigate("/account")
 
         } catch (invalidTokenError) {
             setError(invalidTokenError.message || 'Authentication failed. Please login again.')
-            localStorage.removeItem('token')
+            localStorage.removeItem('authToken')
+            sessionStorage.removeItem('authToken')
         } finally {
             setIsSubmitting(false)
         }  
     } 
 
-    validateTokenOnLauch(token)
+    validateAuthTokenOnLauch(token)
   }, [])
 
   const handleChange = (event) => {
@@ -49,6 +53,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    if (isRedirecting) return
 
     if (!formData.email.trim() || !formData.password) {
       setError('Please fill all required fields.')
@@ -62,9 +67,20 @@ export default function LoginPage() {
       const res = await login(formData.email.trim(), formData.password)
       const resBody = await res.json()
       console.log(resBody)
+      if (!resBody.authToken) {
+        throw new Error('Login response did not include an authentication token.')
+      }
       setSuccess(resBody.message)
-      localStorage.setItem('token', resBody.token)
+      localStorage.removeItem('authToken')
+      sessionStorage.removeItem('authToken')
+      const tokenStorage = rememberMe ? localStorage : sessionStorage
+      tokenStorage.setItem('authToken', resBody.authToken)
       setFormData(initialForm)
+
+      setIsRedirecting(true)
+      setTimeout(() => {
+        navigate('/account')
+      }, 2500)
 
     } catch (submitError) {
         setError(submitError.message || 'Login failed. Please try again.')
@@ -104,6 +120,16 @@ export default function LoginPage() {
                 onChange={handleChange}
                 placeholder="Enter your password"
                 />
+            </label>
+
+            <label className="remember-me">
+                <input
+                className="checkbox"
+                type="checkbox"
+                name="rememberMe"
+                onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <span>Remember me</span>
             </label>
 
           {error && <p className="register-message register-error">{error}</p>}

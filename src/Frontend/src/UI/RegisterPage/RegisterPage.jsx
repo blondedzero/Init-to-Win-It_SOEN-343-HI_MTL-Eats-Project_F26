@@ -39,7 +39,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     //if user opens register page, redirect to login page and authenticate if user has a token
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
     if (!token) return
     navigate("/")
   }, [])
