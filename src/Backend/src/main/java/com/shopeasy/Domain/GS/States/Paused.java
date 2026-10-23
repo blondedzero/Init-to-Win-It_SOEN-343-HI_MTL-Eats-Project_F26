@@ -1,23 +1,24 @@
-package com.shopeasy.Domain.GroceryStore.States;
+package com.shopeasy.Domain.GS.States;
 
-import com.shopeasy.Domain.GroceryStore.StoreContext;
+import com.shopeasy.Domain.GS.StoreContext;
 import com.shopeasy.Foundation.entities.StoreStatus;
 
-public class Closed implements StateGS {
+public class Paused implements GSState {
+
 
     public String openStore(StoreContext store) {
         store.setState(new Open());
-        return "[msg] opening Store";
+
+        return "[msg] unPausing Store";
     }
 
     public String pauseStore(StoreContext store) {
-        store.setState(new Paused());
-        return "[msg] store is pausing";
+        return "[error] store is already paused";
     }
 
     public String closeStore(StoreContext store) {
-        return "[error] store is already closed";
-
+        store.setState(new Closed());
+        return "[msg] store is closed";
     }
 
     public void acceptOrder() {
@@ -28,7 +29,8 @@ public class Closed implements StateGS {
 
     public StoreStatus getEnum()
     {
-        return StoreStatus.CLOSED;
+        return StoreStatus.PAUSED;
     }
+
 
 }
