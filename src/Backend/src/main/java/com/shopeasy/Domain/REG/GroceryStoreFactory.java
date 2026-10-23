@@ -3,6 +3,8 @@ package com.shopeasy.Domain.REG;
 import com.shopeasy.Foundation.entities.GroceryStore;
 import com.shopeasy.Foundation.entities.User;
 
+import static com.shopeasy.Foundation.entities.StoreStatus.CLOSED;
+
 public class GroceryStoreFactory extends UserFactory {
 
     @Override
@@ -22,7 +24,7 @@ public class GroceryStoreFactory extends UserFactory {
                 longitude,
                 latitude,
                 storeData.storeName());
-        store.setStatus("CLOSED");
+        store.setStatus(CLOSED);
         return store;
     }
 }

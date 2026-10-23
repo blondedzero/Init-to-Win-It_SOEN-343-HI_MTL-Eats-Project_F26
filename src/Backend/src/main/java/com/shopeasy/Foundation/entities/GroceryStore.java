@@ -18,7 +18,8 @@ public class GroceryStore extends User {
     private String address;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StoreStatus status;
 
     @Column(nullable = false)
     private double longitude;
@@ -65,11 +66,11 @@ public class GroceryStore extends User {
         this.address = address;
     }
 
-    public String getStatus() {
+    public StoreStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StoreStatus status) {
         this.status = status;
     }
 
