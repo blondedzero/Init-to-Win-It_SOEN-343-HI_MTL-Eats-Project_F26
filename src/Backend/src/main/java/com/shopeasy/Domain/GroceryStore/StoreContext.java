@@ -1,9 +1,22 @@
-package com.shopeasy.Domain;
+package com.shopeasy.Domain.GroceryStore;
 
-import com.shopeasy.Domain.GroceryStoreStates.*;
 
-public class GroceryStore {
+import com.shopeasy.Domain.GroceryStore.States.*;
+import com.shopeasy.Foundation.entities.GroceryStore;
+import com.shopeasy.Foundation.entities.StoreStatus;
 
+public class StoreContext {
+
+    private final GroceryStore entity;
+
+    private StateGS state;
+
+
+    public StoreContext(GroceryStore entity) {
+        this.entity = entity;
+        this.state=new Closed();
+        entity.setStatus(StoreStatus.CLOSED);
+    }
 
     public void acceptOrder(){}
     public void markOrderReady(){}
@@ -28,12 +41,11 @@ public class GroceryStore {
 
 
 
-    //state  transitions, these are only used by the internal implemented states, Closed Paused and Open
-    private StateGS state = new Closed();
-
     public void setState(StateGS stateGS)
     {
         this.state = stateGS;
+        entity.setStatus(state.getEnum());
+
     }
 
     public StateGS getState()
