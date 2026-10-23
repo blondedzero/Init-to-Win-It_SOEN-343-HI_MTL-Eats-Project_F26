@@ -44,26 +44,17 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="zoRDW-a2aFHnKnR_jBHZ-1" parent="ZRDQUMmFTR-N06FtXcZl-7" style="shape=folder;fontStyle=1;tabWidth=110;tabHeight=30;tabPosition=left;html=1;boundedLbl=1;labelInHeader=1;container=1;collapsible=0;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Foundation" vertex="1">
-          <mxGeometry height="269.5" width="217" x="29" y="157.5" as="geometry" />
+          <mxGeometry height="216" width="217" x="29" y="212" as="geometry" />
         </mxCell>
         <mxCell id="zoRDW-a2aFHnKnR_jBHZ-2" parent="zoRDW-a2aFHnKnR_jBHZ-1" style="html=1;strokeColor=none;resizeWidth=1;resizeHeight=1;fillColor=none;part=1;connectable=0;allowArrows=0;deletable=0;whiteSpace=wrap;align=left;labelPosition=center;verticalLabelPosition=middle;verticalAlign=middle;" value="&lt;div&gt;Cart&lt;/div&gt;&lt;div&gt;CartItem&lt;/div&gt;&lt;div&gt;Courier&lt;/div&gt;&lt;div&gt;Customer&lt;/div&gt;&lt;div&gt;GroceryStore&lt;/div&gt;&lt;div&gt;Order&lt;/div&gt;&lt;div&gt;OrderItem&lt;/div&gt;&lt;div&gt;PaymentInfo&lt;/div&gt;&lt;div&gt;Product&lt;/div&gt;&lt;div&gt;ProductCategory&lt;/div&gt;&lt;div&gt;User&lt;/div&gt;&lt;div&gt;Vehicle&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="229.25791855203622" relative="1" width="214.02" as="geometry">
-            <mxPoint x="4" y="34" as="offset" />
+          <mxGeometry height="138.78260869565216" relative="1" width="214.02" as="geometry">
+            <mxPoint x="4" y="60" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="zoRDW-a2aFHnKnR_jBHZ-3" edge="1" parent="ZRDQUMmFTR-N06FtXcZl-7" source="ZRDQUMmFTR-N06FtXcZl-17" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=1.009;entryY=0.642;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0;exitDx=0;exitDy=62.5;exitPerimeter=0;" target="zoRDW-a2aFHnKnR_jBHZ-1" value="Use">
+        <mxCell id="zoRDW-a2aFHnKnR_jBHZ-3" edge="1" parent="ZRDQUMmFTR-N06FtXcZl-7" source="ZRDQUMmFTR-N06FtXcZl-17" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0;entryY=0;entryDx=217;entryDy=118.5;entryPerimeter=0;exitX=0;exitY=0;exitDx=0;exitDy=62.5;exitPerimeter=0;" target="zoRDW-a2aFHnKnR_jBHZ-1" value="Use">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint x="387" y="357" as="sourcePoint" />
             <mxPoint x="617" y="350" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zoRDW-a2aFHnKnR_jBHZ-4" parent="1" style="shape=datastore;whiteSpace=wrap;html=1;" value="DB" vertex="1">
-          <mxGeometry height="48" width="110" x="101" y="693" as="geometry" />
-        </mxCell>
-        <mxCell id="zoRDW-a2aFHnKnR_jBHZ-5" edge="1" parent="1" source="zoRDW-a2aFHnKnR_jBHZ-1" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" value="????">
-          <mxGeometry relative="1" width="160" as="geometry">
-            <mxPoint x="404" y="699" as="sourcePoint" />
-            <mxPoint x="155.25" y="690.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
