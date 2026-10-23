@@ -1,7 +1,7 @@
-package com.shopeasy.Domain.GroceryStore;
+package com.shopeasy.Domain.GS;
 
 
-import com.shopeasy.Domain.GroceryStore.States.*;
+import com.shopeasy.Domain.GS.States.*;
 import com.shopeasy.Foundation.entities.GroceryStore;
 import com.shopeasy.Foundation.entities.StoreStatus;
 
@@ -9,7 +9,7 @@ public class StoreContext {
 
     private final GroceryStore entity;
 
-    private StateGS state;
+    private GSState state;
 
 
     public StoreContext(GroceryStore entity) {
@@ -41,14 +41,14 @@ public class StoreContext {
 
 
 
-    public void setState(StateGS stateGS)
+    public void setState(GSState GSState)
     {
-        this.state = stateGS;
+        this.state = GSState;
         entity.setStatus(state.getEnum());
 
     }
 
-    public StateGS getState()
+    public GSState getState()
     {
         return this.state;
     }

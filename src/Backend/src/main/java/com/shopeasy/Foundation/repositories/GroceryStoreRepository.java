@@ -1,15 +1,17 @@
 package com.shopeasy.Foundation.repositories;
 
 import com.shopeasy.Foundation.entities.GroceryStore;
-import com.shopeasy.Foundation.entities.User;
+import com.shopeasy.Foundation.entities.StoreStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface GroceryStoreRepository extends JpaRepository<GroceryStore, Long> {
+public interface GroceryStoreRepository extends JpaRepository<GroceryStore, String> {
     boolean existsByAddressAndStoreName(String address, String name);
     Optional<GroceryStore> findByAddressAndStoreName(String address, String name);
 
     List<GroceryStore> findByStoreName(String name);
+
+    List<GroceryStore> findByStatus(StoreStatus storeStatus);
 }
