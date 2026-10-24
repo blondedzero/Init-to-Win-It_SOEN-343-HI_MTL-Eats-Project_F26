@@ -13,7 +13,7 @@ Nagha Abdoul-Aziz Kone; ID: 40307505, GitHub ID: osrlazlo, Role: Front End Devel
 3. Open the command line from the folder
 4. Run the following command to install the node modules needed for the frontend 
 ```
-npm install:all
+npm run install:all
 ``` 
 5. Run the following command to build and start the app 
 ```

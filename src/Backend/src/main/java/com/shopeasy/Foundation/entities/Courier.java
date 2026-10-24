@@ -2,6 +2,8 @@ package com.shopeasy.Foundation.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "couriers")
 @PrimaryKeyJoinColumn(name = "account_id")
@@ -22,6 +24,31 @@ public class Courier extends User {
         this.latitude = latitude;
     }
 
+    @Override
+    public List<Order> getHistory() {
+        return null;
+    }
+
+    //Methods to implement
+    public void goOnline() {
+    }
+
+    public void goOffline() {
+    }
+
+    public void acceptOrder() {
+    }
+
+    public void declineOrder() {
+    }
+
+    public void confirmPickup() {
+    }
+
+    public void confirmDelivery() {
+    }
+
+    //Getters & Setters
     public double getLongitude() {
         return longitude;
     }

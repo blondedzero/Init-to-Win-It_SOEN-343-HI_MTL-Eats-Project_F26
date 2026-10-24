@@ -19,6 +19,7 @@ public class StoreContext {
     }
 
     public void acceptOrder(){}
+    public void declineOrder() {}
     public void markOrderReady(){}
     public void addItem(){}
     public void editItem(){}

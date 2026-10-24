@@ -2,10 +2,12 @@ package com.shopeasy.Foundation.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountId;
@@ -36,6 +38,8 @@ public class User {
         this.lastName = lastName;
         this.role = role;
     }
+
+    abstract public List<Order> getHistory();
 
     //Getters & Setters
     public Long getAccountId() {

@@ -2,6 +2,8 @@ package com.shopeasy.Foundation.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(
         name = "grocery_stores",
@@ -38,6 +40,13 @@ public class GroceryStore extends User {
         this.address = address;
     }
 
+    @Override
+    public List<Order> getHistory() {
+        return null;
+    }
+
+
+    //Getters & Setters
     public double getLongitude() {
         return longitude;
     }

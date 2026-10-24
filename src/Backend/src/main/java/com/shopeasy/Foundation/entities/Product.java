@@ -54,15 +54,7 @@ public class Product {
         this.status = ProductStatus.AVAILABLE;
     }
 
-    public void removeFromStock(int quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be positive");
-        }
-        if (quantity > stockQuantity) {
-            return;
-        }
-        stockQuantity -= quantity;
-    }
+    public void removeFromStock(int quantity) {}
 
     public Long getProductId() {
         return productId;

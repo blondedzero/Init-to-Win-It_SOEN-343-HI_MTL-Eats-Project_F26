@@ -35,6 +35,7 @@ public class Vehicle {
         this.carYear = carYear;
     }
 
+    //Getters & Setters
     public Long getCourierId() {
         return courierId;
     }
