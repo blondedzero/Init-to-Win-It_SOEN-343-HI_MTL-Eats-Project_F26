@@ -1,9 +1,9 @@
-package com.shopeasy.Domain.GroceryStore.States;
+package com.shopeasy.Domain.GS.States;
 
-import com.shopeasy.Domain.GroceryStore.StoreContext;
+import com.shopeasy.Domain.GS.StoreContext;
 import com.shopeasy.Foundation.entities.StoreStatus;
 
-public interface StateGS {
+public interface GSState {
 
 
     String openStore(StoreContext store);
