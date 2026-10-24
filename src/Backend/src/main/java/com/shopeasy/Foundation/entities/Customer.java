@@ -2,6 +2,8 @@ package com.shopeasy.Foundation.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "customers")
 @PrimaryKeyJoinColumn(name = "account_id")
@@ -24,6 +26,18 @@ public class Customer extends User {
         this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    @Override
+    public List<Order> getHistory() {
+        return null;
+    }
+
+    //Methods to implement
+    public void placeOrder() {
+    }
+
+    public void cancelOrder() {
     }
 
     //Getters & Setters

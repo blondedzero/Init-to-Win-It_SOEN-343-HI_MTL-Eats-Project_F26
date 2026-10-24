@@ -1,6 +1,7 @@
 package com.shopeasy.Domain.REG;
 
 import com.shopeasy.Domain.REG.exceptions.*;
+import com.shopeasy.Domain.REG.factories.*;
 import com.shopeasy.Domain.REG.registrationRequests.CourierRegistrationRequest;
 import com.shopeasy.Domain.REG.registrationRequests.CustomerRegistrationRequest;
 import com.shopeasy.Domain.REG.registrationRequests.GroceryStoreRegistrationRequest;
@@ -8,7 +9,6 @@ import com.shopeasy.Domain.REG.registrationRequests.RegistrationRequest;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.*;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ public class REGModule {
         this.authTokenUtil = authTokenUtil;
     }
 
-    public RegistrationData createRegistrationData(Role role, RegistrationRequest req) {
+    public RegistrationData processRegistrationRequest(Role role, RegistrationRequest req) {
         String passwordHash = encoder.hashPassword(req.password());
         RegistrationData registrationData;
 
@@ -115,7 +115,7 @@ public class REGModule {
         }
 
         UserFactory factory;
-        RegistrationData registrationData = createRegistrationData(role, req);
+        RegistrationData registrationData = processRegistrationRequest(role, req);
 
         switch (role) {
             case CUSTOMER -> factory = new CustomerFactory();

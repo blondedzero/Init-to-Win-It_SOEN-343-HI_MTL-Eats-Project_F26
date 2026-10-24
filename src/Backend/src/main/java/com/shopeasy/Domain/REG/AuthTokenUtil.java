@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
@@ -28,7 +29,7 @@ public class AuthTokenUtil {
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole().name())
                 .issuedAt(Date.from(now))
-                .expiration(Date.from(now.plusSeconds(30)))
+                .expiration(Date.from(now.plus(1, ChronoUnit.HOURS)))
                 .signWith(secretKey)
                 .compact();
     }

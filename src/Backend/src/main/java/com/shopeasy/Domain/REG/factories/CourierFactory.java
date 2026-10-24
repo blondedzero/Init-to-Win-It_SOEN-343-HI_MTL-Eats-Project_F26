@@ -1,4 +1,4 @@
-package com.shopeasy.Domain.REG;
+package com.shopeasy.Domain.REG.factories;
 
 import com.shopeasy.Foundation.entities.Courier;
 import com.shopeasy.Foundation.entities.User;

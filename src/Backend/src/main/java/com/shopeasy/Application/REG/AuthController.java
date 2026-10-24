@@ -1,6 +1,10 @@
 package com.shopeasy.Application.REG;
 
 import com.shopeasy.Domain.REG.*;
+import com.shopeasy.Domain.REG.factories.CourierData;
+import com.shopeasy.Domain.REG.factories.CustomerData;
+import com.shopeasy.Domain.REG.factories.GroceryStoreData;
+import com.shopeasy.Domain.REG.factories.OperatorData;
 import com.shopeasy.Domain.REG.registrationRequests.CourierRegistrationRequest;
 import com.shopeasy.Domain.REG.registrationRequests.CustomerRegistrationRequest;
 import com.shopeasy.Domain.REG.registrationRequests.GroceryStoreRegistrationRequest;

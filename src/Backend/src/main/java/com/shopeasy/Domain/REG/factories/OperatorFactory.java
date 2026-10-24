@@ -1,21 +1,19 @@
-package com.shopeasy.Domain.REG;
+package com.shopeasy.Domain.REG.factories;
 
-import com.shopeasy.Foundation.entities.Role;
-import com.shopeasy.Foundation.entities.User;
+import com.shopeasy.Foundation.entities.Operator;
 
 public class OperatorFactory extends UserFactory {
 
     @Override
-    public User createUser(RegistrationData data) {
+    public Operator createUser(RegistrationData data) {
         if (!(data instanceof OperatorData operatorData)) {
             throw new IllegalArgumentException("Invalid data type");
         }
 
-        return new User(
+        return new Operator(
                 operatorData.email(),
                 operatorData.passwordHash(),
                 operatorData.firstName(),
-                operatorData.lastName(),
-                Role.OPERATOR);
+                operatorData.lastName());
     }
 }
