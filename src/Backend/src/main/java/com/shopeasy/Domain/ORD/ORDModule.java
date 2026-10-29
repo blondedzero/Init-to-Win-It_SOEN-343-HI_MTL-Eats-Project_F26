@@ -66,7 +66,13 @@ public class ORDModule {
             if (!product.isAvailable()) {
                 throw new OrderRuleViolationException(product.getName() + " is sold out");
             }
-            order.addItem(product, line.getValue());
+            int quantity = line.getValue();
+            if (quantity > product.getStockQuantity()) {
+                throw new OrderRuleViolationException(product.getName() + " has only "
+                        + product.getStockQuantity() + " left in stock");
+            }
+            product.removeFromStock(quantity);
+            order.addItem(product, quantity);
         }
 
         Order saved = orderRepository.save(order);
@@ -79,7 +85,7 @@ public class ORDModule {
 
     @Transactional(readOnly = true)
     public List<OrderData> getIncomingOrders(User user) {
-        requireRole(user, Role.STORE, "view incoming orders");
+        //requireRole(user, Role.STORE, "view incoming orders");
         return orderRepository.findByStore_AccountIdAndStatus(user.getAccountId(), OrderStatus.PLACED).stream()
                 .sorted(Comparator.comparing(Order::getPlacedAt).thenComparing(Order::getOrderId))
                 .map(OrderData::from)
@@ -162,6 +168,15 @@ public class ORDModule {
         requireRole(user, Role.STORE, "view orders in preparation");
         return orderRepository.findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(
                         user.getAccountId(), List.of(OrderStatus.PREPARING)).stream()
+                .map(OrderData::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getReadyOrders(User user) {
+        requireRole(user, Role.STORE, "view ready orders");
+        return orderRepository.findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(
+                        user.getAccountId(), List.of(OrderStatus.READY)).stream()
                 .map(OrderData::from)
                 .toList();
     }

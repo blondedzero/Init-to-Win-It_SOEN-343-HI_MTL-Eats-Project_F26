@@ -18,14 +18,14 @@ public class SystemEvent {
     @Column(name = "event", nullable = false)
     private String event;
 
-    @Column(name = "occurred_at")
-    private Instant occurredAt;
+    @Column(name = "timestamp")
+    private Instant timestamp;
 
     protected SystemEvent() {}
 
     public SystemEvent(String event) {
         this.event = event;
-        this.occurredAt = Instant.now();
+        this.timestamp = Instant.now();
     }
 
     public Long getEventId() {
@@ -36,8 +36,8 @@ public class SystemEvent {
         return event;
     }
 
-    public Instant getOccurredAt() {
-        return occurredAt;
+    public Instant getTimestamp() {
+        return timestamp;
     }
 }
 

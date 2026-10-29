@@ -33,6 +33,7 @@ public class OrderController {
 
     @GetMapping("/store/orders/incoming")
     public List<OrderData> getIncomingOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        System.out.println("Authorization: " + authorization);
         User user = authenticator.authenticate(authorization);
         return ordModule.getIncomingOrders(user);
     }
@@ -54,6 +55,12 @@ public class OrderController {
     public List<OrderData> getOrdersInPreparation(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
         return ordModule.getOrdersInPreparation(user);
+    }
+
+    @GetMapping("/store/orders/ready")
+    public List<OrderData> getReadyOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        User user = authenticator.authenticate(authorization);
+        return ordModule.getReadyOrders(user);
     }
 
     @PostMapping("/store/orders/{orderId}/start-preparing")

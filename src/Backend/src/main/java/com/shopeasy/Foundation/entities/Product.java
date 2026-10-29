@@ -54,7 +54,19 @@ public class Product {
         this.status = ProductStatus.AVAILABLE;
     }
 
-    public void removeFromStock(int quantity) {}
+    public void removeFromStock(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        if (quantity > stockQuantity) {
+            throw new IllegalStateException("Insufficient stock for " + name);
+        }
+
+        stockQuantity -= quantity;
+        if (stockQuantity == 0) {
+            status = ProductStatus.OUT_OF_STOCK;
+        }
+    }
 
     public Long getProductId() {
         return productId;
@@ -107,6 +119,6 @@ public class Product {
     }
 
     public boolean isAvailable() {
-        return status == ProductStatus.AVAILABLE;
+        return status == ProductStatus.AVAILABLE && stockQuantity > 0;
     }
 }
