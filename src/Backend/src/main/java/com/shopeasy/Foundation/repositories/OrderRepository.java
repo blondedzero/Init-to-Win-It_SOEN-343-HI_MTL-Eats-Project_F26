@@ -4,6 +4,7 @@ import com.shopeasy.Foundation.entities.Order;
 import com.shopeasy.Foundation.entities.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
@@ -19,4 +20,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCourier_AccountIdAndStatus(Long courierId, OrderStatus status);
 
     List<Order> findByStore_AccountIdOrderByPlacedAtDesc(Long storeId);
+
+    List<Order> findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(Long storeId, Collection<OrderStatus> statuses);
 }

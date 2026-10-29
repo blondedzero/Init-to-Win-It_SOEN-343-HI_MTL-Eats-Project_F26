@@ -3,6 +3,10 @@ package com.shopeasy.Application;
 import com.shopeasy.Domain.REG.exceptions.StoreAlreadyExistsException;
 import com.shopeasy.Domain.REG.exceptions.UserAlreadyExistsException;
 import com.shopeasy.Domain.REG.exceptions.InvalidCredentialsException;
+import com.shopeasy.Domain.REG.exceptions.UnauthenticatedException;
+import com.shopeasy.Domain.exceptions.NotFoundException;
+import com.shopeasy.Domain.exceptions.PermissionDeniedException;
+import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +43,29 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String, String>> invalidToken(JwtException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Invalid or expired token"));
+    }
+
+    @ExceptionHandler(UnauthenticatedException.class)
+    public ResponseEntity<Map<String, String>> unauthenticated(UnauthenticatedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<Map<String, String>> permissionDenied(PermissionDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, String>> notFound(NotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler({OrderRuleViolationException.class, IllegalStateException.class})
+    public ResponseEntity<Map<String, String>> conflict(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", e.getMessage()));
     }
 }

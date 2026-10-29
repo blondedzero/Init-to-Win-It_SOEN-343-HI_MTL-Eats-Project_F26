@@ -3,6 +3,7 @@ import { login } from '../../api/REG/Login.js'
 import './register-page.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { validateAuthToken } from '../../api/REG/Auth.js'
+import { getHomePath } from '../../api/REG/HomePath.js'
 
 const initialForm = {
   email: '',
@@ -30,7 +31,7 @@ export default function LoginPage() {
           console.log(resBody)
           setSuccess(resBody.message)
 
-          navigate("/account")
+          navigate(await getHomePath(token))
 
         } catch (invalidTokenError) {
             setError(invalidTokenError.message || 'Authentication failed. Please login again.')
@@ -77,9 +78,10 @@ export default function LoginPage() {
       tokenStorage.setItem('authToken', resBody.authToken)
       setFormData(initialForm)
 
+      const homePath = await getHomePath(resBody.authToken)
       setIsRedirecting(true)
       setTimeout(() => {
-        navigate('/account')
+        navigate(homePath)
       }, 2500)
 
     } catch (submitError) {
