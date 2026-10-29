@@ -3,8 +3,8 @@ import { ROLE } from '../EnumRoles'
 
 export function homePathFor(role) {
   switch (role) {
-    case ROLE[0]: return '/homeCustomer'
-    case ROLE[1]: return '/store/orders'
+    case ROLE.CUSTOMER: return '/homeCustomer'
+    case ROLE.STORE: return '/store/orders'
     default: return '/account'
   }
 }

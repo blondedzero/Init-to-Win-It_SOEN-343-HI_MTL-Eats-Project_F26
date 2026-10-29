@@ -60,7 +60,7 @@ export default function TempAccountPage() {
                     <span>Name: {`${user.firstName}, ${user.lastName}`}</span>
                     <span>Email: {user.email}</span>
                     <span>Role: {user.role}</span>
-                    {user.role == ROLE[1] && <span>Store name: {user.storeName}</span>}
+                    {user.role === ROLE.STORE && <span>Store name: {user.storeName}</span>}
                 </>}
             {error && <p className="register-message register-error">{error}</p>}
             <button className="logout-button" onClick={logout}>

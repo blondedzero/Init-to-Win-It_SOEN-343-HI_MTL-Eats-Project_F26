@@ -16,6 +16,10 @@ export function getOrdersInPreparation() {
   return apiRequest('/api/store/orders/preparing')
 }
 
+export function getReadyOrders() {
+  return apiRequest('/api/store/orders/ready')
+}
+
 export function acceptOrder(orderId) {
   return apiRequest(`/api/store/orders/${orderId}/accept`, { method: 'POST' })
 }

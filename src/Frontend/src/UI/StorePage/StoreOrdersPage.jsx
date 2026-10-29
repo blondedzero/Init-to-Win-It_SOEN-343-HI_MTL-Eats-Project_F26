@@ -4,30 +4,33 @@ import {
   acceptOrder,
   getIncomingOrders,
   getOrdersInPreparation,
+  getReadyOrders,
   getQueue,
   markReady,
   rejectOrder,
   startPreparing,
 } from '../../api/Orders'
 import { logSuccess } from '../Console/consoleLog'
-import OrderCard from './OrderCard'
+import OrderCard, { OrderReadyCard } from './OrderCard'
 
 export default function StoreOrdersPage() {
   const { user } = useOutletContext()
   const [incoming, setIncoming] = useState([])
   const [queue, setQueue] = useState({ size: 0, orders: [] })
   const [preparing, setPreparing] = useState([])
+  const [ready, setReady] = useState([])
   const [error, setError] = useState('')
   const [busyOrderId, setBusyOrderId] = useState(null)
   const [rejecting, setRejecting] = useState({})
 
   const load = useCallback(() => {
-    return Promise.all([getIncomingOrders(), getQueue(), getOrdersInPreparation()])
-      .then(([incomingOrders, preparationQueue, inPreparation]) => {
+    return Promise.all([getIncomingOrders(), getQueue(), getOrdersInPreparation(), getReadyOrders()])
+      .then(([incomingOrders, preparationQueue, inPreparation, readyOrders]) => {
         setError('')
         setIncoming(incomingOrders)
         setQueue(preparationQueue)
         setPreparing(inPreparation)
+        setReady(readyOrders)
       })
       .catch((err) => setError(err.message))
   }, [])
@@ -139,6 +142,14 @@ export default function StoreOrdersPage() {
                 </button>
               </div>
             </OrderCard>
+          ))}
+        </section>
+
+        <section>
+          <h3 className="dash-section-title">Ready ({ready.length})</h3>
+          <p className="dash-muted">Orders ready for pickup.</p>
+          {ready.map((order) => (
+            <OrderReadyCard key={order.orderId} order={order}/>
           ))}
         </section>
       </div>

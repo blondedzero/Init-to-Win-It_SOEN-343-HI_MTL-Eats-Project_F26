@@ -13,7 +13,7 @@ const initialForm = {
   email: '',
   password: '',
   confirmPassword: '',
-  role: ROLE[0],
+  role: ROLE.CUSTOMER,
   address: '',
   cardNumber:'',
   cardExpMonth:'',
@@ -186,11 +186,11 @@ export default function RegisterPage() {
 
           <div className='user-details'>
             
-            {selectedRole === ROLE[0] && <CustomerDetails formData={formData} handleChange={handleChange}/>}
+            {selectedRole == ROLE.CUSTOMER && <CustomerDetails formData={formData} handleChange={handleChange}/>}
 
-            {selectedRole === ROLE[1] && <StoreDetails formData={formData} handleChange={handleChange} />}
+            {selectedRole == ROLE.STORE && <StoreDetails formData={formData} handleChange={handleChange} />}
 
-            {selectedRole === ROLE[2] && <CourierDetails formData={formData} handleChange={handleChange} />}
+            {selectedRole == ROLE.COURIER && <CourierDetails formData={formData} handleChange={handleChange} />}
           </div>
           
           {error && <p className="register-message register-error">{error}</p>}
@@ -207,4 +207,3 @@ export default function RegisterPage() {
     </main>
   )
 }
-

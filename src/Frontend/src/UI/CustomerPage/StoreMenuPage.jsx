@@ -32,7 +32,7 @@ export default function StoreMenuPage() {
   }
 
   const storeOpen = menu.store.status === 'OPEN'
-  const selected = menu.products.filter((p) => p.status === 'AVAILABLE' && quantities[p.productId] > 0)
+  const selected = menu.products.filter((p) => p.status === 'AVAILABLE' && p.stockQuantity > 0 && quantities[p.productId] > 0)
   const total = selected.reduce((sum, p) => sum + p.price * quantities[p.productId], 0)
 
   const disabledReason = !storeOpen
@@ -41,7 +41,9 @@ export default function StoreMenuPage() {
 
   const setQuantity = (productId, value) => {
     const quantity = Math.max(0, Math.floor(Number(value) || 0))
-    setQuantities((current) => ({ ...current, [productId]: quantity }))
+    const product = menu.products.find((item) => item.productId === productId)
+    const limitedQuantity = Math.min(quantity, product?.stockQuantity ?? 0)
+    setQuantities((current) => ({ ...current, [productId]: limitedQuantity }))
     setError('')
     setSuccess('')
   }
@@ -80,15 +82,16 @@ export default function StoreMenuPage() {
             <th>Category</th>
             <th>Price</th>
             <th>Status</th>
+            <th>In stock</th>
             <th>Quantity</th>
           </tr>
         </thead>
         <tbody>
           {menu.products.length === 0 && (
-            <tr><td colSpan={5} className="dash-muted">This store has no products yet.</td></tr>
+            <tr><td colSpan={6} className="dash-muted">This store has no products yet.</td></tr>
           )}
           {menu.products.map((p) => {
-            const available = p.status === 'AVAILABLE'
+            const available = p.status === 'AVAILABLE' && p.stockQuantity > 0
             return (
               <tr key={p.productId} className={available ? '' : 'dash-row-disabled'}>
                 <td>{p.name}</td>
@@ -99,15 +102,17 @@ export default function StoreMenuPage() {
                     {available ? 'Available' : 'Sold out'}
                   </span>
                 </td>
+                <td>{p.stockQuantity}</td>
                 <td>
-                  <input
-                    className="dash-input dash-qty"
-                    type="number"
-                    min="0"
-                    value={quantities[p.productId] ?? 0}
-                    disabled={!available || !storeOpen}
-                    onChange={(e) => setQuantity(p.productId, e.target.value)}
-                  />
+                  {available && 
+                    <input
+                      className="dash-input dash-qty"
+                      type="number"
+                      min="0"
+                      max={p.stockQuantity}
+                      value={quantities[p.productId] ?? 0}
+                      onChange={(e) => setQuantity(p.productId, e.target.value)}
+                    />}
                 </td>
               </tr>
             )
