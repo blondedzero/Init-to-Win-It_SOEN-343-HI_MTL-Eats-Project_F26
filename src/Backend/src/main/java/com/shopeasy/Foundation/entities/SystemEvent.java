@@ -2,6 +2,7 @@ package com.shopeasy.Foundation.entities;
 
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,10 +18,14 @@ public class SystemEvent {
     @Column(name = "event", nullable = false)
     private String event;
 
+    @Column(name = "occurred_at")
+    private Instant occurredAt;
+
     protected SystemEvent() {}
 
     public SystemEvent(String event) {
         this.event = event;
+        this.occurredAt = Instant.now();
     }
 
     public Long getEventId() {
@@ -29,6 +34,10 @@ public class SystemEvent {
 
     public String getEvent() {
         return event;
+    }
+
+    public Instant getOccurredAt() {
+        return occurredAt;
     }
 }
 

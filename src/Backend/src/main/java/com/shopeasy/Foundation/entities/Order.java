@@ -41,6 +41,7 @@ public class Order {
     private Instant pickedUpAt;
     private Instant cancelledAt;
     private Instant deliveredAt;
+    private String rejectionReason;
 
     protected Order() {}
 
@@ -63,15 +64,23 @@ public class Order {
         return Collections.unmodifiableList(items);
     }
 
-    public void markAccepted () {
-        if (this.status != OrderStatus.PLACED) throw new IllegalStateException();
-        this.acceptedAt = Instant.now();
-        this.status = OrderStatus.PREPARING;
+    private void requireStatus(OrderStatus expected, OrderStatus target) {
+        if (this.status != expected) {
+            throw new IllegalStateException("Order " + orderId + " cannot go from " + status + " to " + target
+                    + " (it must be " + expected + " first)");
+        }
     }
 
-    public void markRejected () {
-        if (this.status != OrderStatus.PLACED) throw new IllegalStateException();
+    public void markAccepted () {
+        requireStatus(OrderStatus.PLACED, OrderStatus.ACCEPTED);
+        this.acceptedAt = Instant.now();
+        this.status = OrderStatus.ACCEPTED;
+    }
+
+    public void markRejected (String reason) {
+        requireStatus(OrderStatus.PLACED, OrderStatus.REJECTED);
         this.cancelledAt = Instant.now();
+        this.rejectionReason = reason;
         this.status = OrderStatus.REJECTED;
     }
 
@@ -80,20 +89,25 @@ public class Order {
         this.status = OrderStatus.CANCELED;
     }
 
+    public void markPreparing () {
+        requireStatus(OrderStatus.ACCEPTED, OrderStatus.PREPARING);
+        this.status = OrderStatus.PREPARING;
+    }
+
     public void markReady () {
-        if  (this.status != OrderStatus.PREPARING) throw new IllegalStateException();
+        requireStatus(OrderStatus.PREPARING, OrderStatus.READY);
         this.readyAt = Instant.now();
         this.status = OrderStatus.READY;
     }
 
     public void markPickedUp () {
-        if  (this.status != OrderStatus.READY) throw new IllegalStateException();
+        requireStatus(OrderStatus.READY, OrderStatus.PICKED_UP);
         this.pickedUpAt = Instant.now();
         this.status = OrderStatus.PICKED_UP;
     }
 
     public void markDelivered () {
-        if   (this.status != OrderStatus.PICKED_UP) throw new IllegalStateException();
+        requireStatus(OrderStatus.PICKED_UP, OrderStatus.DELIVERED);
         this.deliveredAt = Instant.now();
         this.status = OrderStatus.DELIVERED;
     }
@@ -152,5 +166,9 @@ public class Order {
 
     public OrderStatus getStatus() {
         return status;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
     }
 }

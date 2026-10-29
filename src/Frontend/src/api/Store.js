@@ -1,6 +1,9 @@
-import { BACKEND_ROUTE } from './Helpers'
+import { apiRequest } from './Client'
 
-export async function getOpenStores() {
-  const res = await fetch(`${BACKEND_ROUTE}/api/stores`)
-  if (!res.ok) throw new Error('Could not load stores')
-  return res.json()}
+export function getOpenStores() {
+  return apiRequest('/api/stores')
+}
+
+export function getProducts(storeId) {
+  return apiRequest(`/api/stores/${storeId}/products`)
+}
