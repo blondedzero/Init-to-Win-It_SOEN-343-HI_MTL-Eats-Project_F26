@@ -1,0 +1,77 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="QJfeO_YRqRtqBVB0z9d8">
+    <mxGraphModel dx="596" dy="803" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-35" parent="1" style="shape=table;startSize=0;container=1;collapsible=0;childLayout=tableLayout;fixedHeader=1;tableRender=collapsed;" value="" vertex="1">
+          <mxGeometry height="662.2894736842105" width="666" x="97" y="143" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-36" parent="zbMWM1--Dp6yEC4GF5oM-35" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fixedHeader=1;" value="" vertex="1">
+          <mxGeometry height="56" width="666" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-37" parent="zbMWM1--Dp6yEC4GF5oM-36" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="Customer" vertex="1">
+          <mxGeometry height="56" width="167" as="geometry">
+            <mxRectangle height="56" width="167" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-38" parent="zbMWM1--Dp6yEC4GF5oM-36" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="Grocery Store Representative" vertex="1">
+          <mxGeometry height="56" width="166" x="167" as="geometry">
+            <mxRectangle height="56" width="166" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-39" parent="zbMWM1--Dp6yEC4GF5oM-36" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="Grocery Store Rep." vertex="1">
+          <mxGeometry height="56" width="167" x="333" as="geometry">
+            <mxRectangle height="56" width="167" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-40" parent="zbMWM1--Dp6yEC4GF5oM-36" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="Operator" vertex="1">
+          <mxGeometry height="56" width="166" x="500" as="geometry">
+            <mxRectangle height="56" width="166" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-41" parent="zbMWM1--Dp6yEC4GF5oM-35" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fixedHeader=1;" value="" vertex="1">
+          <mxGeometry height="606" width="666" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-42" parent="zbMWM1--Dp6yEC4GF5oM-41" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="" vertex="1">
+          <mxGeometry height="606" width="167" as="geometry">
+            <mxRectangle height="606" width="167" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-43" parent="zbMWM1--Dp6yEC4GF5oM-41" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="" vertex="1">
+          <mxGeometry height="606" width="166" x="167" as="geometry">
+            <mxRectangle height="606" width="166" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-44" parent="zbMWM1--Dp6yEC4GF5oM-41" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="" vertex="1">
+          <mxGeometry height="606" width="167" x="333" as="geometry">
+            <mxRectangle height="606" width="167" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-45" parent="zbMWM1--Dp6yEC4GF5oM-41" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;pointerEvents=1;" value="" vertex="1">
+          <mxGeometry height="606" width="166" x="500" as="geometry">
+            <mxRectangle height="606" width="166" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-1" parent="1" style="ellipse;fillColor=strokeColor;html=1;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="163" y="206" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-2" parent="1" style="ellipse;html=1;shape=endState;fillColor=strokeColor;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="163" y="694" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;h1&gt;&lt;b&gt;Activity Diagram for the Order&lt;/b&gt;&lt;/h1&gt;" vertex="1">
+          <mxGeometry height="30" width="378" x="236" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-5" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="An order is placed" vertex="1">
+          <mxGeometry height="30" width="140" x="108" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-7" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="An order is accepted" vertex="1">
+          <mxGeometry height="30" width="140" x="278" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="zbMWM1--Dp6yEC4GF5oM-47" parent="1" style="html=1;align=center;verticalAlign=top;rounded=1;absoluteArcSize=1;arcSize=10;dashed=0;whiteSpace=wrap;" value="An order is accepted" vertex="1">
+          <mxGeometry height="30" width="140" x="278" y="426" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
