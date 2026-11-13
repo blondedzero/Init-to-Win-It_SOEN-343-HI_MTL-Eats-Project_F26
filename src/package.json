@@ -8,7 +8,7 @@
     "dev:frontend": "npm run dev --prefix frontend",
     "dev:backend": "cd backend && mvnw clean spring-boot:run",
     "demo": "concurrently -n front,back -c cyan,green \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "dev:backend:mac": "cd Backend && ./mvnw spring-boot:run",
+    "dev:backend:mac": "cd Backend && sh ./mvnw spring-boot:run",
     "demo:mac": "concurrently -n front,back -c cyan,green \"npm run dev:frontend\" \"npm run dev:backend:mac\""
   },
   "devDependencies": {
