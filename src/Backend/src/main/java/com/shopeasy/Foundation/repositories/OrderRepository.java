@@ -22,4 +22,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByStore_AccountIdOrderByPlacedAtDesc(Long storeId);
 
     List<Order> findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(Long storeId, Collection<OrderStatus> statuses);
+
+    List<Order> findByStatusNotIn(Collection<OrderStatus> statuses);
 }

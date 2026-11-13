@@ -7,3 +7,7 @@ export function getOpenStores() {
 export function getProducts(storeId) {
   return apiRequest(`/api/stores/${storeId}/products`)
 }
+
+export function getAllOpenAndPausedStores() {
+  return apiRequest('/api/stores/open-paused')
+}

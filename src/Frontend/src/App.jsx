@@ -7,6 +7,7 @@ import CustomerHomePage from './UI/CustomerPage/CustomerHomePage'
 import StoreMenuPage from './UI/CustomerPage/StoreMenuPage'
 import StoreOrdersPage from './UI/StorePage/StoreOrdersPage'
 import DashboardLayout from './UI/Dashboard/DashboardLayout'
+import OperatorPage from './UI/OperatorPage/OperatorPage'
 
 const router = createBrowserRouter([
   {path:"/", element: <LoginPage/>},
@@ -15,9 +16,10 @@ const router = createBrowserRouter([
   {
     element: <DashboardLayout/>,
     children: [
-      {path:"/homeCustomer",element:<CustomerHomePage/>},
+      {path:"/customer/home",element:<CustomerHomePage/>},
       {path:"/stores/:storeId", element: <StoreMenuPage/>},
       {path:"/store/orders", element: <StoreOrdersPage/>},
+      {path:"/operator/home", element: <OperatorPage/>}
     ]
   }
 ])

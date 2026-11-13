@@ -18,7 +18,7 @@ public record OrderData(Long orderId, Long storeId, String storeName, String cus
         }
     }
 
-    static OrderData from(Order order) {
+    public static OrderData from(Order order) {
         return new OrderData(order.getOrderId(), order.getStore().getAccountId(), order.getStore().getStoreName(),
                 order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName(),
                 order.getStatus().name(), order.getTotalCost(), order.getPlacedAt(), order.getReadyAt(),
