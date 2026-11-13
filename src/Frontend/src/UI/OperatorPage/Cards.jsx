@@ -1,3 +1,6 @@
+import { COURIERSTATUS } from "../../api/Courier"
+import { STORESTATUS } from "../../api/Store"
+
 export function OperatorOrderCard({order}) {
     return(
         <article className="dash-card">
@@ -21,14 +24,30 @@ export function OperatorStoreCard({store}) {
         <article className="dash-card">
         <div className="dash-title-row">
             <h4 className="dash-card-title">
-            {store.storeName} - #{store.orderId}
+            {store.storeName} - #{store.id}
             </h4>
             <span className={`dash-badge dash-badge-${store.status.toLowerCase()}`}>{store.status}</span>
         </div>
-        <p className="dash-muted">
-            Orders in progress: {store.ordersInProgress.length}
-            Orders ready: {store.ordersReady.length}
-        </p>
+        { store.status != STORESTATUS.CLOSED && <p className="dash-muted">
+            Orders in progress: {store.ordersInProgress}
+            <br/>Orders ready: {store.ordersReady}
+        </p>}
+        </article>
+    )
+}
+
+export function OperatorCourierCard({courier}) {
+    return(
+        <article className="dash-card">
+        <div className="dash-title-row">
+            <h4 className="dash-card-title">
+            {courier.name} - #{courier.courierId}
+            </h4>
+            <span className={`dash-badge dash-badge-${courier.status.toLowerCase()}`}>{courier.status}</span>
+        </div>
+        { courier.status != COURIERSTATUS.OFFLINE && <p className="dash-muted">
+            TBD
+        </p>}
         </article>
     )
 }

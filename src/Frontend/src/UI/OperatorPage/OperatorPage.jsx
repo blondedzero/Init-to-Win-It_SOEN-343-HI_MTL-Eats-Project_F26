@@ -1,24 +1,43 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { getAllOrdersInProgress } from '../../api/Orders'
 import { logSuccess } from '../Console/consoleLog'
-import { OperatorOrderCard, OperatorStoreCard } from './Cards'
-import { getAllOpenAndPausedStores } from '../../api/Store'
+import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
+import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty} from '../../api/OperatorRequests'
 
 export default function OperatorPage() {
   const { user } = useOutletContext()
-  const [ordersInProgress, setOrdersInProgress] = useState([])
+  const [ordersReady, setOrdersReady] = useState([])
   const [openAndPausedStores, setOpenAndPausedStores] = useState([])
+  const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [error, setError] = useState('')
 
   const load = useCallback(async() => {
-    return Promise.all([getAllOrdersInProgress(), getAllOpenAndPausedStores()])
-      .then(([ordersInProgress, openAndPausedStores]) => {
-        setError('')
-        setOrdersInProgress(ordersInProgress)
-        setOpenAndPausedStores(openAndPausedStores)
-      })
-      .catch((err) => setError(err.message))
+    const [ordersResult, storesResult, couriersResult] = await Promise.allSettled([
+      getAllOrdersReady(),
+      getAllOpenAndPausedStores(),
+      getAllCouriersOnDuty()
+    ])
+    const errors = []
+
+    if (ordersResult.status === 'fulfilled') {
+      setOrdersReady(ordersResult.value)
+    } else {
+      errors.push(ordersResult.reason.message)
+    }
+
+    if (storesResult.status === 'fulfilled') {
+      setOpenAndPausedStores(storesResult.value)
+    } else {
+      errors.push(storesResult.reason.message)
+    }
+
+    if (couriersResult.status === 'fulfilled') {
+      setCouriersOnDuty(couriersResult.value)
+    } else {
+      errors.push(couriersResult.reason.message)
+    }
+
+    setError(errors.join('; '))
   }, [])
 
   useEffect(() => {
@@ -36,9 +55,9 @@ export default function OperatorPage() {
       <div className="dash-columns">
 
         <section>
-          <h3 className="dash-section-title">All Orders in Progress ({ordersInProgress.length})</h3>
+          <h3 className="dash-section-title">All Orders Ready ({ordersReady.length})</h3>
           <p className="dash-muted">All current orders in the system</p>
-          {ordersInProgress.map((order) => (
+          {ordersReady.map((order) => (
             <OperatorOrderCard key={order.orderId} order={order}/>
           ))}
         </section>
@@ -47,7 +66,15 @@ export default function OperatorPage() {
           <h3 className="dash-section-title">Open Stores ({openAndPausedStores.length})</h3>
           <p className="dash-muted">All open stores</p>
           {openAndPausedStores.map((store) => (
-            <OperatorStoreCard key={store.storeId} store={store}/>
+            <OperatorStoreCard key={store.id} store={store}/>
+          ))}
+        </section>
+
+        <section>
+          <h3 className="dash-section-title">Couriers on Duty ({couriersOnDuty.length})</h3>
+          <p className="dash-muted">All couriers on duty</p>
+          {couriersOnDuty.map((courier) => (
+            <OperatorCourierCard key={courier.id} courier={courier}/>
           ))}
         </section>
 

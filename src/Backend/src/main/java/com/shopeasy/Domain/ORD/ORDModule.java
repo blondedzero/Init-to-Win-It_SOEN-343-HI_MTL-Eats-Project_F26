@@ -5,6 +5,7 @@ import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
+import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
 import com.shopeasy.Foundation.repositories.ProductRepository;
@@ -28,16 +29,19 @@ public class ORDModule {
     private final ProductRepository productRepository;
     private final EventManager eventManager;
     private final RoleValidator roleValidator;
+    private final CourierRepository courierRepository;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
-                     ProductRepository productRepository, EventManager eventManager, RoleValidator roleValidator) {
+                     ProductRepository productRepository, EventManager eventManager, RoleValidator roleValidator,
+                     CourierRepository courierRepository) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
         this.eventManager = eventManager;
         this.roleValidator = roleValidator;
+        this.courierRepository = courierRepository;
     }
 
     @Transactional

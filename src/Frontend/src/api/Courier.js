@@ -1,0 +1,5 @@
+export const COURIERSTATUS = {
+    IDLE: 'IDLE',
+    CARRYING: 'CARRYING',
+    OFFLINE: 'OFFLINE',
+}

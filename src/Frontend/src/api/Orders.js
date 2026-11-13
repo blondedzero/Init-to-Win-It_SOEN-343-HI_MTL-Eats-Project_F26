@@ -35,7 +35,3 @@ export function startPreparing(orderId) {
 export function markReady(orderId) {
   return apiRequest(`/api/store/orders/${orderId}/ready`, { method: 'POST' })
 }
-
-export function getAllOrdersInProgress() {
-  return apiRequest('/api/orders/in-progress', {method: 'GET'})
-}

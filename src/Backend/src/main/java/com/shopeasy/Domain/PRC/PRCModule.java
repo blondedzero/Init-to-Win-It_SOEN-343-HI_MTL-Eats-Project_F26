@@ -34,4 +34,23 @@ public class PRCModule {
                 .map(OrderData::from)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getAllOrdersInProgressExceptReady(User user) {
+        roleValidator.requireRole(user, Role.OPERATOR, "view all orders in progress");
+        Collection<OrderStatus> StatusFinal = List.of(OrderStatus.CANCELED, OrderStatus.DELIVERED, OrderStatus.REJECTED, OrderStatus.READY);
+        return orderRepository.findByStatusNotIn(StatusFinal).stream()
+                .sorted(Comparator.comparing(Order::getPlacedAt).thenComparing(Order::getOrderId))
+                .map(OrderData::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getAllOrdersReady(User user) {
+        roleValidator.requireRole(user, Role.OPERATOR, "view all orders in progress");
+        return orderRepository.findByStatus(OrderStatus.READY).stream()
+                .sorted(Comparator.comparing(Order::getPlacedAt).thenComparing(Order::getOrderId))
+                .map(OrderData::from)
+                .toList();
+    }
 }
