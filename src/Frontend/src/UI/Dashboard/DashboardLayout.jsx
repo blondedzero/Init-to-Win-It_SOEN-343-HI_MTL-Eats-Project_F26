@@ -43,6 +43,7 @@ export default function DashboardLayout() {
     <div className="dash-shell">
       <header className="dash-header">
         <Link to={homePathFor(user.role)} className="dash-brand">ShopEasy</Link>
+        <button onClick={() => navigate('/map')}>MAP</button>
         <div className="dash-user">
           <span>{user.storeName || `${user.firstName} ${user.lastName}`}</span>
           <span className="dash-role">{user.role}</span>

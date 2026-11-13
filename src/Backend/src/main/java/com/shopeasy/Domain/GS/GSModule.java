@@ -70,7 +70,7 @@ public class GSModule {
 
     @Transactional(readOnly = true)
     public List<StoreContextData> getAllOpenAndPausedStores(User user) {
-        roleValidator.requireRole(user, Role.OPERATOR, "view all open and paused stores");
+        //roleValidator.requireRole(user, Role.OPERATOR, "view all open and paused stores");
 
         List<GroceryStore> stores = groceryStoreRepository.findByStatusIn(
                 List.of(StoreStatus.OPEN, StoreStatus.PAUSED));

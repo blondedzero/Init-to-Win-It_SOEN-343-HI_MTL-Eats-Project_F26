@@ -8,6 +8,7 @@ import StoreMenuPage from './UI/CustomerPage/StoreMenuPage'
 import StoreOrdersPage from './UI/StorePage/StoreOrdersPage'
 import DashboardLayout from './UI/Dashboard/DashboardLayout'
 import OperatorPage from './UI/OperatorPage/OperatorPage'
+import MapWrapper from './UI/MapWrapper'
 
 const router = createBrowserRouter([
   {path:"/", element: <LoginPage/>},
@@ -19,7 +20,8 @@ const router = createBrowserRouter([
       {path:"/customer/home",element:<CustomerHomePage/>},
       {path:"/stores/:storeId", element: <StoreMenuPage/>},
       {path:"/store/orders", element: <StoreOrdersPage/>},
-      {path:"/operator/home", element: <OperatorPage/>}
+      {path:"/operator/home", element: <OperatorPage/>},
+      {path:"/map", element: <MapWrapper/>}
     ]
   }
 ])

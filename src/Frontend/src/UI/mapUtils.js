@@ -43,7 +43,7 @@ export function loadGoogleMaps(apiKey) {
 // Determines store marker color based on operational status and queue length -> R-DASH-03 & Issue 5.7.1-3
 export function getStoreColor(store) {
     const status = (store.status || 'OPEN').toUpperCase()
-    const queueLength = Number(store.size ?? store.queue?.length ?? 0)
+    const queueLength = Number(store.ordersInProgress ?? 0)
 
     if (status === 'PAUSED' || status === 'CLOSED' || queueLength >= 6) {
         return '#dc2626' // Red
