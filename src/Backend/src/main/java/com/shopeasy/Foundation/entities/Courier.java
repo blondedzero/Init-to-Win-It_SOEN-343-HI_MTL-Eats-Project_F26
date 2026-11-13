@@ -15,6 +15,9 @@ public class Courier extends User {
     @Column(nullable = false)
     private double latitude;
 
+    @Enumerated
+    CourierStatus status;
+
     protected Courier() {}
 
     //Constructor
@@ -22,6 +25,7 @@ public class Courier extends User {
         super(email, passwordHash, firstName, lastName, Role.COURIER);
         this.longitude = longitude;
         this.latitude = latitude;
+        this.status = CourierStatus.IDLE;
     }
 
     @Override
@@ -61,6 +65,13 @@ public class Courier extends User {
     }
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public CourierStatus getStatus() {
+        return status;
+    }
+    public void setStatus(CourierStatus status) {
+        this.status = status;
     }
 
 }

@@ -42,12 +42,7 @@ public abstract class User {
     abstract public List<Order> getHistory();
 
     //Getters & Setters
-    public Long getAccountId() {
-        return accountId;
-    }
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
+
 
     public String getEmail() {
         return email;
@@ -77,9 +72,14 @@ public abstract class User {
         this.lastName = lastName;
     }
 
-    //Role cannot be changed
+    public Long getAccountId() {
+        return accountId;
+    }
     public Role getRole() {
         return role;
+    }
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 }
 

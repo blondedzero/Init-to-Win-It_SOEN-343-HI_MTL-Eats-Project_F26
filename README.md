@@ -15,10 +15,16 @@ Nagha Abdoul-Aziz Kone; ID: 40307505, GitHub ID: osrlazlo, Role: Front End Devel
 ```
 npm run install:all
 ``` 
-5. Run the following command to build and start the app 
+5. If you're on WindowsOS, run the following command to build and start the app 
 ```
 npm run demo
 ```
+
+5. If you're on MacOS, run the following command to build and start the app 
+```
+npm run demo:mac
+```
+
 - This will automatically run 2 commands with ```concurrently```
     - ```npm run dev``` in ```Frontend/``` to build and start the server that serves the frontend on ```localhost:5173```
     - ```mvnw spring-boot:run``` in ```Backend/``` to build and start the backend server on ```localhost:8080```

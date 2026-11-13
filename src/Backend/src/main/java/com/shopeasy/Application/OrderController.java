@@ -86,4 +86,5 @@ public class OrderController {
         User user = authenticator.authenticate(authorization);
         return ordModule.rejectOrder(user, orderId, request == null ? null : request.reason());
     }
+
 }

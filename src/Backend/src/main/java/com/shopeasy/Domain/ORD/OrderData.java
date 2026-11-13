@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-public record OrderData(Long orderId, Long storeId, String storeName, String customerName, String status,
+public record OrderData(Long orderId, Long storeId, String storeName, String customerName, String status, String deliveryAddress,
                         BigDecimal totalCost, Instant placedAt, Instant readyAt, String rejectionReason,
                         List<OrderLineData> lines) {
 
@@ -18,10 +18,10 @@ public record OrderData(Long orderId, Long storeId, String storeName, String cus
         }
     }
 
-    static OrderData from(Order order) {
+    public static OrderData from(Order order) {
         return new OrderData(order.getOrderId(), order.getStore().getAccountId(), order.getStore().getStoreName(),
                 order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName(),
-                order.getStatus().name(), order.getTotalCost(), order.getPlacedAt(), order.getReadyAt(),
+                order.getStatus().name(), order.getDeliveryAddress(), order.getTotalCost(), order.getPlacedAt(), order.getReadyAt(),
                 order.getRejectionReason(),
                 order.getItems().stream().map(OrderLineData::from).toList());
     }

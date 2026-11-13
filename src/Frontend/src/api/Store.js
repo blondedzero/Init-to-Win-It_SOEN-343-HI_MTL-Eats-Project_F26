@@ -1,3 +1,8 @@
+export const STORESTATUS = {
+    OPEN: 'OPEN',
+    CLOSED: 'CLOSED',
+    PAUSED: 'PAUSED',
+}
 import { apiRequest } from './Client'
 
 export function getOpenStores() {

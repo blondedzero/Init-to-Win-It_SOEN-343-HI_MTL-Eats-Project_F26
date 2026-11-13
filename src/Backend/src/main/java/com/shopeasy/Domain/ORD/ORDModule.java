@@ -5,6 +5,7 @@ import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
+import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
 import com.shopeasy.Foundation.repositories.ProductRepository;
@@ -27,20 +28,25 @@ public class ORDModule {
     private final GroceryStoreRepository groceryStoreRepository;
     private final ProductRepository productRepository;
     private final EventManager eventManager;
+    private final RoleValidator roleValidator;
+    private final CourierRepository courierRepository;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
-                     ProductRepository productRepository, EventManager eventManager) {
+                     ProductRepository productRepository, EventManager eventManager, RoleValidator roleValidator,
+                     CourierRepository courierRepository) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
         this.eventManager = eventManager;
+        this.roleValidator = roleValidator;
+        this.courierRepository = courierRepository;
     }
 
     @Transactional
     public OrderResult placeOrder(User user, PlaceOrderRequest request) {
-        requireRole(user, Role.CUSTOMER, "place orders");
+        roleValidator.requireRole(user, Role.CUSTOMER, "place orders");
         Customer customer = (Customer) user;
 
         if (request == null || request.storeId() == null) {
@@ -85,7 +91,7 @@ public class ORDModule {
 
     @Transactional(readOnly = true)
     public List<OrderData> getIncomingOrders(User user) {
-        //requireRole(user, Role.STORE, "view incoming orders");
+        //roleValidator.requireRole(user, Role.STORE, "view incoming orders");
         return orderRepository.findByStore_AccountIdAndStatus(user.getAccountId(), OrderStatus.PLACED).stream()
                 .sorted(Comparator.comparing(Order::getPlacedAt).thenComparing(Order::getOrderId))
                 .map(OrderData::from)
@@ -94,7 +100,7 @@ public class ORDModule {
 
     @Transactional
     public OrderResult acceptOrder(User user, Long orderId) {
-        requireRole(user, Role.STORE, "accept orders");
+        roleValidator.requireRole(user, Role.STORE, "accept orders");
         Order order = findOwnOrder(user, orderId);
 
         order.markAccepted();
@@ -109,7 +115,7 @@ public class ORDModule {
 
     @Transactional
     public OrderResult rejectOrder(User user, Long orderId, String reason) {
-        requireRole(user, Role.STORE, "reject orders");
+        roleValidator.requireRole(user, Role.STORE, "reject orders");
         if (reason == null || reason.isBlank()) {
             throw new IllegalArgumentException("A reason is required to reject an order");
         }
@@ -124,7 +130,7 @@ public class ORDModule {
 
     @Transactional(readOnly = true)
     public QueueData getPreparationQueue(User user) {
-        requireRole(user, Role.STORE, "view a preparation queue");
+        roleValidator.requireRole(user, Role.STORE, "view a preparation queue");
         GroceryStore store = (GroceryStore) user;
         List<Long> orderIds = queueFor(store.getAccountId()).orderIds();
 
@@ -140,7 +146,7 @@ public class ORDModule {
 
     @Transactional
     public OrderResult startPreparing(User user, Long orderId) {
-        requireRole(user, Role.STORE, "prepare orders");
+        roleValidator.requireRole(user, Role.STORE, "prepare orders");
         Order order = findOwnOrder(user, orderId);
         PreparationQueue queue = queueFor(user.getAccountId());
 
@@ -154,7 +160,7 @@ public class ORDModule {
 
     @Transactional
     public OrderResult markReady(User user, Long orderId) {
-        requireRole(user, Role.STORE, "mark orders ready");
+        roleValidator.requireRole(user, Role.STORE, "mark orders ready");
         Order order = findOwnOrder(user, orderId);
 
         order.markReady();
@@ -165,7 +171,7 @@ public class ORDModule {
 
     @Transactional(readOnly = true)
     public List<OrderData> getOrdersInPreparation(User user) {
-        requireRole(user, Role.STORE, "view orders in preparation");
+        roleValidator.requireRole(user, Role.STORE, "view orders in preparation");
         return orderRepository.findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(
                         user.getAccountId(), List.of(OrderStatus.PREPARING)).stream()
                 .map(OrderData::from)
@@ -174,7 +180,7 @@ public class ORDModule {
 
     @Transactional(readOnly = true)
     public List<OrderData> getReadyOrders(User user) {
-        requireRole(user, Role.STORE, "view ready orders");
+        roleValidator.requireRole(user, Role.STORE, "view ready orders");
         return orderRepository.findByStore_AccountIdAndStatusInOrderByPlacedAtAsc(
                         user.getAccountId(), List.of(OrderStatus.READY)).stream()
                 .map(OrderData::from)
@@ -197,13 +203,6 @@ public class ORDModule {
             throw new PermissionDeniedException("Order " + orderId + " belongs to another store");
         }
         return order;
-    }
-
-    private void requireRole(User user, Role required, String action) {
-        if (user.getRole() != required) {
-            throw new PermissionDeniedException("A " + user.getRole().name().toLowerCase()
-                    + " account cannot " + action);
-        }
     }
 
     private Map<Long, Integer> mergeLines(List<PlaceOrderRequest.Line> lines) {

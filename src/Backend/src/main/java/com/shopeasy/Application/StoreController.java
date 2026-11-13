@@ -1,6 +1,6 @@
 package com.shopeasy.Application;
 
-import com.shopeasy.Domain.ORD.ORDModule;
+
 import com.shopeasy.Domain.GS.GSModule;
 import com.shopeasy.Domain.GS.StoreMenuData;
 import com.shopeasy.Foundation.entities.User;
@@ -18,22 +18,18 @@ import java.util.List;
 @RequestMapping("/api/stores")
 public class StoreController {
     private final GSModule gsModule;
-    private final ORDModule ordModule;
     private final RequestAuthenticator authenticator;
 
-    public StoreController(GSModule gsModule, ORDModule ordModule, RequestAuthenticator authenticator) {
+    public StoreController(GSModule gsModule, RequestAuthenticator authenticator) {
         this.gsModule = gsModule;
-        this.ordModule = ordModule;
         this.authenticator = authenticator;
     }
 
-    // Note: In Phase 3, the mapping here has been updated to pass the store's active order queue size into StoreContextData for map rendering - NC
     @GetMapping
     public List<StoreContextData> getGSModule(@RequestHeader(value = "Authorization", required = false) String authorization) {
         authenticator.authenticate(authorization);
         return gsModule.listOpenStores().stream()
-                .map(s -> new StoreContextData(s.getAccountId(), s.getStoreName(), s.getAddress(),
-                        s.getLatitude(), s.getLongitude(), s.getStatus().name(), ordModule.getPreparationQueue(s).size()))
+                .map(StoreContextData::from)
                 .toList();
     }
 

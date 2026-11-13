@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadGoogleMaps, getStoreColor, parseCoordinate } from './mapUtils'
-import { logCommand, logSuccess, logError } from '../Console/consoleLog'
+import { logCommand, logSuccess, logError } from './Console/consoleLog'
 
 export default function MapCanvas({
     stores = [],
@@ -116,7 +116,7 @@ export default function MapCanvas({
             bounds.extend(position)
 
             const colour = getStoreColor(store)
-            const queueLength = Number(store.size ?? store.queue?.length ?? 0)
+            const queueLength = Number(store.ordersInProgress ?? 0)
             const name = store.storeName || 'Grocery Store'
 
             const marker = new maps.Marker({
@@ -153,7 +153,7 @@ export default function MapCanvas({
             const position = { lat: courier.latitude, lng: courier.longitude }
             bounds.extend(position)
 
-            const name = `${courier.firstName || ''} ${courier.lastName || ''}`.trim() || 'Courier'
+            const name = `${courier.name}`.trim() || 'Courier'
             const status = (courier.status || 'IDLE').toUpperCase()
 
             const marker = new maps.Marker({

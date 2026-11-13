@@ -14,4 +14,5 @@ public interface GroceryStoreRepository extends JpaRepository<GroceryStore, Long
     List<GroceryStore> findByStoreName(String name);
 
     List<GroceryStore> findByStatus(StoreStatus storeStatus);
+    List<GroceryStore> findByStatusIn(List<StoreStatus> statuses);
 }
