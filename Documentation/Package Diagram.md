@@ -27,10 +27,10 @@ flowchart TB
 
             subgraph application["Application"]
                 direction TB
-                authController["REG · AuthController"]
-                orderController["ORD · OrderController"]
+                authController["REG<br/>AuthController"]
+                orderController["ORD<br/>OrderController"]
                 operatorController["OperatorRequestsController"]
-                prcController["PRC · LedgerController"]
+                prcController["PRC<br/>LedgerController"]
                 exceptionHandler["ApiExceptionHandler"]
             end
 
@@ -39,6 +39,7 @@ flowchart TB
                 reg["REG <br/>REGModule · AuthTokenUtil<br/>..."]
                 ord["ORD <br/>ORDModule · OrderData · PreparationQueue<br/>..."]
                 prc["PRC <br/>PRCModule<br/>..."]
+                dlv["DLV <br/>DLVModule<br/>DispatchQueue<br/>..."]
                 supporting["GSModule · OperatorRequestsModule<br/>..."]
             end
 
@@ -67,7 +68,7 @@ flowchart TB
     classDef databaseStyle fill:#eeeeee,stroke:#555,color:#111
     class dashboard,regClient,ordClient,operatorClient uiStyle
     class authController,orderController,operatorController,prcController,exceptionHandler appStyle
-    class reg,ord,prc,supporting domainStyle
+    class reg,ord,prc,supporting,dlv domainStyle
     class entities,repositories foundationStyle
     class database databaseStyle
 ```
