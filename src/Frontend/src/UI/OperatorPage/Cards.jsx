@@ -1,5 +1,7 @@
 import { COURIERSTATUS } from "../../api/Courier"
+import { closeStore, openStore, pauseStore } from "../../api/OperatorRequests"
 import { STORESTATUS } from "../../api/Store"
+import { TABS } from "./OperatorPage"
 
 export function OperatorOrderCard({order}) {
     return(
@@ -19,7 +21,7 @@ export function OperatorOrderCard({order}) {
     )
 }
 
-export function OperatorStoreCard({store}) {
+export function OperatorStoreCard({store, handleOperation, tab}) {
     return(
         <article className="dash-card">
         <div className="dash-title-row">
@@ -28,10 +30,36 @@ export function OperatorStoreCard({store}) {
             </h4>
             <span className={`dash-badge dash-badge-${store.status.toLowerCase()}`}>{store.status}</span>
         </div>
-        { store.status != STORESTATUS.CLOSED && <p className="dash-muted">
+        
+        {store.status != STORESTATUS.CLOSED && <p className="dash-muted">
             Orders in progress: {store.ordersInProgress}
             <br/>Orders ready: {store.ordersReady}
         </p>}
+
+        {tab == TABS.OVERVIEW && 
+            <>
+            {store.status != STORESTATUS.PAUSED && <button 
+                className={`op-button-pause`}
+                onClick={() => handleOperation(pauseStore, store.id)}
+                >
+                    Pause Store
+            </button>}
+
+            {store.status != STORESTATUS.OPEN && <button 
+                className={`op-button-open`}
+                onClick={() => handleOperation(openStore, store.id, store.ordersInProgress)}
+                >
+                    Open Store
+            </button>}
+
+            {store.status != STORESTATUS.CLOSED && <button 
+                className={`op-button-close`}
+                onClick={() => handleOperation(closeStore, store.id)}
+                >
+                    Close Store
+            </button>}
+            </>
+        }
         </article>
     )
 }

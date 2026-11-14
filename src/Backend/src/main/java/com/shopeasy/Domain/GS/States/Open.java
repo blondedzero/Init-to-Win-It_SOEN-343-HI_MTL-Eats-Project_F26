@@ -6,8 +6,8 @@ import com.shopeasy.Foundation.entities.StoreStatus;
 public class Open implements GSState {
 
 
-    public String openStore(StoreContext store) {
-        return "[error] this store is already open";
+    public String openStore(StoreContext store, int queueSize) {
+        throw new IllegalStateException("Store is already open");
     }
 
     public String pauseStore(StoreContext store) {
@@ -18,7 +18,6 @@ public class Open implements GSState {
     public String closeStore(StoreContext store) {
         store.setState(new Closed());
         return "[msg] store is closing";
-
     }
 
     public void acceptOrder() {

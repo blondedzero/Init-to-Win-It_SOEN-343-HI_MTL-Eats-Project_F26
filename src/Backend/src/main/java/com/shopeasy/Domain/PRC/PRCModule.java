@@ -1,7 +1,7 @@
 package com.shopeasy.Domain.PRC;
 
 import com.shopeasy.Domain.ORD.OrderData;
-import com.shopeasy.Domain.ORD.RoleValidator;
+import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Foundation.entities.Order;
 import com.shopeasy.Foundation.entities.OrderStatus;
 import com.shopeasy.Foundation.entities.Role;

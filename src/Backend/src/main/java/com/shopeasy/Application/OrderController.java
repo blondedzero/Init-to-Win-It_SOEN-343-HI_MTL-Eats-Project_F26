@@ -33,7 +33,7 @@ public class OrderController {
 
     @GetMapping("/store/orders/incoming")
     public List<OrderData> getIncomingOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
-        System.out.println("Authorization: " + authorization);
+//        System.out.println("Authorization: " + authorization);
         User user = authenticator.authenticate(authorization);
         return ordModule.getIncomingOrders(user);
     }

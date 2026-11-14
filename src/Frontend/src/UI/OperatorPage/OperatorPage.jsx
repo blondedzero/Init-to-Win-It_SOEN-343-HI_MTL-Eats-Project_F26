@@ -2,19 +2,27 @@ import { useCallback, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { logSuccess } from '../Console/consoleLog'
 import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
-import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty} from '../../api/OperatorRequests'
+import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty, getAllStores } from '../../api/OperatorRequests'
+import { STORESTATUS } from '../../api/Store'
+
+export const TABS = {
+  OVERVIEW:'OVERVIEW',
+  STORES:'STORES',
+  ORDERS:'ORDERS'
+}
 
 export default function OperatorPage() {
   const { user } = useOutletContext()
   const [ordersReady, setOrdersReady] = useState([])
-  const [openAndPausedStores, setOpenAndPausedStores] = useState([])
+  const [stores, setStores] = useState([])
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [error, setError] = useState('')
+  const [tab, setTab] = useState(TABS.OVERVIEW)
 
   const load = useCallback(async() => {
     const [ordersResult, storesResult, couriersResult] = await Promise.allSettled([
       getAllOrdersReady(),
-      getAllOpenAndPausedStores(),
+      getAllStores(),
       getAllCouriersOnDuty()
     ])
     const errors = []
@@ -26,7 +34,7 @@ export default function OperatorPage() {
     }
 
     if (storesResult.status === 'fulfilled') {
-      setOpenAndPausedStores(storesResult.value)
+      setStores(storesResult.value)
     } else {
       errors.push(storesResult.reason.message)
     }
@@ -43,6 +51,18 @@ export default function OperatorPage() {
   useEffect(() => {
     load()
   }, [load])
+  
+  async function handleOperation(operation, ...args) {
+    try {
+      await operation(...args);
+      await load();
+    }
+    catch(err) {
+      console.log(err.message)
+      setError(err.message)
+    }
+    
+  }
 
   return (
     <>
@@ -52,8 +72,29 @@ export default function OperatorPage() {
       </div>
       {error && <p className="dash-error">{error}</p>}
 
-      <div className="dash-columns">
+      <div className='tab-selector'>
+        <div className='tab-selector-button' onClick={() => setTab(TABS.OVERVIEW)}>Overview</div>
+        <div className='tab-selector-button' onClick={() => setTab(TABS.STORES)}>Stores</div>
+        <div className='tab-selector-button' onClick={() => setTab(TABS.ORDERS)}>Orders</div>
+      </div>
+      <div className='tab-container'>
+        {tab == TABS.OVERVIEW && <OverviewTab 
+          ordersReady={ordersReady}
+          stores={stores}
+          couriersOnDuty={couriersOnDuty}/>}
 
+        {tab == TABS.STORES && <ManageStoresTab stores={stores} handleOperation={handleOperation}/>}
+
+        {tab == TABS.ORDERS && <div>Manage stalled orders</div>}
+      </div>
+    </>
+  )
+}
+
+function OverviewTab({ordersReady, stores, couriersOnDuty}) {
+  return(
+      <>
+      <div className="dash-columns">
         <section>
           <h3 className="dash-section-title">All Orders Ready ({ordersReady.length})</h3>
           <p className="dash-muted">All current orders in the system</p>
@@ -63,9 +104,9 @@ export default function OperatorPage() {
         </section>
         
         <section>
-          <h3 className="dash-section-title">Open Stores ({openAndPausedStores.length})</h3>
+          <h3 className="dash-section-title">Open Stores ({stores.length})</h3>
           <p className="dash-muted">All open stores</p>
-          {openAndPausedStores.map((store) => (
+          {stores.filter(s => s.status !== STORESTATUS.CLOSED).map((store) => (
             <OperatorStoreCard key={store.id} store={store}/>
           ))}
         </section>
@@ -77,7 +118,42 @@ export default function OperatorPage() {
             <OperatorCourierCard key={courier.id} courier={courier}/>
           ))}
         </section>
+      </div>
+      </>
+  )
+}
 
+function ManageStoresTab({stores, handleOperation}) {
+  const openStores = stores.filter(s => s.status == STORESTATUS.OPEN)
+  const pausedStores = stores.filter(s => s.status == STORESTATUS.PAUSED)
+  const closedStores = stores.filter(s => s.status == STORESTATUS.CLOSED)
+
+  return(
+    <>
+      <div className="dash-columns">        
+        <section>
+          <h3 className="dash-section-title">Open Stores ({openStores.length})</h3>
+          <p className="dash-muted">All open stores</p>
+          {openStores.sort((a, b) => a.ordersInProgress - b.ordersInProgress).map((store) => (
+            <OperatorStoreCard key={store.id} store={store} handleOperation={handleOperation} tab={TABS.OVERVIEW}/>
+          ))}
+        </section>
+
+        <section>
+          <h3 className="dash-section-title">Paused Stores ({pausedStores.length})</h3>
+          <p className="dash-muted">All paused stores</p>
+          {pausedStores.map((store) => (
+            <OperatorStoreCard key={store.id} store={store} handleOperation={handleOperation} tab={TABS.OVERVIEW}/>
+          ))}
+        </section>
+
+        <section>
+          <h3 className="dash-section-title">Closed Stores ({closedStores.length})</h3>
+          <p className="dash-muted">All closed stores</p>
+          {closedStores.map((store) => (
+            <OperatorStoreCard key={store.id} store={store} handleOperation={handleOperation} tab={TABS.OVERVIEW}/>
+          ))}
+        </section>
       </div>
     </>
   )

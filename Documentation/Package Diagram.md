@@ -2,48 +2,59 @@
 
 ```mermaid
 flowchart TB
-    subgraph src["src"]
+    subgraph system["ShopEasy"]
         direction TB
 
-        subgraph ui["UI"]
+        subgraph frontend["Frontend · src/Frontend/src"]
             direction TB
-            pages["LoginPage · RegisterPage<br/>TempAccountPage"]
-            widgets["CustomerDetails · StoreDetails<br/>CourierDetails"]
-            client["api/REG<br/>Login · Register · Auth"]
-            pages --> widgets
-            pages --> client
+
+            subgraph dashModule["UI"]
+                direction TB
+                dashboard["DASH<br/>Dashboard/<br/>RegisterPage · CustomerPage · StorePage · OperatorPage"]
+                subgraph api["api/"]
+                    direction TB
+                    regClient["REG client<br/>Auth.js · Login.js · Register.js"]
+                    ordClient["ORD client<br/>Orders.js · Store.js"]
+                    operatorClient["Operator client<br/>OperatorRequests.js"]
+                end
+                dashboard -. "user actions" .-> api
+            end
+
         end
 
-        subgraph application["Application"]
+        subgraph backend["Backend · com.shopeasy"]
             direction TB
-            web["AuthController"]
-            errors["ApiExceptionHandler"]
-            web --- errors
+
+            subgraph application["Application"]
+                direction TB
+                authController["REG · AuthController"]
+                orderController["ORD · OrderController"]
+                operatorController["OperatorRequestsController"]
+                prcController["PRC · LedgerController"]
+                exceptionHandler["ApiExceptionHandler"]
+            end
+
+            subgraph domain["Domain"]
+                direction TB
+                reg["REG <br/>REGModule · AuthTokenUtil<br/>..."]
+                ord["ORD <br/>ORDModule · OrderData · PreparationQueue<br/>..."]
+                prc["PRC <br/>PRCModule<br/>..."]
+                supporting["GSModule · OperatorRequestsModule<br/>..."]
+            end
+
+            subgraph foundation["Foundation"]
+                direction TB
+                entities["entities/<br/>User · Order · GroceryStore<br/>..."]
+                repositories["repositories/<br/>UserRepository · OrderRepository · GroceryStoreRepository<br/>..."]
+            end
+
+
+            application -. "uses" .-> domain
+            application -. "uses entities" .-> foundation
+            domain -. "uses entities / repositories" .-> foundation
         end
 
-        subgraph domain["Domain"]
-            direction TB
-            registration["REGModule"]
-            auth["AuthTokenUtil · PasswordEncoder"]
-            factories["UserFactory<br/>Customer · Store · Courier · Operator"]
-            models["Account · GroceryStore · Item<br/>Order · PreparationQueue · EventLog"]
-            states["GroceryStoreStates<br/>Open · Paused · Closed"]
-            registration --> factories
-            registration --> auth
-            models --> states
-        end
-
-        subgraph foundation["Foundation"]
-            direction TB
-            entities["entities<br/>User · Customer · GroceryStore<br/>Order · Cart · Product · PaymentInfo"]
-            repositories["repositories<br/>User · Order · Product · Cart · …"]
-            entities --- repositories
-        end
-
-        ui -. "HTTP / JSON" .-> application
-        application -. "uses" .-> domain
-        application -. "uses entities / repositories" .-> foundation
-        domain -. "uses entities / repositories" .-> foundation
+        api -. "HTTP / JSON" .-> application
     end
 
     database[("PostgreSQL")]
@@ -54,11 +65,9 @@ flowchart TB
     classDef domainStyle fill:#fff99a,stroke:#555,color:#111
     classDef foundationStyle fill:#f6d5b8,stroke:#555,color:#111
     classDef databaseStyle fill:#eeeeee,stroke:#555,color:#111
-    class pages,widgets,client uiStyle
-    class web,errors appStyle
-    class registration,auth,factories,models,states domainStyle
+    class dashboard,regClient,ordClient,operatorClient uiStyle
+    class authController,orderController,operatorController,prcController,exceptionHandler appStyle
+    class reg,ord,prc,supporting domainStyle
     class entities,repositories foundationStyle
     class database databaseStyle
 ```
-
-The UI box lists the routed React pages and registration details; the API client sends requests to `AuthController`. The `Browse.html`, `ManageAccount.html`, and `Order.html` files exist as static UI files but are not currently wired into the React router. The older `Domain` model classes are shown separately from the persisted `Foundation.entities` classes because both packages currently exist in the codebase.

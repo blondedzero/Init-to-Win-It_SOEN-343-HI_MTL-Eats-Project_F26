@@ -2,6 +2,7 @@ package com.shopeasy.Domain.ORD;
 
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
+import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;

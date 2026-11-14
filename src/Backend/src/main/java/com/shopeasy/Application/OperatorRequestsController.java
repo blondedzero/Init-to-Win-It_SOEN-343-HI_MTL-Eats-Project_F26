@@ -7,10 +7,7 @@ import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.OperatorRequestsModule;
 import com.shopeasy.Domain.PRC.PRCModule;
 import com.shopeasy.Foundation.entities.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +37,26 @@ public class OperatorRequestsController {
     public List<StoreContextData> getAllOpenAndPausedStores(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
         return gsModule.getAllOpenAndPausedStores(user);
+    }
+
+    public record UpdateStoreStatusBody(int queueSize){}
+
+    @PostMapping("stores/{storeId}/open")
+    public StoreContextData openStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId, @RequestBody UpdateStoreStatusBody body) {
+        User user = authenticator.authenticate(authorization);
+        return gsModule.openStore(user, storeId, body.queueSize());
+    }
+
+    @PostMapping("stores/{storeId}/pause")
+    public StoreContextData pauseStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId) {
+        User user = authenticator.authenticate(authorization);
+        return gsModule.pauseStore(user, storeId);
+    }
+
+    @PostMapping("stores/{storeId}/close")
+    public StoreContextData closeStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId) {
+        User user = authenticator.authenticate(authorization);
+        return gsModule.closeStore(user, storeId);
     }
 
     //Order Operations
