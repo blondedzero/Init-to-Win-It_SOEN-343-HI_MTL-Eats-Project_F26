@@ -38,7 +38,7 @@ export function OperatorStoreCard({store, handleOperation, tab}) {
 
         {tab == TABS.OVERVIEW && 
             <>
-            {store.status != STORESTATUS.PAUSED && <button 
+            {(store.status == STORESTATUS.OPEN) && <button 
                 className={`op-button-pause`}
                 onClick={() => handleOperation(pauseStore, store.id)}
                 >
