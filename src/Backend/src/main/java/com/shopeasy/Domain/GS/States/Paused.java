@@ -5,7 +5,6 @@ import com.shopeasy.Foundation.entities.StoreStatus;
 
 public class Paused implements GSState {
 
-
     public String openStore(StoreContext store, int queueSize) {
         if (queueSize >= 6) {
             throw new IllegalStateException("Store cannot be reopened while the preparation queue has 6 or more orders.");
@@ -33,6 +32,5 @@ public class Paused implements GSState {
     {
         return StoreStatus.PAUSED;
     }
-
 
 }

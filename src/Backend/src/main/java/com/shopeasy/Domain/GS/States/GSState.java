@@ -5,7 +5,6 @@ import com.shopeasy.Foundation.entities.StoreStatus;
 
 public interface GSState {
 
-
     String openStore(StoreContext store, int queueSize);
 
     String pauseStore(StoreContext store);

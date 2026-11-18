@@ -60,7 +60,7 @@ public class GSModule {
     }
 
     @Transactional
-    public StoreContextData openStore(User user, Long storeId, int queueSize) {
+    public StoreContextData openStore(User user, Long storeId) {
         roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.STORE), "open a store");
         if  (user.getRole() == Role.STORE && !user.getAccountId().equals(storeId)) {
             throw new PermissionDeniedException("Cannot open another store");
@@ -68,6 +68,8 @@ public class GSModule {
 
         GroceryStore store = groceryStoreRepository.findById(storeId)
                 .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
+
+        int queueSize = orderRepository.countByStore_AccountIdAndStatusIn(store.getAccountId(), List.of(OrderStatus.ACCEPTED, OrderStatus.PREPARING));
 
         StoreContext context = new StoreContext(store);
         context.openStore(queueSize);

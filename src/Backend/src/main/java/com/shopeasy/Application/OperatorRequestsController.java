@@ -44,7 +44,7 @@ public class OperatorRequestsController {
     @PostMapping("stores/{storeId}/open")
     public StoreContextData openStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId, @RequestBody UpdateStoreStatusBody body) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.openStore(user, storeId, body.queueSize());
+        return gsModule.openStore(user, storeId);
     }
 
     @PostMapping("stores/{storeId}/pause")

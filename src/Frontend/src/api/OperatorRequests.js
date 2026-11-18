@@ -14,8 +14,8 @@ export function getAllOpenAndPausedStores() {
   return opRequest('/stores/open-paused')
 }
 
-export function openStore(storeId, queueSize) {
-  return opRequest(`/stores/${storeId}/open`, {method: 'POST', body: {queueSize}})
+export function openStore(storeId) {
+  return opRequest(`/stores/${storeId}/open`, {method: 'POST'})
 }
 
 export function pauseStore(storeId) {

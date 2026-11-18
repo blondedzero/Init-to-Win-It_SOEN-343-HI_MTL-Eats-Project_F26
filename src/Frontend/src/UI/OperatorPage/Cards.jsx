@@ -47,7 +47,7 @@ export function OperatorStoreCard({store, handleOperation, tab}) {
 
             {store.status != STORESTATUS.OPEN && <button 
                 className={`op-button-open`}
-                onClick={() => handleOperation(openStore, store.id, store.ordersInProgress)}
+                onClick={() => handleOperation(openStore, store.id)}
                 >
                     Open Store
             </button>}

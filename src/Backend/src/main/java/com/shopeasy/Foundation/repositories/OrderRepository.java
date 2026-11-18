@@ -37,4 +37,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<StoreOrderCount> countByStoreAndStatus(
             @Param("storeIds") Collection<Long> storeIds,
             @Param("statuses") Collection<OrderStatus> statuses);
+
+    int countByStore_AccountIdAndStatusIn(Long storeId, Collection<OrderStatus> status);
+    int countByStore_AccountIdAndStatus(Long storeId, OrderStatus status);
 }
