@@ -6,11 +6,14 @@ import TempAccountPage from './UI/TempAccountPage'
 import CustomerHomePage from './UI/CustomerPage/CustomerHomePage'
 import StoreMenuPage from './UI/CustomerPage/StoreMenuPage'
 import StoreOrdersPage from './UI/StorePage/StoreOrdersPage'
+import StoreCatalogPage from './UI/StorePage/StoreCatalogPage'
+import StoreHistoryPage from './UI/StorePage/StoreHistoryPage'
 import DashboardLayout from './UI/Dashboard/DashboardLayout'
 import OperatorPage from './UI/OperatorPage/OperatorPage'
 import MapWrapper from './UI/MapWrapper'
 import OrderHistoryPage from './UI/Dashboard/OrderHistoryPage'
 import CustomerOrdersPage from './UI/CustomerPage/CustomerOrdersPage'
+import CourierPage from './UI/CourierPage/CourierPage'
 
 const router = createBrowserRouter([
   {path:"/", element: <LoginPage/>},
@@ -23,7 +26,10 @@ const router = createBrowserRouter([
       {path:"/stores/:storeId", element: <StoreMenuPage/>},
       {path:"/customer/orders", element: <CustomerOrdersPage/>},
       {path:"/store/orders", element: <StoreOrdersPage/>},
+      {path:"/store/catalog", element: <StoreCatalogPage/>},
+      {path:"/store/history", element: <StoreHistoryPage/>},
       {path:"/operator/home", element: <OperatorPage/>},
+      {path:"/courier/home", element: <CourierPage/>},
       {path:"/map", element: <MapWrapper/>},
       {path:'/history', element: <OrderHistoryPage/>}
     ]
