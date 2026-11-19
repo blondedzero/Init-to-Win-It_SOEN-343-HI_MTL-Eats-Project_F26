@@ -44,6 +44,24 @@
     font-size: 0.9rem;
 }
 
+.history-line .details {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.history-line .details .total {
+    font-weight: 700;
+    color: #000;
+}
+
+.history-line .details .reason {
+    color: #991b1b;
+}
+
 @media (max-width: 600px) {
     .history-line {
         grid-template-columns: 1fr 1fr;
