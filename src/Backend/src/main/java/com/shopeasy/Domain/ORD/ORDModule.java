@@ -140,6 +140,11 @@ public class ORDModule {
                 && !order.getCustomer().getAccountId().equals(user.getAccountId())) {
             throw new PermissionDeniedException("Customers can only cancel their own orders");
         }
+        // Customers may cancel only while the order is still placed; afterwards it is an operator action
+        if (user.getRole() == Role.CUSTOMER && order.getStatus() != OrderStatus.PLACED) {
+            throw new OrderRuleViolationException("Order #" + orderId + " is " + order.getStatus()
+                    + " and can no longer be canceled by the customer");
+        }
         if (user.getRole() == Role.STORE
                 && !order.getStore().getAccountId().equals(user.getAccountId())) {
             throw new PermissionDeniedException("Stores can only cancel their own orders");
@@ -155,6 +160,17 @@ public class ORDModule {
                 + " -> CANCELED by " + user.getRole().name().toLowerCase()
                 + " " + user.getAccountId());
         return new OrderResult("Order #" + orderId + " canceled", eventId, OrderData.from(order));
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getCustomerActiveOrders(User user) {
+        roleValidator.requireRole(user, Role.CUSTOMER, "view their active orders");
+        List<OrderStatus> active = List.of(OrderStatus.PLACED, OrderStatus.ACCEPTED, OrderStatus.PREPARING,
+                OrderStatus.READY, OrderStatus.PICKED_UP);
+        return orderRepository.findByCustomer_AccountIdAndStatusIn(user.getAccountId(), active).stream()
+                .sorted(Comparator.comparing(Order::getPlacedAt).thenComparing(Order::getOrderId))
+                .map(OrderData::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)

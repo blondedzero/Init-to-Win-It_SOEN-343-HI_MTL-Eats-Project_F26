@@ -238,7 +238,8 @@
 
 .dash-badge-open,
 .dash-badge-available,
-.dash-badge-ready {
+.dash-badge-ready,
+.dash-badge-picked_up {
   background: #dcfce7;
   color: #166534;
 }

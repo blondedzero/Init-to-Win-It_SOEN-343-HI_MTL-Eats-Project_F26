@@ -43,7 +43,7 @@ export default function OrderHistoryPage() {
         <>
         <div className="history-container">
             <h1>Order history</h1>
-            {orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order}/>)
+            {orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role}/>)
             :<>Order history is empty.</>}
         </div>
         </>

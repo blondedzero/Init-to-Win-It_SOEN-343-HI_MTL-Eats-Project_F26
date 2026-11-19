@@ -15,6 +15,14 @@ export function placeOrder(storeId, lines) {
   return apiRequest('/api/orders', { method: 'POST', body: { storeId, lines } })
 }
 
+export function getCustomerActiveOrders() {
+  return apiRequest('/api/customer/orders/active')
+}
+
+export function cancelOwnOrder(orderId) {
+  return apiRequest(`/api/customer/orders/${orderId}/cancel`, { method: 'POST' })
+}
+
 export function getIncomingOrders() {
   return apiRequest('/api/store/orders/incoming')
 }

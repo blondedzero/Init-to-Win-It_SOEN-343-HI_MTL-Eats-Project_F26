@@ -30,6 +30,19 @@ public class OrderController extends Controller {
         return ResponseEntity.status(HttpStatus.CREATED).body(ordModule.placeOrder(user, request));
     }
 
+    @GetMapping("/customer/orders/active")
+    public List<OrderData> getCustomerActiveOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        User user = authenticator.authenticate(authorization);
+        return ordModule.getCustomerActiveOrders(user);
+    }
+
+    @PostMapping("/customer/orders/{orderId}/cancel")
+    public OrderResult cancelOwnOrder(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                      @PathVariable Long orderId) {
+        User user = authenticator.authenticate(authorization);
+        return ordModule.cancelOrder(user, orderId);
+    }
+
     @GetMapping("/store/orders/incoming")
     public List<OrderData> getIncomingOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
 //        System.out.println("Authorization: " + authorization);
