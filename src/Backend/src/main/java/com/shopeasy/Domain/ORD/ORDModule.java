@@ -2,6 +2,7 @@ package com.shopeasy.Domain.ORD;
 
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
+import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
@@ -126,6 +127,34 @@ public class ORDModule {
                 + user.getAccountId() + " (" + reason.trim() + ")");
 
         return new OrderResult("Order #" + orderId + " rejected", eventId, OrderData.from(order));
+    }
+
+    @Transactional
+    public OrderResult cancelOrder(User user, Long orderId) {
+        roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.CUSTOMER, Role.STORE), "cancel orders");
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order " + orderId + " does not exist"));
+
+        if (user.getRole() == Role.CUSTOMER
+                && !order.getCustomer().getAccountId().equals(user.getAccountId())) {
+            throw new PermissionDeniedException("Customers can only cancel their own orders");
+        }
+        if (user.getRole() == Role.STORE
+                && !order.getStore().getAccountId().equals(user.getAccountId())) {
+            throw new PermissionDeniedException("Stores can only cancel their own orders");
+        }
+
+        OrderStatus previousStatus = order.getStatus();
+        if (previousStatus == OrderStatus.ACCEPTED) {
+            queueFor(order.getStore().getAccountId()).remove(orderId);
+        }
+        order.markCancelled();
+
+        Long eventId = eventManager.logEvent("Order " + orderId + ": " + previousStatus
+                + " -> CANCELED by " + user.getRole().name().toLowerCase()
+                + " " + user.getAccountId());
+        return new OrderResult("Order #" + orderId + " canceled", eventId, OrderData.from(order));
     }
 
     @Transactional(readOnly = true)

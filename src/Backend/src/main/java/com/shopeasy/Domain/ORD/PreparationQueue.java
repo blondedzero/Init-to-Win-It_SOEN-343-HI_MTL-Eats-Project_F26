@@ -41,6 +41,10 @@ public class PreparationQueue {
         entries.removeFirst();
     }
 
+    public synchronized void remove(Long orderId) {
+        entries.removeIf(entry -> entry.orderId().equals(orderId));
+    }
+
     public synchronized int positionOf(Long orderId) {
         for (int i = 0; i < entries.size(); i++) {
             if (entries.get(i).orderId().equals(orderId)) return i + 1;

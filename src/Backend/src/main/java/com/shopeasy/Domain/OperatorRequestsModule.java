@@ -1,7 +1,6 @@
 package com.shopeasy.Domain;
 
 import com.shopeasy.Domain.ORD.CourierDisplayData;
-import com.shopeasy.Domain.ORD.RoleValidator;
 import com.shopeasy.Foundation.entities.CourierStatus;
 import com.shopeasy.Foundation.entities.Role;
 import com.shopeasy.Foundation.entities.User;

@@ -14,8 +14,25 @@ public class StoreContext {
 
     public StoreContext(GroceryStore entity) {
         this.entity = entity;
-        this.state=new Closed();
-        entity.setStatus(StoreStatus.CLOSED);
+        this.state = setContextState(entity);
+    }
+
+    private GSState setContextState(GroceryStore entity) {
+        switch (entity.getStatus()) {
+            case OPEN -> {
+                return new Open();
+            }
+            case CLOSED -> {
+                return new Closed();
+            }
+            case PAUSED -> {
+                return new Paused();
+            }
+            default -> {
+                entity.setStatus(StoreStatus.CLOSED);
+                return new Closed();
+            }
+        }
     }
 
     public void acceptOrder(){}
@@ -27,8 +44,9 @@ public class StoreContext {
 
 
     //when a user wants to change the state simply call the methods and no matter what state the store is currently in it will switch
-    public String openStore() {
-        return state.openStore(this);
+    //if store is paused, check that queue size is < threshold before allowing re-open, otherwise pause is useless
+    public String openStore(int queueSize) {
+        return state.openStore(this, queueSize);
     }
 
     public String pauseStore()
@@ -46,16 +64,11 @@ public class StoreContext {
     {
         this.state = GSState;
         entity.setStatus(state.getEnum());
-
     }
 
     public GSState getState()
     {
         return this.state;
     }
-
-
-
-
 
 }

@@ -16,13 +16,12 @@ import java.util.List;
 
 @RestController                          // "my return values become JSON"
 @RequestMapping("/api/stores")
-public class StoreController {
+public class StoreController extends Controller{
     private final GSModule gsModule;
-    private final RequestAuthenticator authenticator;
 
     public StoreController(GSModule gsModule, RequestAuthenticator authenticator) {
+        super(authenticator);
         this.gsModule = gsModule;
-        this.authenticator = authenticator;
     }
 
     @GetMapping

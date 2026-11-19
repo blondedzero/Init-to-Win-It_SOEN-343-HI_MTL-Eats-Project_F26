@@ -68,7 +68,7 @@ export default function StoreMenuPage() {
 
   return (
     <>
-      <Link to="/homeCustomer" className="dash-back">← All stores</Link>
+      <Link to="/customer/home" className="dash-back">← All stores</Link>
       <div className="dash-title-row">
         <h2 className="dash-title">{menu.store.storeName}</h2>
         <span className={`dash-badge dash-badge-${menu.store.status.toLowerCase()}`}>{menu.store.status}</span>

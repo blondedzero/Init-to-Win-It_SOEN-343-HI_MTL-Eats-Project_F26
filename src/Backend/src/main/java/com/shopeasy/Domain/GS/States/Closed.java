@@ -5,18 +5,17 @@ import com.shopeasy.Foundation.entities.StoreStatus;
 
 public class Closed implements GSState {
 
-    public String openStore(StoreContext store) {
+    public String openStore(StoreContext store, int queueSize) {
         store.setState(new Open());
         return "[msg] opening Store";
     }
 
     public String pauseStore(StoreContext store) {
-        store.setState(new Paused());
-        return "[msg] store is pausing";
+        throw new IllegalStateException("Cannot pause a closed Store");
     }
 
     public String closeStore(StoreContext store) {
-        return "[error] store is already closed";
+        throw new IllegalStateException("Cannot close a closed Store");
 
     }
 

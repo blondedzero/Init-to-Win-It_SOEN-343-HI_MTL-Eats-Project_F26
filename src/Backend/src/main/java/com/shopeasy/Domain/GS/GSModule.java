@@ -1,7 +1,7 @@
 package com.shopeasy.Domain.GS;
 
 
-import com.shopeasy.Domain.ORD.RoleValidator;
+import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
@@ -9,7 +9,6 @@ import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
 import com.shopeasy.Foundation.repositories.ProductRepository;
 import com.shopeasy.Foundation.repositories.StoreOrderCount;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,11 +59,73 @@ public class GSModule {
         return new StoreMenuData(storeData, products);
     }
 
+    @Transactional
+    public StoreContextData openStore(User user, Long storeId) {
+        roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.STORE), "open a store");
+        if  (user.getRole() == Role.STORE && !user.getAccountId().equals(storeId)) {
+            throw new PermissionDeniedException("Cannot open another store");
+        }
+
+        GroceryStore store = groceryStoreRepository.findById(storeId)
+                .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
+
+        int queueSize = orderRepository.countByStore_AccountIdAndStatusIn(store.getAccountId(), List.of(OrderStatus.ACCEPTED, OrderStatus.PREPARING));
+
+        StoreContext context = new StoreContext(store);
+        context.openStore(queueSize);
+        return StoreContextData.from(store);
+    }
+
+    @Transactional
+    public StoreContextData pauseStore(User user, Long storeId) {
+        roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.STORE), "pause a store");
+        if  (user.getRole() == Role.STORE && !user.getAccountId().equals(storeId)) {
+            throw new PermissionDeniedException("Cannot pause another store");
+        }
+
+        GroceryStore store = groceryStoreRepository.findById(storeId)
+            .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
+
+        StoreContext context = new StoreContext(store);
+        context.pauseStore();
+
+        return StoreContextData.from(store);
+    }
+
+    @Transactional
+    public StoreContextData closeStore(User user, Long storeId) {
+        roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.STORE), "pause a store");
+        if  (user.getRole() == Role.STORE && !user.getAccountId().equals(storeId)) {
+            throw new PermissionDeniedException("Cannot close another store");
+        }
+
+        GroceryStore store = groceryStoreRepository.findById(storeId)
+                .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
+
+        StoreContext context = new StoreContext(store);
+        context.closeStore();
+
+        return StoreContextData.from(store);
+    }
+
     @Transactional(readOnly = true)
     public List<StoreContextData> getAllStores(User user) {
         roleValidator.requireRole(user, Role.OPERATOR, "view all stores");
-        return groceryStoreRepository.findAll().stream()
-                .map(StoreContextData::from)
+        List<GroceryStore> stores = groceryStoreRepository.findAll();
+        if (stores.isEmpty()) {
+            return List.of();
+        }
+        List<Long> ids = stores.stream().map(GroceryStore::getAccountId).toList();
+
+        Map<Long, Map<OrderStatus, Long>> counts = countActiveOrders(ids);
+
+        return stores.stream()
+                .map(s -> {
+                    Map<OrderStatus, Long> c = counts.getOrDefault(s.getAccountId(), Map.of());
+                    return StoreContextData.from(s,
+                            c.getOrDefault(OrderStatus.PREPARING, 0L) + c.getOrDefault(OrderStatus.ACCEPTED, 0L),
+                            c.getOrDefault(OrderStatus.READY, 0L));
+                })
                 .toList();
     }
 
@@ -79,12 +140,7 @@ public class GSModule {
         }
         List<Long> ids = stores.stream().map(GroceryStore::getAccountId).toList();
 
-        Map<Long, Map<OrderStatus, Long>> counts = orderRepository
-                .countByStoreAndStatus(ids, List.of(OrderStatus.PREPARING, OrderStatus.ACCEPTED, OrderStatus.READY))
-                .stream()
-                .collect(Collectors.groupingBy(
-                        StoreOrderCount::getStoreId,
-                        Collectors.toMap(StoreOrderCount::getStatus, StoreOrderCount::getCount)));
+        Map<Long, Map<OrderStatus, Long>> counts = countActiveOrders(ids);
 
         return stores.stream()
                 .map(s -> {
@@ -93,6 +149,23 @@ public class GSModule {
                             c.getOrDefault(OrderStatus.PREPARING, 0L) + c.getOrDefault(OrderStatus.ACCEPTED, 0L),
                             c.getOrDefault(OrderStatus.READY, 0L));
                 })
+                .toList();
+    }
+
+    private Map<Long, Map<OrderStatus, Long>> countActiveOrders(List<Long> ids) {
+        return orderRepository
+                .countByStoreAndStatus(ids, List.of(OrderStatus.PREPARING, OrderStatus.ACCEPTED, OrderStatus.READY))
+                .stream()
+                .collect(Collectors.groupingBy(
+                        StoreOrderCount::getStoreId,
+                        Collectors.toMap(StoreOrderCount::getStatus, StoreOrderCount::getCount)));
+    }
+
+    @Transactional(readOnly = true)
+    public List<StoreContextData> getAllClosedStores(User user) {
+        roleValidator.requireRole(user, Role.OPERATOR, "view all stores");
+        return groceryStoreRepository.findByStatus(StoreStatus.CLOSED).stream()
+                .map(StoreContextData::from)
                 .toList();
     }
 }

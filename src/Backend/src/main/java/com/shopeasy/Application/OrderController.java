@@ -14,14 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class OrderController {
+public class OrderController extends Controller {
 
     private final ORDModule ordModule;
-    private final RequestAuthenticator authenticator;
 
     public OrderController(ORDModule ordModule, RequestAuthenticator authenticator) {
+        super(authenticator);
         this.ordModule = ordModule;
-        this.authenticator = authenticator;
     }
 
     @PostMapping("/orders")
@@ -33,7 +32,7 @@ public class OrderController {
 
     @GetMapping("/store/orders/incoming")
     public List<OrderData> getIncomingOrders(@RequestHeader(value = "Authorization", required = false) String authorization) {
-        System.out.println("Authorization: " + authorization);
+//        System.out.println("Authorization: " + authorization);
         User user = authenticator.authenticate(authorization);
         return ordModule.getIncomingOrders(user);
     }

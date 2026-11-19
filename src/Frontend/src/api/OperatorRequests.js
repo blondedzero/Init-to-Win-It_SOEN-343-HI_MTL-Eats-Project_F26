@@ -1,30 +1,49 @@
 import { apiRequest } from "./Client"
 
 const BASE = '/api/operator'
+function opRequest(route,  { method, body } = {}) {
+  return apiRequest( `${BASE}${route}`, { method, body })
+}
 
 //STORE OPERATIONS
 export function getAllStores() {
-  return apiRequest(`${BASE}/stores/all`)
+  return opRequest('/stores/all')
 }
 
 export function getAllOpenAndPausedStores() {
-  return apiRequest(`${BASE}/stores/open-paused`)
+  return opRequest('/stores/open-paused')
+}
+
+export function openStore(storeId) {
+  return opRequest(`/stores/${storeId}/open`, {method: 'POST'})
+}
+
+export function pauseStore(storeId) {
+  return opRequest(`/stores/${storeId}/pause`, {method: 'POST'})
+}
+
+export function closeStore(storeId) {
+  return opRequest(`/stores/${storeId}/close`, {method: 'POST'})
 }
 
 //ORDER OPERATIONS
 export function getAllOrdersInProgress() {
-  return apiRequest(`${BASE}/orders/in-progress`)
+  return opRequest('/orders/in-progress')
 }
 
 export function getAllOrdersReady() {
-  return apiRequest(`${BASE}/orders/ready`)
+  return opRequest('/orders/ready')
+}
+
+export function cancelOrder(orderId) {
+  return opRequest(`/orders/${orderId}/cancel`, { method: 'POST' })
 }
 
 //COURIER OPERATIONS
 export function getAllCouriersOnDuty() {
-    return apiRequest(`${BASE}/couriers/on-duty`)
+    return opRequest('/couriers/on-duty')
 }
 
 export function getAllCouriersIdle() {
-    return apiRequest(`${BASE}/couriers/idle`)
+    return opRequest('/couriers/idle')
 }
