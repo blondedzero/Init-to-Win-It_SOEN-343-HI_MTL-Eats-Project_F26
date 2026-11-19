@@ -5,6 +5,13 @@ import OrderHistoryLine from "./OrderHistoryLine";
 import './order-history.css'
 import { ROLE } from "../../api/EnumRoles";
 
+function getLastActionTimestamp(order) {
+    return [order.placedAt, order.deliveredAt, order.canceledAt].reduce((latest, timestamp) => {
+        const parsed = Date.parse(timestamp)
+        return Number.isNaN(parsed) ? latest : Math.max(latest, parsed)
+    }, 0)
+}
+
 export default function OrderHistoryPage() {
     const { user } = useOutletContext()
     const [orderHistory, setOrderHistory] = useState([])
@@ -17,7 +24,9 @@ export default function OrderHistoryPage() {
         const errors = []
     
         if (orderHistoryResult.status === 'fulfilled') {
-          setOrderHistory(orderHistoryResult.value)
+          setOrderHistory([...orderHistoryResult.value].sort(
+            (a, b) => getLastActionTimestamp(b) - getLastActionTimestamp(a)
+          ))
           console.log(orderHistoryResult.value)
         } else {
           errors.push(orderHistoryResult.reason.message)

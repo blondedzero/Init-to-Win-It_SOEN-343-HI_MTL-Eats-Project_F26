@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { logSuccess } from '../Console/consoleLog'
 import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
-import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty, getAllStores } from '../../api/OperatorRequests'
+import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty, getAllStores, getAllOrdersInProgress } from '../../api/OperatorRequests'
 import { STORESTATUS } from '../../api/Store'
 import { ROLE } from '../../api/EnumRoles'
+import { ORDERSTATUS } from '../../api/Orders'
 
 export const TABS = {
   OVERVIEW:'OVERVIEW',
@@ -14,7 +15,7 @@ export const TABS = {
 
 export default function OperatorPage() {
   const { user } = useOutletContext()
-  const [ordersReady, setOrdersReady] = useState([])
+  const [ordersInProgress, setOrdersInProgress] = useState([])
   const [stores, setStores] = useState([])
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [error, setError] = useState('')
@@ -23,14 +24,14 @@ export default function OperatorPage() {
 
   const load = useCallback(async() => {
     const [ordersResult, storesResult, couriersResult] = await Promise.allSettled([
-      getAllOrdersReady(),
+      getAllOrdersInProgress(),
       getAllStores(),
       getAllCouriersOnDuty()
     ])
     const errors = []
 
     if (ordersResult.status === 'fulfilled') {
-      setOrdersReady(ordersResult.value)
+      setOrdersInProgress(ordersResult.value)
     } else {
       errors.push(ordersResult.reason.message)
     }
@@ -82,17 +83,17 @@ export default function OperatorPage() {
       <div className="operator-tabs" role="group" aria-label="Operator sections">
         <button type="button" className="operator-tab" aria-pressed={tab === TABS.OVERVIEW} onClick={() => setTab(TABS.OVERVIEW)}>Overview</button>
         <button type="button" className="operator-tab" aria-pressed={tab === TABS.STORES} onClick={() => setTab(TABS.STORES)}>Stores</button>
-        <button type="button" className="operator-tab" aria-pressed={tab === TABS.ORDERS} onClick={() => setTab(TABS.ORDERS)}>Orders</button>
+        <button type="button" className="operator-tab" aria-pressed={tab === TABS.ORDERS} onClick={() => setTab(TABS.ORDERS)}>Orders & Couriers</button>
       </div>
       <div className='tab-container'>
         {tab == TABS.OVERVIEW && <OverviewTab 
-          ordersReady={ordersReady}
+          ordersReady={ordersInProgress.filter(order => order.status == ORDERSTATUS.READY)}
           stores={stores}
           couriersOnDuty={couriersOnDuty}/>}
 
         {tab == TABS.STORES && <ManageStoresTab stores={stores} handleOperation={handleOperation}/>}
 
-        {tab == TABS.ORDERS && <div>Manage stalled orders</div>}
+        {tab == TABS.ORDERS && <ManageOrdersTab orders={ordersInProgress} handleOperation={handleOperation}/>}
       </div>
     </>
   )
@@ -111,8 +112,8 @@ function OverviewTab({ordersReady, stores, couriersOnDuty}) {
         </section>
         
         <section>
-          <h3 className="dash-section-title">Open Stores ({stores.length})</h3>
-          <p className="dash-muted">All open stores</p>
+          <h3 className="dash-section-title">Open Stores ({stores.filter(s => s.status !== STORESTATUS.CLOSED).length})</h3>
+          <p className="dash-muted">All open and paused stores</p>
           {stores.filter(s => s.status !== STORESTATUS.CLOSED).map((store) => (
             <OperatorStoreCard key={store.id} store={store}/>
           ))}
@@ -164,4 +165,38 @@ function ManageStoresTab({stores, handleOperation}) {
       </div>
     </>
   )
+}
+
+function ManageOrdersTab({orders, handleOperation}) {
+  const ordersReady = orders.filter(order => order.status == ORDERSTATUS.READY)
+  const ordersAccepted = orders.filter(order => order.status == ORDERSTATUS.ACCEPTED)
+  const ordersPreparing = orders.filter(order => order.status == ORDERSTATUS.PREPARING)
+
+    return(
+      <div className="dash-columns">
+          <section>
+            <h3 className="dash-section-title">Orders Accepted ({ordersAccepted.length})</h3>
+            <p className="dash-muted">All current orders in the system</p>
+            {ordersAccepted.map((order) => (
+              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+            ))}
+          </section>
+
+          <section>
+            <h3 className="dash-section-title">Orders Preparing ({ordersPreparing.length})</h3>
+            <p className="dash-muted">All current orders in the system</p>
+            {ordersPreparing.map((order) => (
+              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+            ))}
+          </section>
+
+            <section>
+            <h3 className="dash-section-title">Orders Ready ({ordersReady.length})</h3>
+            <p className="dash-muted">All current orders in the system</p>
+            {ordersReady.map((order) => (
+              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+            ))}
+          </section>
+      </div>
+    )
 }

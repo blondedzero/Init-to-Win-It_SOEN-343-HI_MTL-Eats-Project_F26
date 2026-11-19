@@ -35,6 +35,10 @@ export function getAllOrdersReady() {
   return opRequest('/orders/ready')
 }
 
+export function cancelOrder(orderId) {
+  return opRequest(`/orders/${orderId}/cancel`, { method: 'POST' })
+}
+
 //COURIER OPERATIONS
 export function getAllCouriersOnDuty() {
     return opRequest('/couriers/on-duty')

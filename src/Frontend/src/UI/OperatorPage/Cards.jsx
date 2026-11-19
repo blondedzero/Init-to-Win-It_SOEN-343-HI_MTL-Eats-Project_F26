@@ -1,9 +1,10 @@
 import { COURIERSTATUS } from "../../api/Courier"
-import { closeStore, openStore, pauseStore } from "../../api/OperatorRequests"
+import { cancelOrder, closeStore, openStore, pauseStore } from "../../api/OperatorRequests"
+import { ORDERSTATUS } from "../../api/Orders"
 import { STORESTATUS } from "../../api/Store"
 import { TABS } from "./OperatorPage"
 
-export function OperatorOrderCard({order}) {
+export function OperatorOrderCard({order, tab, handleOperation}) {
     return(
         <article className="dash-card">
         <div className="dash-title-row">
@@ -15,8 +16,17 @@ export function OperatorOrderCard({order}) {
         <p className="dash-muted">
             Customer: {order.customerName} - {order.deliveryAddress}
             <br/> Store: {order.storeName}
-            <br/> Courier: {order.courier || "UNNASSIGNED"}
+            {order.status == ORDERSTATUS.READY && <><br/> Courier: {order.courier || "UNNASSIGNED"}</>}
         </p>
+        {tab == TABS.ORDERS && 
+        <div className="op-order-buttons">
+            {(order.status == ORDERSTATUS.READY && order.courier == undefined) && <button>Assign courrier</button>}
+            <button onClick={() => {
+                if (window.confirm(`Confirm cancel order #${order.orderId}?`)) {
+                    handleOperation(cancelOrder, order.orderId)
+                }
+            }}>Cancel order</button>
+        </div>}
         </article>
     )
 }
