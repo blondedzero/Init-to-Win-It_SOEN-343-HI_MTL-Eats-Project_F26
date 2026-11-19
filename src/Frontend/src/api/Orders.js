@@ -1,5 +1,16 @@
 import { apiRequest } from './Client'
 
+export const ORDERSTATUS = {
+    PLACED: 'PLACED',
+    ACCEPTED: 'ACCEPTED',
+    PREPARING: 'PREPARING',
+    REJECTED: 'REJECTED',
+    CANCELED: 'CANCELED',
+    READY: 'READY',
+    PICKED_UP: 'PICKED_UP',
+    DELIVERED: 'DELIVERED',
+}
+
 export function placeOrder(storeId, lines) {
   return apiRequest('/api/orders', { method: 'POST', body: { storeId, lines } })
 }

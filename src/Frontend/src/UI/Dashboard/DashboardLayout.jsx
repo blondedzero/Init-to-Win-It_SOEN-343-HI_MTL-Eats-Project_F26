@@ -6,6 +6,7 @@ import { getAuthToken } from '../../api/Client'
 import { homePathFor } from '../../api/REG/HomePath'
 import OutputConsole from '../Console/OutputConsole'
 import './dashboard.css'
+import { ROLE } from '../../api/EnumRoles'
 
 export default function DashboardLayout() {
   const [user, setUser] = useState(null)
@@ -43,7 +44,9 @@ export default function DashboardLayout() {
     <div className="dash-shell">
       <header className="dash-header">
         <Link to={homePathFor(user.role)} className="dash-brand">ShopEasy</Link>
-        <button onClick={() => navigate('/map')}>MAP</button>
+        {user.role != ROLE.STORE && <button onClick={() => navigate('/map')}>MAP</button>}
+        {user.role == ROLE.OPERATOR && <button onClick={() => navigate('/operator/home')}>Manage System</button>}
+        <button onClick={() => navigate('/history')}>Order History</button>
         <div className="dash-user">
           <span>{user.storeName || `${user.firstName} ${user.lastName}`}</span>
           <span className="dash-role">{user.role}</span>

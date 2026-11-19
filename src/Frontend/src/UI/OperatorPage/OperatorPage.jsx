@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { logSuccess } from '../Console/consoleLog'
 import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
 import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty, getAllStores } from '../../api/OperatorRequests'
 import { STORESTATUS } from '../../api/Store'
+import { ROLE } from '../../api/EnumRoles'
 
 export const TABS = {
   OVERVIEW:'OVERVIEW',
@@ -18,6 +19,7 @@ export default function OperatorPage() {
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [error, setError] = useState('')
   const [tab, setTab] = useState(TABS.OVERVIEW)
+  const navigate = useNavigate()
 
   const load = useCallback(async() => {
     const [ordersResult, storesResult, couriersResult] = await Promise.allSettled([
@@ -49,6 +51,11 @@ export default function OperatorPage() {
   }, [])
 
   useEffect(() => {
+    if (user.role != ROLE.OPERATOR) {
+      setError('Access Denied')
+      setTimeout(()=>navigate('/'), 1500)
+      return
+    }
     load()
   }, [load])
   
@@ -72,10 +79,10 @@ export default function OperatorPage() {
       </div>
       {error && <p className="dash-error">{error}</p>}
 
-      <div className='tab-selector'>
-        <div className='tab-selector-button' onClick={() => setTab(TABS.OVERVIEW)}>Overview</div>
-        <div className='tab-selector-button' onClick={() => setTab(TABS.STORES)}>Stores</div>
-        <div className='tab-selector-button' onClick={() => setTab(TABS.ORDERS)}>Orders</div>
+      <div className="operator-tabs" role="group" aria-label="Operator sections">
+        <button type="button" className="operator-tab" aria-pressed={tab === TABS.OVERVIEW} onClick={() => setTab(TABS.OVERVIEW)}>Overview</button>
+        <button type="button" className="operator-tab" aria-pressed={tab === TABS.STORES} onClick={() => setTab(TABS.STORES)}>Stores</button>
+        <button type="button" className="operator-tab" aria-pressed={tab === TABS.ORDERS} onClick={() => setTab(TABS.ORDERS)}>Orders</button>
       </div>
       <div className='tab-container'>
         {tab == TABS.OVERVIEW && <OverviewTab 

@@ -109,6 +109,7 @@ public class AuthController {
         body.put("lastName", user.getLastName());
         body.put("email", user.getEmail());
         body.put("role", user.getRole().toString());
+        body.put("userId", user.getAccountId().toString());
 
         if (user instanceof GroceryStore store) {
             body.put("storeName", store.getStoreName());

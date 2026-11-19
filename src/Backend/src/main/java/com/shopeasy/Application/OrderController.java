@@ -14,14 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class OrderController {
+public class OrderController extends Controller {
 
     private final ORDModule ordModule;
-    private final RequestAuthenticator authenticator;
 
     public OrderController(ORDModule ordModule, RequestAuthenticator authenticator) {
+        super(authenticator);
         this.ordModule = ordModule;
-        this.authenticator = authenticator;
     }
 
     @PostMapping("/orders")

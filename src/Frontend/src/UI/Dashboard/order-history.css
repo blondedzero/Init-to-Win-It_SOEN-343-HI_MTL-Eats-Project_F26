@@ -1,0 +1,51 @@
+
+.history-container h1 {
+    color: black;
+    margin-bottom: 50px;
+}
+
+.history-line {
+    display: grid;
+    grid-template-columns: 3fr 2fr 1fr 2fr;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid #bbb;
+    border-radius: 10px;
+}
+
+.history-line .order-id {
+    font-weight: 700;
+}
+
+.history-line .status {
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #e5e5e5;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.history-line .delivered {
+    background: rgb(59, 127, 59);
+    color: white;
+}
+
+.history-line .canceled {
+    background: rgb(146, 64, 64);
+    color: white;
+}
+
+.history-line .timestamp {
+    color: #555;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .history-line {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -13,14 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/operator")
-public class OperatorRequestsController {
-    private final RequestAuthenticator authenticator;
+public class OperatorRequestsController extends Controller{
     private final PRCModule prcModule;
     private final GSModule gsModule;
     private final OperatorRequestsModule ORM;
 
     public OperatorRequestsController(RequestAuthenticator authenticator, PRCModule prcModule, GSModule gsModule, OperatorRequestsModule ORM) {
-        this.authenticator = authenticator;
+        super(authenticator);;
         this.prcModule = prcModule;
         this.gsModule = gsModule;
         this.ORM = ORM;
@@ -39,10 +38,8 @@ public class OperatorRequestsController {
         return gsModule.getAllOpenAndPausedStores(user);
     }
 
-    public record UpdateStoreStatusBody(int queueSize){}
-
     @PostMapping("stores/{storeId}/open")
-    public StoreContextData openStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId, @RequestBody UpdateStoreStatusBody body) {
+    public StoreContextData openStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId) {
         User user = authenticator.authenticate(authorization);
         return gsModule.openStore(user, storeId);
     }
