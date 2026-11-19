@@ -6,6 +6,7 @@ export function homePathFor(role) {
     case ROLE.CUSTOMER: return '/customer/home'
     case ROLE.STORE: return '/store/orders'
     case ROLE.OPERATOR: return '/operator/home'
+    case ROLE.COURIER: return '/courier/home'
     default: return '/account'
   }
 }

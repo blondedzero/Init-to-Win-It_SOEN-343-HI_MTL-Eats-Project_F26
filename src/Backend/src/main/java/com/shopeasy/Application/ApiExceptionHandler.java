@@ -7,6 +7,7 @@ import com.shopeasy.Domain.REG.exceptions.UnauthenticatedException;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
+import com.shopeasy.Domain.GS.exceptions.InvalidStoreTransitionException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,7 @@ public class ApiExceptionHandler {
                 .body(Map.of("error", e.getMessage()));
     }
 
-    @ExceptionHandler({OrderRuleViolationException.class, IllegalStateException.class})
+    @ExceptionHandler({OrderRuleViolationException.class, InvalidStoreTransitionException.class, IllegalStateException.class})
     public ResponseEntity<Map<String, String>> conflict(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(Map.of("error", e.getMessage()));

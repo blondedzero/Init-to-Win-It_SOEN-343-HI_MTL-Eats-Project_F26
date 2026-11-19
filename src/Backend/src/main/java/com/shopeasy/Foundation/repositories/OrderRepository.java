@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByStatus(OrderStatus status);
@@ -23,6 +24,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCourier_AccountId(Long courierId);
     List<Order> findByCourier_AccountIdAndStatus(Long courierId, OrderStatus status);
     List<Order> findByCourier_AccountIdAndStatusIn(Long courierId, Collection<OrderStatus> statuses);
+
+    Optional<Order> findFirstByCourier_AccountIdAndStatusInOrderByPlacedAtAsc(Long courierId, Collection<OrderStatus> statuses);
+    List<Order> findByStatusAndCourierIsNullOrderByReadyAtAsc(OrderStatus status);
 
     List<Order> findByStore_AccountIdOrderByPlacedAtDesc(Long storeId);
 
