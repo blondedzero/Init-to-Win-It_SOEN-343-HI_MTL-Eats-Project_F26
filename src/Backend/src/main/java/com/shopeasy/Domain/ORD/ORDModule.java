@@ -1,6 +1,7 @@
 package com.shopeasy.Domain.ORD;
 
-import com.shopeasy.Domain.DLV.DLVmodule;
+import com.shopeasy.Domain.DLV.DLVModule;
+import com.shopeasy.Domain.DLV.DispatchQueue;
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.PRC.MockPaymentProcessor;
@@ -35,14 +36,15 @@ public class ORDModule {
     private final MockPaymentProcessor paymentProcessor;
     private final EventManager eventManager;
     private final RoleValidator roleValidator;
-    private final DLVmodule dLVmodule;
+    private final DLVModule dLVmodule;
+    private final DispatchQueue dispatchQueue;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
                      ProductRepository productRepository, PaymentInfoRepository paymentInfoRepository,
                      MockPaymentProcessor paymentProcessor, EventManager eventManager,
-                     RoleValidator roleValidator, DLVmodule dLVmodule) {
+                     RoleValidator roleValidator, DLVModule dLVmodule, DispatchQueue dispatchQueue) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
@@ -51,6 +53,7 @@ public class ORDModule {
         this.eventManager = eventManager;
         this.roleValidator = roleValidator;
         this.dLVmodule = dLVmodule;
+        this.dispatchQueue = dispatchQueue;
     }
 
     @Transactional
@@ -179,7 +182,10 @@ public class ORDModule {
         orderRepository.save(order);
 
         Courier courier = order.getCourier();
-        if (courier != null) { courier.setStatus(CourierStatus.IDLE);}
+        if (courier != null
+                && (courier.getStatus() == CourierStatus.ASSIGNED || courier.getStatus() == CourierStatus.CARRYING)) {
+            dLVmodule.releaseCourier(courier);
+        }
 
         Long eventId = eventManager.logEvent("Order " + orderId + ": " + previousStatus
                 + " -> CANCELED by " + user.getRole().name().toLowerCase()
@@ -235,7 +241,12 @@ public class ORDModule {
 
         order.markReady();
         eventManager.logEvent("Order " + orderId + ": PREPARING -> READY by store " + user.getAccountId());
-        return dLVmodule.assignOrderToClosestCourier(orderId);
+        OrderResult result = dLVmodule.assignOrderToClosestCourier(orderId);
+        // no idle courier, so the order waits in the dispatch queue
+        if (order.getCourier() == null) {
+            dispatchQueue.enqueue(order);
+        }
+        return result;
     }
 
 

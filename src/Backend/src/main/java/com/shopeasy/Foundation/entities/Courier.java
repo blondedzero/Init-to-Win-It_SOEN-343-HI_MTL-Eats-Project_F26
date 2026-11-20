@@ -33,23 +33,42 @@ public class Courier extends User {
         return null;
     }
 
-    //Methods to implement
     public void goOnline() {
+        requireStatus(CourierStatus.OFFLINE, CourierStatus.IDLE);
+        this.status = CourierStatus.IDLE;
     }
 
     public void goOffline() {
+
+        if (status == CourierStatus.CARRYING) {
+            throw new IllegalStateException("Courier " + getAccountId() + " cannot go offline while carrying an order");
+        }
+        this.status = CourierStatus.OFFLINE;
     }
 
     public void acceptOrder() {
+        requireStatus(CourierStatus.IDLE, CourierStatus.ASSIGNED);
+        this.status = CourierStatus.ASSIGNED;
     }
 
     public void declineOrder() {
     }
 
     public void confirmPickup() {
+        requireStatus(CourierStatus.ASSIGNED, CourierStatus.CARRYING);
+        this.status = CourierStatus.CARRYING;
     }
 
     public void confirmDelivery() {
+        requireStatus(CourierStatus.CARRYING, CourierStatus.IDLE);
+        this.status = CourierStatus.IDLE;
+    }
+
+    private void requireStatus(CourierStatus expected, CourierStatus target) {
+        if (this.status != expected) {
+            throw new IllegalStateException("Courier " + getAccountId() + " cannot go from " + status + " to " + target
+                    + " (it must be " + expected + " first)");
+        }
     }
 
     //Getters & Setters
