@@ -163,44 +163,44 @@ public class GSModule {
                 .toList();
     }
 
-    @Transactional
-    public ProductData addProduct(User user, ProductRequest req) {
-        GroceryStore store = requireOwnStore(user, "add products");
-        validateProductRequest(req);
-
-        Product product = new Product(store, req.price(), req.name().trim(), req.description(),
-                req.stockQuantity(), findOrCreateCategory(req.categoryName()));
-        if (product.getStockQuantity() == 0) {
-            product.setStatus(ProductStatus.OUT_OF_STOCK);
-        }
-
-        Product saved = productRepository.save(product);
-        eventManager.logEvent("Store " + store.getAccountId() + ": added product " + saved.getProductId()
-                + " (" + saved.getName() + ")");
-        return toProductData(saved);
-    }
-
-    @Transactional
-    public ProductData updateProduct(User user, Long productId, ProductRequest req) {
-        GroceryStore store = requireOwnStore(user, "edit products");
-        Product product = requireOwnProduct(store, productId);
-        validateProductRequest(req);
-
-        product.setName(req.name().trim());
-        product.setDescription(req.description());
-        product.setPrice(req.price());
-        product.setStockQuantity(req.stockQuantity());
-        product.setCategory(findOrCreateCategory(req.categoryName()));
-
-        if (product.getStatus() != ProductStatus.UNAVAILABLE) {
-            product.setStatus(product.getStockQuantity() > 0
-                    ? ProductStatus.AVAILABLE
-                    : ProductStatus.OUT_OF_STOCK);
-        }
-
-        eventManager.logEvent("Store " + store.getAccountId() + ": edited product " + productId);
-        return toProductData(product);
-    }
+//    @Transactional
+//    public ProductData addProduct(User user, ProductRequest req) {
+//        GroceryStore store = requireOwnStore(user, "add products");
+//        validateProductRequest(req);
+//
+//        Product product = new Product(store, req.price(), req.name().trim(), req.description(),
+//                req.stockQuantity(), findOrCreateCategory(req.categoryName()));
+//        if (product.getStockQuantity() == 0) {
+//            product.setStatus(ProductStatus.OUT_OF_STOCK);
+//        }
+//
+//        Product saved = productRepository.save(product);
+//        eventManager.logEvent("Store " + store.getAccountId() + ": added product " + saved.getProductId()
+//                + " (" + saved.getName() + ")");
+//        return toProductData(saved);
+//    }
+//
+//    @Transactional
+//    public ProductData updateProduct(User user, Long productId, ProductRequest req) {
+//        GroceryStore store = requireOwnStore(user, "edit products");
+//        Product product = requireOwnProduct(store, productId);
+//        validateProductRequest(req);
+//
+//        product.setName(req.name().trim());
+//        product.setDescription(req.description());
+//        product.setPrice(req.price());
+//        product.setStockQuantity(req.stockQuantity());
+//        product.setCategory(findOrCreateCategory(req.categoryName()));
+//
+//        if (product.getStatus() != ProductStatus.UNAVAILABLE) {
+//            product.setStatus(product.getStockQuantity() > 0
+//                    ? ProductStatus.AVAILABLE
+//                    : ProductStatus.OUT_OF_STOCK);
+//        }
+//
+//        eventManager.logEvent("Store " + store.getAccountId() + ": edited product " + productId);
+//        return toProductData(product);
+//    }
 
     @Transactional
     public ProductData removeProduct(User user, Long productId) {
@@ -313,6 +313,7 @@ public class GSModule {
                 .orElseGet(() -> productCategoryRepository.save(new ProductCategory(name)));
     }
 
+/**
     private static void validateProductRequest(ProductRequest req) {
         if (req == null) {
             throw new IllegalArgumentException("A product is required");
@@ -330,6 +331,7 @@ public class GSModule {
             throw new IllegalArgumentException("Category is required");
         }
     }
+*/
 
     private static ProductData toProductData(Product p) {
         return new ProductData(p.getProductId(), p.getName(), p.getDescription(),

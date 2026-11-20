@@ -5,9 +5,10 @@ import com.shopeasy.Domain.REG.exceptions.UserAlreadyExistsException;
 import com.shopeasy.Domain.REG.exceptions.InvalidCredentialsException;
 import com.shopeasy.Domain.REG.exceptions.UnauthenticatedException;
 import com.shopeasy.Domain.exceptions.NotFoundException;
+import com.shopeasy.Domain.exceptions.OrderAssignmentFailedException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
-import com.shopeasy.Domain.GS.exceptions.InvalidStoreTransitionException;
+//import com.shopeasy.Domain.GS.exceptions.InvalidStoreTransitionException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -64,9 +65,15 @@ public class ApiExceptionHandler {
                 .body(Map.of("error", e.getMessage()));
     }
 
-    @ExceptionHandler({OrderRuleViolationException.class, InvalidStoreTransitionException.class, IllegalStateException.class})
-    public ResponseEntity<Map<String, String>> conflict(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
+//    @ExceptionHandler({OrderRuleViolationException.class, InvalidStoreTransitionException.class, IllegalStateException.class})
+//    public ResponseEntity<Map<String, String>> conflict(RuntimeException e) {
+//        return ResponseEntity.status(HttpStatus.CONFLICT)
+//                .body(Map.of("error", e.getMessage()));
+//    }
+
+    @ExceptionHandler(OrderAssignmentFailedException.class)
+    public ResponseEntity<Map<String, String>> orderAssignmentFailed(OrderAssignmentFailedException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", e.getMessage()));
     }
 }

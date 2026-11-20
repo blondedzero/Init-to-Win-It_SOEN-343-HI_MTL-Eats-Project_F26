@@ -279,6 +279,37 @@
   font-size: 1.05rem;
 }
 
+.op-order-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.op-courier-options {
+  flex-basis: 100%;
+  padding-top: 8px;
+  border-top: 1px solid #ddd;
+}
+
+.op-courier-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.op-courier-option span {
+  display: flex;
+  flex-direction: column;
+}
+
+.op-courier-option small {
+  color: #555;
+}
+
 .dash-position {
   display: inline-block;
   margin-right: 8px;
