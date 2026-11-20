@@ -27,6 +27,10 @@ export function declineDelivery(orderId) {
   return apiRequest(`/api/courier/orders/${orderId}/decline`, { method: 'POST' })
 }
 
+export function cancelDeliveryAssignment(orderId) {
+  return apiRequest(`/api/courier/orders/${orderId}/cancel-assignment`, { method: 'POST' })
+}
+
 export function confirmPickup(orderId) {
   return apiRequest(`/api/courier/orders/${orderId}/pickup`, { method: 'POST' })
 }
