@@ -28,7 +28,7 @@ public class OperatorRequestsModule {
     @Transactional(readOnly = true)
     public List<CourierDisplayData> getAllCouriersOnDuty(User user) {
         roleValidator.requireRole(user, Role.OPERATOR, "view all couriers");
-        return courierRepository.findByStatusIn(List.of(CourierStatus.IDLE, CourierStatus.CARRYING)).stream()
+        return courierRepository.findByStatusIn(List.of(CourierStatus.IDLE, CourierStatus.CARRYING, CourierStatus.ASSIGNED)).stream()
                 .map(CourierDisplayData::from)
                 .toList();
     }

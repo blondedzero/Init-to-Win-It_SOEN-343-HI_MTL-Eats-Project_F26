@@ -7,7 +7,8 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
-public record OrderData(Long orderId, Long storeId, String storeName, String customerName, String status, String deliveryAddress,
+public record OrderData(Long orderId, Long storeId, String storeName, Long courierId, String courierName,
+                        String customerName, String status, String deliveryAddress,
                         BigDecimal totalCost, Instant placedAt, Instant readyAt, Instant canceledAt, Instant pickedUpAt, Instant deliveredAt, String rejectionReason,
                         List<OrderLineData> lines) {
 
@@ -19,7 +20,9 @@ public record OrderData(Long orderId, Long storeId, String storeName, String cus
     }
 
     public static OrderData from(Order order) {
+        var courier = order.getCourier();
         return new OrderData(order.getOrderId(), order.getStore().getAccountId(), order.getStore().getStoreName(),
+                courier == null ? null : courier.getAccountId(), courier == null ? null : courier.getFullName(),
                 order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName(),
                 order.getStatus().name(), order.getDeliveryAddress(), order.getTotalCost(), order.getPlacedAt(), order.getReadyAt(), order.getCancelledAt(), order.getPickedUpAt(), order.getDeliveredAt(),
                 order.getRejectionReason(),

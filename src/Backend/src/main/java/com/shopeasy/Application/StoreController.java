@@ -3,7 +3,7 @@ package com.shopeasy.Application;
 
 import com.shopeasy.Domain.GS.GSModule;
 import com.shopeasy.Domain.GS.ProductData;
-import com.shopeasy.Domain.GS.ProductRequest;
+//import com.shopeasy.Domain.GS.ProductRequest;
 import com.shopeasy.Domain.GS.StoreContextData;
 import com.shopeasy.Domain.GS.StoreMenuData;
 import com.shopeasy.Domain.ORD.OrderData;
@@ -71,20 +71,20 @@ public class StoreController extends Controller{
         return gsModule.getMyProducts(user);
     }
 
-    @PostMapping("/me/products")
-    public ResponseEntity<ProductData> addProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
-                                                  @RequestBody ProductRequest request) {
-        User user = authenticator.authenticate(authorization);
-        return ResponseEntity.status(HttpStatus.CREATED).body(gsModule.addProduct(user, request));
-    }
-
-    @PutMapping("/me/products/{productId}")
-    public ProductData updateProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
-                                     @PathVariable Long productId,
-                                     @RequestBody ProductRequest request) {
-        User user = authenticator.authenticate(authorization);
-        return gsModule.updateProduct(user, productId, request);
-    }
+//    @PostMapping("/me/products")
+//    public ResponseEntity<ProductData> addProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
+//                                                  @RequestBody ProductRequest request) {
+//        User user = authenticator.authenticate(authorization);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(gsModule.addProduct(user, request));
+//    }
+//
+//    @PutMapping("/me/products/{productId}")
+//    public ProductData updateProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
+//                                     @PathVariable Long productId,
+//                                     @RequestBody ProductRequest request) {
+//        User user = authenticator.authenticate(authorization);
+//        return gsModule.updateProduct(user, productId, request);
+//    }
 
     @DeleteMapping("/me/products/{productId}")
     public ProductData removeProduct(@RequestHeader(value = "Authorization", required = false) String authorization,

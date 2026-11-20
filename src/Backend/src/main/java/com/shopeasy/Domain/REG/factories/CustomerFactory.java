@@ -10,8 +10,11 @@ public class CustomerFactory extends UserFactory {
         if (!(data instanceof CustomerData customerData)) {
             throw new IllegalArgumentException("Invalid data type");
         }
-        double longitude = 45; //write function to get lon,lat from address with Google Maps API
-        double latitude = -73;
+        
+        Coordinates coords = Coordinates.randomMontrealCoordinates();
+        double longitude = coords.longitude();
+        double latitude = coords.latitude();
+
         return new Customer(
                 customerData.email(),
                 customerData.passwordHash(),

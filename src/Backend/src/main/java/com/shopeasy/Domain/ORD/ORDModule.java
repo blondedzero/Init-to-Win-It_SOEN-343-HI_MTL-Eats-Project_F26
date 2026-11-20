@@ -1,9 +1,11 @@
 package com.shopeasy.Domain.ORD;
 
+import com.shopeasy.Domain.DLV.DLVmodule;
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
+import com.shopeasy.Domain.exceptions.OrderAssignmentFailedException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.CourierRepository;
@@ -31,18 +33,20 @@ public class ORDModule {
     private final EventManager eventManager;
     private final RoleValidator roleValidator;
     private final CourierRepository courierRepository;
+    private final DLVmodule dLVmodule;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
                      ProductRepository productRepository, EventManager eventManager, RoleValidator roleValidator,
-                     CourierRepository courierRepository) {
+                     CourierRepository courierRepository, DLVmodule dLVmodule) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
         this.eventManager = eventManager;
         this.roleValidator = roleValidator;
         this.courierRepository = courierRepository;
+        this.dLVmodule = dLVmodule;
     }
 
     @Transactional
@@ -154,7 +158,12 @@ public class ORDModule {
         if (previousStatus == OrderStatus.ACCEPTED) {
             queueFor(order.getStore().getAccountId()).remove(orderId);
         }
+
         order.markCancelled();
+        orderRepository.save(order);
+
+        Courier courier = order.getCourier();
+        if (courier != null) { courier.setStatus(CourierStatus.IDLE);}
 
         Long eventId = eventManager.logEvent("Order " + orderId + ": " + previousStatus
                 + " -> CANCELED by " + user.getRole().name().toLowerCase()
@@ -209,10 +218,10 @@ public class ORDModule {
         Order order = findOwnOrder(user, orderId);
 
         order.markReady();
-        Long eventId = eventManager.logEvent("Order " + orderId + ": PREPARING -> READY by store " + user.getAccountId());
-
-        return new OrderResult("Order #" + orderId + " is ready for pickup", eventId, OrderData.from(order));
+        eventManager.logEvent("Order " + orderId + ": PREPARING -> READY by store " + user.getAccountId());
+        return dLVmodule.assignOrderToClosestCourier(orderId);
     }
+
 
     @Transactional(readOnly = true)
     public List<OrderData> getOrdersInPreparation(User user) {

@@ -12,8 +12,10 @@ public class GroceryStoreFactory extends UserFactory {
         if (!(data instanceof GroceryStoreData storeData)) {
             throw new IllegalArgumentException("Invalid data type");
         }
-        double longitude = 45; //write function to get lon,lat from address with Google Maps API
-        double latitude = -73;
+
+        Coordinates coords = Coordinates.randomMontrealCoordinates();
+        double longitude = coords.longitude();
+        double latitude = coords.latitude();
 
         GroceryStore store = new GroceryStore(
                 storeData.email(),

@@ -1,5 +1,6 @@
 package com.shopeasy.Application;
 
+import com.shopeasy.Domain.DLV.DLVmodule;
 import com.shopeasy.Domain.GS.GSModule;
 import com.shopeasy.Domain.GS.StoreContextData;
 import com.shopeasy.Domain.ORD.CourierDisplayData;
@@ -20,14 +21,16 @@ public class OperatorRequestsController extends Controller{
     private final GSModule gsModule;
     private final OperatorRequestsModule opReqModule;
     private final ORDModule ordModule;
+    private final DLVmodule dlvModule;
 
     public OperatorRequestsController(RequestAuthenticator authenticator, PRCModule prcModule, GSModule gsModule,
-                                      OperatorRequestsModule opReqModule, ORDModule ordModule) {
+                                      OperatorRequestsModule opReqModule, ORDModule ordModule, DLVmodule dlvModule) {
         super(authenticator);;
         this.prcModule = prcModule;
         this.gsModule = gsModule;
         this.opReqModule = opReqModule;
         this.ordModule = ordModule;
+        this.dlvModule = dlvModule;
     }
 
     //Store Operations
@@ -93,6 +96,13 @@ public class OperatorRequestsController extends Controller{
     public List<CourierDisplayData> getAllCouriersIdle(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
         return opReqModule.getAllCouriersIdle(user);
+    }
+
+    @PostMapping("/courier/{courierId}/assign/{orderId}")
+    public OrderResult assignOrderToCourier(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                                         @PathVariable Long courierId, @PathVariable Long orderId) {
+        User user = authenticator.authenticate(authorization);
+        return dlvModule.assignOrderToCourier(user, orderId, courierId);
     }
 
 }

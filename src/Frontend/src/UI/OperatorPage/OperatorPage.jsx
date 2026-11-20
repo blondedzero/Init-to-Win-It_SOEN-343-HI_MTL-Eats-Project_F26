@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import { logSuccess } from '../Console/consoleLog'
 import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
-import { getAllOpenAndPausedStores, getAllOrdersReady, getAllCouriersOnDuty, getAllStores, getAllOrdersInProgress } from '../../api/OperatorRequests'
+import { getAllCouriersIdle, getAllCouriersOnDuty, getAllStores, getAllOrdersInProgress } from '../../api/OperatorRequests'
 import { STORESTATUS } from '../../api/Store'
 import { ROLE } from '../../api/EnumRoles'
 import { ORDERSTATUS } from '../../api/Orders'
@@ -18,15 +17,17 @@ export default function OperatorPage() {
   const [ordersInProgress, setOrdersInProgress] = useState([])
   const [stores, setStores] = useState([])
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
+  const [idleCouriers, setIdleCouriers] = useState([])
   const [error, setError] = useState('')
   const [tab, setTab] = useState(TABS.OVERVIEW)
   const navigate = useNavigate()
 
   const load = useCallback(async() => {
-    const [ordersResult, storesResult, couriersResult] = await Promise.allSettled([
+    const [ordersResult, storesResult, couriersResult, idleCouriersResult] = await Promise.allSettled([
       getAllOrdersInProgress(),
       getAllStores(),
-      getAllCouriersOnDuty()
+      getAllCouriersOnDuty(),
+      getAllCouriersIdle()
     ])
     const errors = []
 
@@ -48,6 +49,13 @@ export default function OperatorPage() {
       errors.push(couriersResult.reason.message)
     }
 
+    if (idleCouriersResult.status === 'fulfilled') {
+      setIdleCouriers(idleCouriersResult.value)
+    } else {
+      setIdleCouriers([])
+      errors.push(idleCouriersResult.reason.message)
+    }
+
     setError(errors.join('; '))
   }, [])
 
@@ -64,10 +72,12 @@ export default function OperatorPage() {
     try {
       await operation(...args);
       await load();
+      return true
     }
     catch(err) {
       console.log(err.message)
       setError(err.message)
+      return false
     }
     
   }
@@ -93,7 +103,12 @@ export default function OperatorPage() {
 
         {tab == TABS.STORES && <ManageStoresTab stores={stores} handleOperation={handleOperation}/>}
 
-        {tab == TABS.ORDERS && <ManageOrdersTab orders={ordersInProgress} handleOperation={handleOperation}/>}
+        {tab == TABS.ORDERS && <ManageOrdersTab
+          orders={ordersInProgress}
+          stores={stores}
+          idleCouriers={idleCouriers}
+          handleOperation={handleOperation}
+        />}
       </div>
     </>
   )
@@ -167,7 +182,7 @@ function ManageStoresTab({stores, handleOperation}) {
   )
 }
 
-function ManageOrdersTab({orders, handleOperation}) {
+function ManageOrdersTab({orders, stores, idleCouriers, handleOperation}) {
   const ordersReady = orders.filter(order => order.status == ORDERSTATUS.READY)
   const ordersAccepted = orders.filter(order => order.status == ORDERSTATUS.ACCEPTED)
   const ordersPreparing = orders.filter(order => order.status == ORDERSTATUS.PREPARING)
@@ -178,7 +193,7 @@ function ManageOrdersTab({orders, handleOperation}) {
             <h3 className="dash-section-title">Orders Accepted ({ordersAccepted.length})</h3>
             <p className="dash-muted">All current orders in the system</p>
             {ordersAccepted.map((order) => (
-              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+              <OperatorOrderCard key={order.orderId} order={order} stores={stores} idleCouriers={idleCouriers} tab={TABS.ORDERS} handleOperation={handleOperation}/>
             ))}
           </section>
 
@@ -186,7 +201,7 @@ function ManageOrdersTab({orders, handleOperation}) {
             <h3 className="dash-section-title">Orders Preparing ({ordersPreparing.length})</h3>
             <p className="dash-muted">All current orders in the system</p>
             {ordersPreparing.map((order) => (
-              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+              <OperatorOrderCard key={order.orderId} order={order} stores={stores} idleCouriers={idleCouriers} tab={TABS.ORDERS} handleOperation={handleOperation}/>
             ))}
           </section>
 
@@ -194,7 +209,7 @@ function ManageOrdersTab({orders, handleOperation}) {
             <h3 className="dash-section-title">Orders Ready ({ordersReady.length})</h3>
             <p className="dash-muted">All current orders in the system</p>
             {ordersReady.map((order) => (
-              <OperatorOrderCard key={order.orderId} order={order} tab={TABS.ORDERS} handleOperation={handleOperation}/>
+              <OperatorOrderCard key={order.orderId} order={order} stores={stores} idleCouriers={idleCouriers} tab={TABS.ORDERS} handleOperation={handleOperation}/>
             ))}
           </section>
       </div>
