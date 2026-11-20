@@ -25,6 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByCourier_AccountId(Long courierId);
     List<Order> findByCourier_AccountIdAndStatus(Long courierId, OrderStatus status);
+    boolean existsByCourier_AccountIdAndStatus(Long courierId, OrderStatus status);
     List<Order> findByCourier_AccountIdAndStatusIn(Long courierId, Collection<OrderStatus> statuses);
 
     Optional<Order> findFirstByCourier_AccountIdAndStatusInOrderByPlacedAtAsc(Long courierId, Collection<OrderStatus> statuses);

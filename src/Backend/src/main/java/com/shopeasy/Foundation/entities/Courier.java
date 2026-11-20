@@ -52,6 +52,9 @@ public class Courier extends User {
     }
 
     public void declineOrder() {
+        if (status != CourierStatus.IDLE) {
+            throw new IllegalStateException("Courier " + getAccountId() + " is " + status + " and has no offer to decline");
+        }
     }
 
     public void confirmPickup() {

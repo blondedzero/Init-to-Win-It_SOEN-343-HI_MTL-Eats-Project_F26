@@ -19,6 +19,10 @@ export function acceptDelivery(orderId) {
   return apiRequest(`/api/courier/orders/${orderId}/accept`, { method: 'POST' })
 }
 
+export function declineDelivery(orderId) {
+  return apiRequest(`/api/courier/orders/${orderId}/decline`, { method: 'POST' })
+}
+
 export function confirmPickup(orderId) {
   return apiRequest(`/api/courier/orders/${orderId}/pickup`, { method: 'POST' })
 }
