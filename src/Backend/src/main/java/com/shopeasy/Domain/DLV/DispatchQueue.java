@@ -8,11 +8,11 @@ import com.shopeasy.Foundation.repositories.OrderRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-// Concrete observer (R-DLV-04): holds ready orders that no courier could take, and retries
-// assignment whenever DLVModule reports that a courier became idle.
+//holds READY orders with no courier and offers the oldest one to a courier when they become idle (R-DLV-04)
 @Component
 public class DispatchQueue implements CourierStatusObserver {
 
@@ -29,7 +29,6 @@ public class DispatchQueue implements CourierStatusObserver {
     @PostConstruct
     void init() {
         dlvModule.subscribe(this);
-        // Orders still waiting from before a restart: ready, no courier, oldest first
         waitingOrders.addAll(orderRepository.findByStatusAndCourierIsNullOrderByReadyAtAsc(OrderStatus.READY));
     }
 
@@ -39,19 +38,28 @@ public class DispatchQueue implements CourierStatusObserver {
 
     @Override
     public void onCourierIdle(Courier c) {
-        if (c.getStatus() != CourierStatus.IDLE) {
+        if (c.getStatus() != CourierStatus.IDLE || dlvModule.hasPendingOffer(c)) {
             return;
         }
-        // Offer the oldest waiting order. The queue only fills while no courier is idle, so the
-        // courier that just became idle is the nearest idle one (R-DLV-02).
-        Order next;
-        while ((next = waitingOrders.poll()) != null) {
-            // Reload: the order may have been canceled or manually assigned while it waited
-            Order order = orderRepository.findById(next.getOrderId()).orElse(null);
-            if (order != null && order.getStatus() == OrderStatus.READY && order.getCourier() == null) {
-                dlvModule.assignWaitingOrder(order, c);
-                return;
+        for (Order waiting : orderRepository.findByStatusAndCourierIsNullOrderByReadyAtAsc(OrderStatus.READY)) {
+            if (waitingOrders.stream().noneMatch(o -> o.getOrderId().equals(waiting.getOrderId()))) {
+                waitingOrders.add(waiting);
             }
+        }
+        Iterator<Order> it = waitingOrders.iterator();
+        while (it.hasNext()) {
+            Order next = it.next();
+            Order order = orderRepository.findById(next.getOrderId()).orElse(null);
+            if (order == null || order.getStatus() != OrderStatus.READY || order.getCourier() != null) {
+                it.remove();
+                continue;
+            }
+            if (dlvModule.hasDeclined(order.getOrderId(), c.getAccountId())) {
+                continue;
+            }
+            it.remove();
+            dlvModule.offerWaitingOrder(order, c);
+            return;
         }
     }
 }

@@ -5,6 +5,7 @@ import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.ORD.OrderResult;
 import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
+import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
@@ -13,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
@@ -24,6 +28,7 @@ public class DLVModule {
     private final RoleValidator roleValidator;
 
     private final List<CourierStatusObserver> observers = new CopyOnWriteArrayList<>();
+    private final Map<Long, Set<Long>> declinedBy = new ConcurrentHashMap<>();
 
     public DLVModule(CourierRepository courierRepository, OrderRepository orderRepository, EventManager eventManager, RoleValidator roleValidator) {
         this.courierRepository = courierRepository;
@@ -62,6 +67,78 @@ public class DLVModule {
         courier.goOffline();
         courierRepository.save(courier);
         eventManager.logEvent("Courier #" + courierId + ": " + previousStatus + " -> OFFLINE (off duty)");
+        orderRepository.findByCourier_AccountIdAndStatus(courierId, OrderStatus.READY)
+                .forEach(order -> withdrawOffer(order, courier));
+    }
+
+    @Transactional
+    public OrderResult acceptOffer(User user, Long orderId) {
+        roleValidator.requireRole(user, Role.COURIER, "accept orders");
+        Courier courier = findCourier(user.getAccountId());
+        Order order = findOfferedOrder(orderId, courier);
+
+        courier.acceptOrder();
+        courierRepository.save(courier);
+        declinedBy.remove(orderId);
+
+        Long eventId = eventManager.logEvent("Order #" + orderId + " accepted by courier #" + courier.getAccountId()
+                + "; courier IDLE -> ASSIGNED");
+        return new OrderResult("Order #" + orderId + " accepted", eventId, OrderData.from(order));
+    }
+
+    @Transactional
+    public OrderResult declineOffer(User user, Long orderId) {
+        roleValidator.requireRole(user, Role.COURIER, "decline orders");
+        Courier courier = findCourier(user.getAccountId());
+        Order order = findOfferedOrder(orderId, courier);
+
+        courier.declineOrder();
+        String outcome = withdrawOffer(order, courier);
+
+        Long eventId = eventManager.logEvent("Order #" + orderId + " declined by courier #" + courier.getAccountId()
+                + "; " + outcome);
+        return new OrderResult("Order #" + orderId + " declined", eventId, OrderData.from(order));
+    }
+
+    public boolean hasPendingOffer(Courier courier) {
+        return courier.getStatus() == CourierStatus.IDLE
+                && orderRepository.existsByCourier_AccountIdAndStatus(courier.getAccountId(), OrderStatus.READY);
+    }
+
+    public boolean hasDeclined(Long orderId, Long courierId) {
+        return declinedBy.getOrDefault(orderId, Set.of()).contains(courierId);
+    }
+
+    private String withdrawOffer(Order order, Courier courier) {
+        declinedBy.computeIfAbsent(order.getOrderId(), id -> ConcurrentHashMap.newKeySet()).add(courier.getAccountId());
+        order.setCourier(null);
+        orderRepository.save(order);
+
+        Courier next = findClosestCourier(order.getStore(), order.getOrderId());
+        if (next == null) {
+            return "no other idle courier, order waits in the dispatch queue";
+        }
+        offer(order, next);
+        return "offered to courier #" + next.getAccountId();
+    }
+
+    private Order findOfferedOrder(Long orderId, Courier courier) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order with id " + orderId + " not found"));
+        if (order.getCourier() == null || !order.getCourier().getAccountId().equals(courier.getAccountId())) {
+            throw new PermissionDeniedException("Order #" + orderId + " was not offered to you");
+        }
+        if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.IDLE) {
+            throw new IllegalStateException("Order #" + orderId + " has no pending offer (order " + order.getStatus()
+                    + ", courier " + courier.getStatus() + ")");
+        }
+        return order;
+    }
+
+    //an offer is a READY order with a courier set, the courier stays IDLE until they accept
+    private void offer(Order order, Courier courier) {
+        order.setCourier(courier);
+        orderRepository.save(order);
     }
 
     @Transactional
@@ -89,12 +166,9 @@ public class DLVModule {
     }
 
     @Transactional
-    public void assignWaitingOrder(Order order, Courier courier) {
-        courier.acceptOrder();
-        order.setCourier(courier);
-        orderRepository.save(order);
-        courierRepository.save(courier);
-        eventManager.logEvent("Order #" + order.getOrderId() + " taken from the dispatch queue and assigned to courier #"
+    public void offerWaitingOrder(Order order, Courier courier) {
+        offer(order, courier);
+        eventManager.logEvent("Order #" + order.getOrderId() + " taken from the dispatch queue and offered to courier #"
                 + courier.getAccountId());
     }
 
@@ -110,18 +184,15 @@ public class DLVModule {
             throw new NotFoundException("Order with id " + orderId + " not found");
         }
         GroceryStore store = order.getStore();
-        Courier closetIdleCourier = findClosestCourier(store);
+        Courier closetIdleCourier = findClosestCourier(store, orderId);
         if (closetIdleCourier == null || closetIdleCourier.getStatus() != CourierStatus.IDLE) {
             Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. No idle courier available");
             return new OrderResult("Order #"+orderId+" Preparing -> Ready. No idle courier available", eventId, OrderData.from(order));
         }
-        order.setCourier(closetIdleCourier);
-        orderRepository.save(order);
-        closetIdleCourier.setStatus(CourierStatus.ASSIGNED);
-        courierRepository.save(closetIdleCourier);
+        offer(order, closetIdleCourier);
 
-        Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. Order assigned to courrier #"+closetIdleCourier.getAccountId());
-        return new OrderResult("Order assigned to courier", eventId, OrderData.from(order));
+        Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. Order offered to courrier #"+closetIdleCourier.getAccountId());
+        return new OrderResult("Order offered to courier", eventId, OrderData.from(order));
     }
 
     @Transactional
@@ -141,23 +212,24 @@ public class DLVModule {
         if (courier.getStatus() != CourierStatus.IDLE) {
             throw new IllegalStateException("Cannot assign order to courier with status " + courier.getStatus());
         }
+        if (hasPendingOffer(courier)) {
+            throw new IllegalStateException("Courier #" + courierId + " already has an order offered to them");
+        }
 
-        order.setCourier(courier);
-        orderRepository.save(order);
-        courier.setStatus(CourierStatus.ASSIGNED);
-        courierRepository.save(courier);
+        offer(order, courier);
 
-        Long eventId = eventManager.logEvent(String.format("Order #%d Assigned to courier", orderId));
-        return new OrderResult("Order manually assigned to courier", eventId, OrderData.from(order));
+        Long eventId = eventManager.logEvent(String.format("Order #%d manually offered to courier #%d", orderId, courierId));
+        return new OrderResult("Order manually offered to courier", eventId, OrderData.from(order));
     }
 
-    private Courier findClosestCourier(GroceryStore store) {
+    private Courier findClosestCourier(GroceryStore store, Long orderId) {
         List<Courier> idleCouriers = courierRepository.findByStatusIn(List.of(CourierStatus.IDLE));
         if (idleCouriers.isEmpty()) {
             return null;
         }
 
         return idleCouriers.stream()
+                .filter(c -> !hasPendingOffer(c) && !hasDeclined(orderId, c.getAccountId()))
                 .min(Comparator
                         .comparingDouble((Courier c) -> getDistanceKm(c, store))
                         .thenComparing(Courier::getAccountId))

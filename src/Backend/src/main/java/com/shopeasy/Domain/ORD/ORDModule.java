@@ -242,7 +242,6 @@ public class ORDModule {
         order.markReady();
         eventManager.logEvent("Order " + orderId + ": PREPARING -> READY by store " + user.getAccountId());
         OrderResult result = dLVmodule.assignOrderToClosestCourier(orderId);
-        // no idle courier, so the order waits in the dispatch queue
         if (order.getCourier() == null) {
             dispatchQueue.enqueue(order);
         }
