@@ -9,6 +9,7 @@ export const ORDERSTATUS = {
     READY: 'READY',
     PICKED_UP: 'PICKED_UP',
     DELIVERED: 'DELIVERED',
+    REFUNDED: 'REFUNDED',
 }
 
 export function placeOrder(storeId, lines) {

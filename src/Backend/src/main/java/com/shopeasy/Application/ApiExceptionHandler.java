@@ -65,11 +65,11 @@ public class ApiExceptionHandler {
                 .body(Map.of("error", e.getMessage()));
     }
 
-//    @ExceptionHandler({OrderRuleViolationException.class, InvalidStoreTransitionException.class, IllegalStateException.class})
-//    public ResponseEntity<Map<String, String>> conflict(RuntimeException e) {
-//        return ResponseEntity.status(HttpStatus.CONFLICT)
-//                .body(Map.of("error", e.getMessage()));
-//    }
+    @ExceptionHandler(OrderRuleViolationException.class)
+    public ResponseEntity<Map<String, String>> orderRuleViolation(OrderRuleViolationException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", e.getMessage()));
+    }
 
     @ExceptionHandler(OrderAssignmentFailedException.class)
     public ResponseEntity<Map<String, String>> orderAssignmentFailed(OrderAssignmentFailedException e) {

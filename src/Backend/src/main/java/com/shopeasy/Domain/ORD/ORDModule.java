@@ -3,14 +3,15 @@ package com.shopeasy.Domain.ORD;
 import com.shopeasy.Domain.DLV.DLVmodule;
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
+import com.shopeasy.Domain.PRC.MockPaymentProcessor;
 import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
-import com.shopeasy.Domain.exceptions.OrderAssignmentFailedException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
+import com.shopeasy.Foundation.repositories.PaymentInfoRepository;
 import com.shopeasy.Foundation.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,22 +31,25 @@ public class ORDModule {
     private final OrderRepository orderRepository;
     private final GroceryStoreRepository groceryStoreRepository;
     private final ProductRepository productRepository;
+    private final PaymentInfoRepository paymentInfoRepository;
+    private final MockPaymentProcessor paymentProcessor;
     private final EventManager eventManager;
     private final RoleValidator roleValidator;
-    private final CourierRepository courierRepository;
     private final DLVmodule dLVmodule;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
-                     ProductRepository productRepository, EventManager eventManager, RoleValidator roleValidator,
-                     CourierRepository courierRepository, DLVmodule dLVmodule) {
+                     ProductRepository productRepository, PaymentInfoRepository paymentInfoRepository,
+                     MockPaymentProcessor paymentProcessor, EventManager eventManager,
+                     RoleValidator roleValidator, DLVmodule dLVmodule) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
+        this.paymentInfoRepository = paymentInfoRepository;
+        this.paymentProcessor = paymentProcessor;
         this.eventManager = eventManager;
         this.roleValidator = roleValidator;
-        this.courierRepository = courierRepository;
         this.dLVmodule = dLVmodule;
     }
 
@@ -66,6 +70,8 @@ public class ORDModule {
             throw new OrderRuleViolationException(store.getStoreName() + " is "
                     + store.getStatus().name().toLowerCase() + " and is not accepting orders");
         }
+        PaymentInfo paymentInfo = paymentInfoRepository.findById(customer.getAccountId())
+                .orElseThrow(() -> new OrderRuleViolationException("Customer does not have a payment method"));
 
         Order order = new Order(customer, store);
         for (Map.Entry<Long, Integer> line : quantities.entrySet()) {
@@ -86,6 +92,7 @@ public class ORDModule {
             order.addItem(product, quantity);
         }
 
+        order.markCharged(paymentProcessor.charge(paymentInfo, order.getTotalCost()));
         Order saved = orderRepository.save(order);
         Long eventId = eventManager.logEvent("Order " + saved.getOrderId() + ": placed (PLACED) by customer "
                 + customer.getAccountId() + " at store " + store.getAccountId());
@@ -156,7 +163,7 @@ public class ORDModule {
 
         OrderStatus previousStatus = order.getStatus();
         if (previousStatus == OrderStatus.CANCELED || previousStatus == OrderStatus.REJECTED
-                || previousStatus == OrderStatus.DELIVERED) {
+                || previousStatus == OrderStatus.DELIVERED || previousStatus == OrderStatus.REFUNDED) {
             throw new OrderRuleViolationException("Order #" + orderId + " cannot be canceled because it is "
                     + previousStatus.name().toLowerCase());
         }
