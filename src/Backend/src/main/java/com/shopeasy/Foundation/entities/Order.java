@@ -42,6 +42,12 @@ public class Order {
     private Instant cancelledAt;
     private Instant deliveredAt;
     private String rejectionReason;
+    private Boolean isCharged;
+
+    private String chargeReference;
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Refund refund;
 
     protected Order() {}
 
@@ -52,6 +58,7 @@ public class Order {
         this.placedAt = Instant.now();
         this.status = OrderStatus.PLACED;
         this.totalCost = BigDecimal.ZERO;
+        this.isCharged = false;
     }
 
     public void addItem(Product product, int quantity) {
@@ -112,6 +119,25 @@ public class Order {
         this.status = OrderStatus.DELIVERED;
     }
 
+    public void markCharged(String chargeReference) {
+        if (chargeReference == null || chargeReference.isBlank() || Boolean.TRUE.equals(isCharged)) {
+            throw new IllegalStateException("Order cannot be charged");
+        }
+        this.chargeReference = chargeReference;
+        this.isCharged = true;
+    }
+
+    public void markRefunded(Refund refund) {
+        if (status != OrderStatus.DELIVERED && status != OrderStatus.CANCELED) {
+            throw new IllegalStateException("Only delivered or canceled orders can be refunded");
+        }
+        if (!Boolean.TRUE.equals(isCharged) || this.refund != null || refund == null || refund.getOrder() != this) {
+            throw new IllegalStateException("Order is not eligible for a refund");
+        }
+        this.refund = refund;
+        this.status = OrderStatus.REFUNDED;
+    }
+
     public Long getOrderId() {
         return orderId;
     }
@@ -170,5 +196,19 @@ public class Order {
 
     public String getRejectionReason() {
         return rejectionReason;
+    }
+
+    public Boolean getIsCharged() {
+        return isCharged;
+    }
+    public void setIsCharged(Boolean isCharged) {
+        this.isCharged = isCharged;
+    }
+    public String getChargeReference() {
+        return chargeReference;
+    }
+
+    public Refund getRefund() {
+        return refund;
     }
 }

@@ -29,6 +29,11 @@
     font-weight: 600;
 }
 
+.history-line .refunded {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
 .history-line .delivered {
   background: #dcfce7;
   color: #166534;
@@ -60,6 +65,51 @@
 
 .history-line .details .reason {
     color: #991b1b;
+}
+
+.history-line .refund-details,
+.history-line .refund-form {
+    grid-column: 1 / -1;
+}
+
+.history-line .refund-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.history-line .refund-toggle,
+.history-line .refund-form button {
+    width: fit-content;
+}
+
+.history-line .refund-form {
+    display: grid;
+    gap: 10px;
+    max-width: 420px;
+}
+
+.history-line .refund-form label {
+    display: grid;
+    gap: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.history-line .refund-form input,
+.history-line .refund-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    font: inherit;
+}
+
+.history-line .refund-form textarea {
+    min-height: 72px;
+    resize: vertical;
 }
 
 @media (max-width: 600px) {

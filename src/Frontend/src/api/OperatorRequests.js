@@ -43,6 +43,10 @@ export function assignOrderToCourier(courierId, orderId) {
   return opRequest(`/courier/${courierId}/assign/${orderId}`, { method: 'POST' })
 }
 
+export function resetSimulation() {
+  return opRequest('/simulation/reset', { method: 'POST' })
+}
+
 //COURIER OPERATIONS
 export function getAllCouriersOnDuty() {
     return opRequest('/couriers/on-duty')

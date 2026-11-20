@@ -2,7 +2,9 @@ package com.shopeasy.Foundation.repositories;
 
 import com.shopeasy.Foundation.entities.Order;
 import com.shopeasy.Foundation.entities.OrderStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -34,6 +36,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByStatusIn(Collection<OrderStatus> statuses);
     List<Order> findByStatusNotIn(Collection<OrderStatus> statuses);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select o from CustomerOrder o where o.orderId = :orderId")
+    Optional<Order> findByIdForUpdate(@Param("orderId") Long orderId);
 
     @Query("""
         SELECT o.store.accountId AS storeId, o.status AS status, COUNT(o) AS count

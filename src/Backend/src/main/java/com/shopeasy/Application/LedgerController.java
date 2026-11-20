@@ -2,6 +2,7 @@ package com.shopeasy.Application;
 
 import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.PRC.PRCModule;
+import com.shopeasy.Domain.PRC.RefundRequest;
 import com.shopeasy.Foundation.entities.User;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,17 @@ public class LedgerController extends Controller{
         this.prcModule = prcModule;
     }
 
-    @GetMapping("/history/{userId}")
-        public List<OrderData> getOrderHistory(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long userId) {
+    @GetMapping("/history")
+    public List<OrderData> getOrderHistory(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
         return prcModule.getOrderHistory(user);
+    }
+
+    @PostMapping("/orders/{orderId}/refund")
+    public OrderData refundOrder(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                 @PathVariable Long orderId, @RequestBody RefundRequest request) {
+        User user = authenticator.authenticate(authorization);
+        return prcModule.refundOrder(user, orderId, request);
     }
 
 }

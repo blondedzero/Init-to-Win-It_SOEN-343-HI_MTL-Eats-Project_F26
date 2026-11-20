@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class GSModule {
 
     private static final List<OrderStatus> FINAL_ORDER_STATUSES =
-            List.of(OrderStatus.DELIVERED, OrderStatus.CANCELED, OrderStatus.REJECTED);
+            List.of(OrderStatus.DELIVERED, OrderStatus.CANCELED, OrderStatus.REJECTED, OrderStatus.REFUNDED);
 
     private final GroceryStoreRepository groceryStoreRepository;
     private final ProductRepository productRepository;
