@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { OperatorCourierCard, OperatorOrderCard, OperatorStoreCard } from './Cards'
-import { getAllCouriersIdle, getAllCouriersOnDuty, getAllStores, getAllOrdersInProgress } from '../../api/OperatorRequests'
+import { getAllCouriersIdle, getAllCouriersOnDuty, getAllStores, getAllOrdersInProgress, resetSimulation } from '../../api/OperatorRequests'
 import { STORESTATUS } from '../../api/Store'
 import { ROLE } from '../../api/EnumRoles'
 import { ORDERSTATUS } from '../../api/Orders'
@@ -19,6 +19,8 @@ export default function OperatorPage() {
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [idleCouriers, setIdleCouriers] = useState([])
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [resetting, setResetting] = useState(false)
   const [tab, setTab] = useState(TABS.OVERVIEW)
   const navigate = useNavigate()
 
@@ -82,13 +84,36 @@ export default function OperatorPage() {
     
   }
 
+  async function handleResetSimulation() {
+    if (!window.confirm('Reset the simulation? This will cancel all active orders, close all stores, and set all couriers offline.')) {
+      return
+    }
+
+    setResetting(true)
+    setError('')
+    setSuccess('')
+    try {
+      await resetSimulation()
+      await load()
+      setSuccess('Simulation reset: active orders canceled, stores closed, and couriers set offline.')
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setResetting(false)
+    }
+  }
+
   return (
     <>
       <div className="dash-title-row">
         <h2 className="dash-title">{user.storeName}</h2>
+        <button type="button" className="dash-button op-reset-button" onClick={handleResetSimulation} disabled={resetting}>
+          {resetting ? 'Resetting...' : 'Reset simulation'}
+        </button>
         <button type="button" className="dash-button dash-button-light" onClick={load}>Refresh</button>
       </div>
       {error && <p className="dash-error">{error}</p>}
+      {success && <p className="dash-success">{success}</p>}
 
       <div className="operator-tabs" role="group" aria-label="Operator sections">
         <button type="button" className="operator-tab" aria-pressed={tab === TABS.OVERVIEW} onClick={() => setTab(TABS.OVERVIEW)}>Overview</button>

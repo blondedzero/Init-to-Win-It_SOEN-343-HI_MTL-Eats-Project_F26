@@ -19,7 +19,7 @@ export default function OrderHistoryPage() {
 
     const load = useCallback(async() => {
         const [orderHistoryResult] = await Promise.allSettled([
-          getOrderHistory(user.userId)
+          getOrderHistory()
         ])
         const errors = []
     
@@ -43,6 +43,7 @@ export default function OrderHistoryPage() {
         <>
         <div className="history-container">
             <h1>Order history</h1>
+            {error && <p className="dash-error">{error}</p>}
             {orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role}/>)
             :<>Order history is empty.</>}
         </div>

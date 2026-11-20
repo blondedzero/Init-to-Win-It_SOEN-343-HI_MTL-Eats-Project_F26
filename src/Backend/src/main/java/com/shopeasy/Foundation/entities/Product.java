@@ -68,6 +68,17 @@ public class Product {
         }
     }
 
+    public void addToStock(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+
+        stockQuantity = Math.addExact(stockQuantity, quantity);
+        if (status == ProductStatus.OUT_OF_STOCK) {
+            status = ProductStatus.AVAILABLE;
+        }
+    }
+
     public Long getProductId() {
         return productId;
     }

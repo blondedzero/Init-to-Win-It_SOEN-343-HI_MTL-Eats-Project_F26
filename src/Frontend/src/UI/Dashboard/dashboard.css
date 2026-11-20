@@ -279,6 +279,15 @@
   font-size: 1.05rem;
 }
 
+.op-reset-button {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.op-reset-button:hover:not(:disabled) {
+  background: #991b1b;
+}
+
 .op-order-buttons {
   display: flex;
   flex-wrap: wrap;

@@ -1,5 +1,5 @@
 import { apiRequest } from "../Client"
 
-export async function getOrderHistory(userId) {
-    return apiRequest(`/api/prc/history/${userId}`)
+export async function getOrderHistory() {
+    return apiRequest('/api/prc/history')
 }

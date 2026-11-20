@@ -105,4 +105,10 @@ public class OperatorRequestsController extends Controller{
         return dlvModule.assignOrderToCourier(user, orderId, courierId);
     }
 
+    @PostMapping("/simulation/reset")
+    public void resetSimulation(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        User user = authenticator.authenticate(authorization);
+        opReqModule.resetSimulation(user);
+    }
+
 }

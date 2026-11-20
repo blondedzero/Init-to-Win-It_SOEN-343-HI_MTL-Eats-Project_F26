@@ -155,8 +155,17 @@ public class ORDModule {
         }
 
         OrderStatus previousStatus = order.getStatus();
+        if (previousStatus == OrderStatus.CANCELED || previousStatus == OrderStatus.REJECTED
+                || previousStatus == OrderStatus.DELIVERED) {
+            throw new OrderRuleViolationException("Order #" + orderId + " cannot be canceled because it is "
+                    + previousStatus.name().toLowerCase());
+        }
         if (previousStatus == OrderStatus.ACCEPTED) {
             queueFor(order.getStore().getAccountId()).remove(orderId);
+        }
+
+        for (OrderItem item : order.getItems()) {
+            item.getProduct().addToStock(item.getQuantity());
         }
 
         order.markCancelled();

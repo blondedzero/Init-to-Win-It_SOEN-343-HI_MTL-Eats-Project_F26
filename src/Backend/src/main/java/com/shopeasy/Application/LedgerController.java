@@ -17,8 +17,8 @@ public class LedgerController extends Controller{
         this.prcModule = prcModule;
     }
 
-    @GetMapping("/history/{userId}")
-        public List<OrderData> getOrderHistory(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long userId) {
+    @GetMapping("/history")
+    public List<OrderData> getOrderHistory(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
         return prcModule.getOrderHistory(user);
     }
