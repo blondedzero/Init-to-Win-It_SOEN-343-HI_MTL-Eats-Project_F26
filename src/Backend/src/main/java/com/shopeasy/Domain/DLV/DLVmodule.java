@@ -37,7 +37,7 @@ public class DLVmodule {
         }
         GroceryStore store = order.getStore();
         Courier closetIdleCourier = findClosestCourier(store);
-        if (closetIdleCourier == null) {
+        if (closetIdleCourier == null || closetIdleCourier.getStatus() != CourierStatus.IDLE) {
             Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. No idle courier available");
             return new OrderResult("Order #"+orderId+" Preparing -> Ready. No idle courier available", eventId, OrderData.from(order));
         }
