@@ -13,20 +13,94 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
-public class DLVmodule {
+public class DLVModule {
 
     private final CourierRepository courierRepository;
     private final OrderRepository orderRepository;
     private final EventManager eventManager;
     private final RoleValidator roleValidator;
 
-    public DLVmodule(CourierRepository courierRepository, OrderRepository orderRepository, EventManager eventManager, RoleValidator roleValidator) {
+    private final List<CourierStatusObserver> observers = new CopyOnWriteArrayList<>();
+
+    public DLVModule(CourierRepository courierRepository, OrderRepository orderRepository, EventManager eventManager, RoleValidator roleValidator) {
         this.courierRepository = courierRepository;
         this.orderRepository = orderRepository;
         this.eventManager = eventManager;
         this.roleValidator = roleValidator;
+    }
+
+    public void subscribe(CourierStatusObserver o) {
+        observers.add(o);
+    }
+
+    public void unsubscribe(CourierStatusObserver o) {
+        observers.remove(o);
+    }
+
+    private void notifyCourierIdle(Courier c) {
+        for (CourierStatusObserver o : observers) {
+            o.onCourierIdle(c);
+        }
+    }
+
+    @Transactional
+    public void goOnDuty(Long courierId) {
+        Courier courier = findCourier(courierId);
+        courier.goOnline();
+        courierRepository.save(courier);
+        eventManager.logEvent("Courier #" + courierId + ": OFFLINE -> IDLE (on duty)");
+        notifyCourierIdle(courier);
+    }
+
+    @Transactional
+    public void goOffDuty(Long courierId) {
+        Courier courier = findCourier(courierId);
+        CourierStatus previousStatus = courier.getStatus();
+        courier.goOffline();
+        courierRepository.save(courier);
+        eventManager.logEvent("Courier #" + courierId + ": " + previousStatus + " -> OFFLINE (off duty)");
+    }
+
+    @Transactional
+    public void confirmDelivery(Long courierId) {
+        Courier courier = findCourier(courierId);
+        Order order = orderRepository.findByCourier_AccountIdAndStatus(courierId, OrderStatus.PICKED_UP).stream()
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Courier #" + courierId + " has no picked-up order to deliver"));
+
+        order.markDelivered();
+        orderRepository.save(order);
+        courier.confirmDelivery();
+        courierRepository.save(courier);
+        eventManager.logEvent("Order #" + order.getOrderId() + ": PICKED_UP -> DELIVERED by courier #" + courierId
+                + "; courier CARRYING -> IDLE");
+        notifyCourierIdle(courier);
+    }
+
+    @Transactional
+    public void releaseCourier(Courier courier) {
+        courier.setStatus(CourierStatus.IDLE);
+        courierRepository.save(courier);
+        eventManager.logEvent("Courier #" + courier.getAccountId() + " released -> IDLE");
+        notifyCourierIdle(courier);
+    }
+
+    @Transactional
+    public void assignWaitingOrder(Order order, Courier courier) {
+        courier.acceptOrder();
+        order.setCourier(courier);
+        orderRepository.save(order);
+        courierRepository.save(courier);
+        eventManager.logEvent("Order #" + order.getOrderId() + " taken from the dispatch queue and assigned to courier #"
+                + courier.getAccountId());
+    }
+
+    private Courier findCourier(Long courierId) {
+        return courierRepository.findById(courierId)
+                .orElseThrow(() -> new NotFoundException("Courier with id " + courierId + " not found"));
     }
 
     @Transactional

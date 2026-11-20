@@ -1,6 +1,6 @@
 package com.shopeasy.Application;
 
-import com.shopeasy.Domain.DLV.DLVmodule;
+import com.shopeasy.Domain.DLV.DLVModule;
 import com.shopeasy.Domain.GS.GSModule;
 import com.shopeasy.Domain.GS.StoreContextData;
 import com.shopeasy.Domain.ORD.CourierDisplayData;
@@ -21,10 +21,10 @@ public class OperatorRequestsController extends Controller{
     private final GSModule gsModule;
     private final OperatorRequestsModule opReqModule;
     private final ORDModule ordModule;
-    private final DLVmodule dlvModule;
+    private final DLVModule dlvModule;
 
     public OperatorRequestsController(RequestAuthenticator authenticator, PRCModule prcModule, GSModule gsModule,
-                                      OperatorRequestsModule opReqModule, ORDModule ordModule, DLVmodule dlvModule) {
+                                      OperatorRequestsModule opReqModule, ORDModule ordModule, DLVModule dlvModule) {
         super(authenticator);;
         this.prcModule = prcModule;
         this.gsModule = gsModule;
