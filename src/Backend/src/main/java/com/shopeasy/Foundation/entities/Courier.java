@@ -15,8 +15,9 @@ public class Courier extends User {
     @Column(nullable = false)
     private double latitude;
 
-    @Enumerated
-    CourierStatus status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CourierStatus status;
 
     protected Courier() {}
 

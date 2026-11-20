@@ -11,6 +11,10 @@ export function getCourierDashboard() {
   return apiRequest('/api/courier/me')
 }
 
+export function getCourierOffers() {
+  return apiRequest('/api/courier/orders/offers')
+}
+
 export function changeCourierStatus(status) {
   return apiRequest('/api/courier/me/status', { method: 'POST', body: { status } })
 }
