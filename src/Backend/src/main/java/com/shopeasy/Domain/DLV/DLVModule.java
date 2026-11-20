@@ -79,17 +79,31 @@ public class DLVModule {
     }
 
     @Transactional
-    public void goOnDuty(Long courierId) {
-        Courier courier = findCourier(courierId);
+    public void goOnDuty(User user) {
+        roleValidator.requireRole(user, Role.COURIER, "go online");
+        Courier courier = findCourier(user.getAccountId());
+        if (courier.getStatus() != CourierStatus.OFFLINE) {
+            throw new OrderRuleViolationException("You are already online or have an active order.");
+        }
         courier.goOnline();
         courierRepository.save(courier);
-        eventManager.logEvent("Courier #" + courierId + ": OFFLINE -> IDLE (on duty)");
+        eventManager.logEvent("Courier #" + courier.getAccountId() + ": OFFLINE -> IDLE (on duty)");
         notifyCourierIdle(courier);
     }
 
     @Transactional
-    public void goOffDuty(Long courierId) {
-        Courier courier = findCourier(courierId);
+    public void goOffDuty(User user) {
+        roleValidator.requireRole(user, Role.COURIER, "go offline");
+        Courier courier = findCourier(user.getAccountId());
+        if (courier.getStatus() == CourierStatus.ASSIGNED || courier.getStatus() == CourierStatus.CARRYING) {
+            throw new OrderRuleViolationException("You cannot go offline while an order is assigned or being carried. "
+                    + "Complete the delivery first.");
+        }
+        if (courier.getStatus() == CourierStatus.OFFLINE) {
+            throw new OrderRuleViolationException("You are already offline.");
+        }
+
+        Long courierId = courier.getAccountId();
         CourierStatus previousStatus = courier.getStatus();
         courier.goOffline();
         courierRepository.save(courier);
@@ -125,6 +139,26 @@ public class DLVModule {
         Long eventId = eventManager.logEvent("Order #" + orderId + " declined by courier #" + courier.getAccountId()
                 + "; " + outcome);
         return new OrderResult("Order #" + orderId + " declined", eventId, OrderData.from(order));
+    }
+
+    @Transactional
+    public OrderResult cancelAcceptedAssignment(User user, Long orderId) {
+        roleValidator.requireRole(user, Role.COURIER, "cancel an accepted delivery");
+        Courier courier = findCourier(user.getAccountId());
+        Order order = findAssignedOrder(orderId, courier);
+        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY) {
+            throw new OrderRuleViolationException("Order #" + orderId
+                    + " can only be canceled before pickup and after acceptance");
+        }
+
+        courier.cancelAssignment();
+        courierRepository.save(courier);
+        String outcome = withdrawOffer(order, courier);
+        Long eventId = eventManager.logEvent("Courier #" + courier.getAccountId()
+                + " canceled the accepted pickup for order #" + orderId + "; " + outcome);
+        notifyCourierIdle(courier);
+        return new OrderResult("Pickup for order #" + orderId + " canceled; " + outcome,
+                eventId, OrderData.from(order));
     }
 
     public boolean hasPendingOffer(Courier courier) {

@@ -40,9 +40,9 @@ public class Courier extends User {
     }
 
     public void goOffline() {
-
-        if (status == CourierStatus.CARRYING) {
-            throw new IllegalStateException("Courier " + getAccountId() + " cannot go offline while carrying an order");
+        if (status == CourierStatus.ASSIGNED || status == CourierStatus.CARRYING) {
+            throw new IllegalStateException("Courier " + getAccountId()
+                    + " cannot go offline while an order is assigned or being carried");
         }
         this.status = CourierStatus.OFFLINE;
     }
@@ -50,6 +50,11 @@ public class Courier extends User {
     public void acceptOrder() {
         requireStatus(CourierStatus.IDLE, CourierStatus.ASSIGNED);
         this.status = CourierStatus.ASSIGNED;
+    }
+
+    public void cancelAssignment() {
+        requireStatus(CourierStatus.ASSIGNED, CourierStatus.IDLE);
+        this.status = CourierStatus.IDLE;
     }
 
     public void declineOrder() {

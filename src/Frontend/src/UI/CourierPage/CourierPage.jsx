@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from 'react'
 import {
   COURIERSTATUS,
   acceptDelivery,
+  cancelDeliveryAssignment,
+  changeCourierStatus,
   confirmDelivery,
   confirmPickup,
   declineDelivery,
   getCourierDashboard,
 } from '../../api/Courier'
 import { logSuccess } from '../Console/consoleLog'
-import { useNavigate } from 'react-router-dom'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
 
@@ -17,7 +18,7 @@ export default function CourierPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [busyOrderId, setBusyOrderId] = useState(null)
-  const navigate = useNavigate()
+  const [statusBusy, setStatusBusy] = useState(false)
 
   const load = useCallback(() => {
     return getCourierDashboard()
@@ -48,16 +49,53 @@ export default function CourierPage() {
     }
   }
 
+  const toggleDuty = async () => {
+    const nextStatus = dashboard.status === COURIERSTATUS.OFFLINE
+      ? COURIERSTATUS.IDLE
+      : COURIERSTATUS.OFFLINE
+    setStatusBusy(true)
+    setError('')
+    setSuccess('')
+    try {
+      const updatedDashboard = await changeCourierStatus(nextStatus)
+      setDashboard(updatedDashboard)
+      const message = nextStatus === COURIERSTATUS.IDLE ? 'You are now online.' : 'You are now offline.'
+      setSuccess(message)
+      logSuccess(message)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setStatusBusy(false)
+    }
+  }
+
+  const hasActiveDelivery = dashboard?.status === COURIERSTATUS.ASSIGNED
+    || dashboard?.status === COURIERSTATUS.CARRYING
+
   return (
     <>
       <div className="dash-title-row">
         <h2 className="dash-title">Courier orders</h2>
         {dashboard && <span className="dash-badge">{dashboard.status}</span>}
+        {dashboard && (
+          <button
+            type="button"
+            className={`dash-button ${dashboard.status === COURIERSTATUS.OFFLINE ? '' : 'dash-button-light'}`}
+            onClick={toggleDuty}
+            disabled={statusBusy || hasActiveDelivery}
+            title={hasActiveDelivery ? 'Complete your assigned delivery before going offline.' : undefined}
+          >
+            {statusBusy ? 'Updating…' : dashboard.status === COURIERSTATUS.OFFLINE ? 'Go online' : 'Go offline'}
+          </button>
+        )}
         <button type="button" className="dash-button dash-button-light" onClick={load}>
           Refresh
         </button>
       </div>
       <p className="dash-muted">Manage your assigned delivery orders.</p>
+      {hasActiveDelivery && (
+        <p className="dash-muted">Complete your assigned delivery before going offline.</p>
+      )}
       {error && <p className="dash-error" role="alert">{error}</p>}
       {success && <p className="dash-success" role="status">{success}</p>}
 
@@ -105,14 +143,24 @@ export default function CourierPage() {
                 </>
               )}
               {dashboard.status === COURIERSTATUS.ASSIGNED && (
-                <button
-                  type="button"
-                  className="dash-button"
-                  disabled={busy}
-                  onClick={() => respondToOffer(order.orderId, confirmPickup)}
-                >
-                  {busy ? 'Updating…' : 'Mark picked up'}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    className="dash-button"
+                    disabled={busy}
+                    onClick={() => respondToOffer(order.orderId, confirmPickup)}
+                  >
+                    {busy ? 'Updating…' : 'Mark picked up'}
+                  </button>
+                  <button
+                    type="button"
+                    className="dash-button dash-button-danger"
+                    disabled={busy}
+                    onClick={() => respondToOffer(order.orderId, cancelDeliveryAssignment)}
+                  >
+                    Cancel pickup
+                  </button>
+                </>
               )}
               {dashboard.status === COURIERSTATUS.CARRYING && (
                 <button
