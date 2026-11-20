@@ -12,7 +12,7 @@ import OperatorPage from './UI/OperatorPage/OperatorPage'
 import MapWrapper from './UI/MapWrapper'
 import OrderHistoryPage from './UI/Dashboard/OrderHistoryPage'
 import CustomerOrdersPage from './UI/CustomerPage/CustomerOrdersPage'
-// import CourierPage from './UI/CourierPage/CourierPage'
+import CourierPage from './UI/CourierPage/CourierPage'
 
 const router = createBrowserRouter([
   {path:"/", element: <LoginPage/>},
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
       {path:"/store/orders", element: <StoreOrdersPage/>},
       // {path:"/store/catalog", element: <StoreCatalogPage/>},
       {path:"/operator/home", element: <OperatorPage/>},
-      // {path:"/courier/home", element: <CourierPage/>},
+      {path:"/courier/home", element: <CourierPage/>},
       {path:"/map", element: <MapWrapper/>},
       {path:'/history', element: <OrderHistoryPage/>}
     ]

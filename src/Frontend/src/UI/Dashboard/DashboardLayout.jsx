@@ -47,6 +47,7 @@ export default function DashboardLayout() {
         {user.role != ROLE.STORE && <button onClick={() => navigate('/map')}>MAP</button>}
         {user.role == ROLE.OPERATOR && <button onClick={() => navigate('/operator/home')}>Manage System</button>}
         {user.role == ROLE.CUSTOMER && <button onClick={() => navigate('/customer/orders')}>My Orders</button>}
+        {user.role == ROLE.COURIER &&  <button onClick={() => navigate("/courier/home")}>Pending orders</button>}
         <button onClick={() => navigate('/history')}>Order History</button>
         <div className="dash-user">
           <span>{user.storeName || `${user.firstName} ${user.lastName}`}</span>

@@ -3,6 +3,7 @@ package com.shopeasy.Domain.DLV;
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.ORD.OrderResult;
+import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
@@ -43,6 +44,32 @@ public class DLVModule {
 
     public void unsubscribe(CourierStatusObserver o) {
         observers.remove(o);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderData> getPendingOffers(User user) {
+        roleValidator.requireRole(user, Role.COURIER, "view delivery offers");
+        Courier courier = findCourier(user.getAccountId());
+        return orderRepository.findByCourier_AccountIdAndStatus(courier.getAccountId(), OrderStatus.READY)
+                .stream()
+                .map(OrderData::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CourierDashboardData getDashboard(User user) {
+        roleValidator.requireRole(user, Role.COURIER, "view their delivery dashboard");
+        Courier courier = findCourier(user.getAccountId());
+        List<OrderStatus> visibleStatuses = switch (courier.getStatus()) {
+            case IDLE, ASSIGNED -> List.of(OrderStatus.READY);
+            case CARRYING -> List.of(OrderStatus.PICKED_UP);
+            case OFFLINE -> List.of();
+        };
+        List<OrderData> orders = visibleStatuses.stream()
+                .flatMap(status -> orderRepository.findByCourier_AccountIdAndStatus(courier.getAccountId(), status).stream())
+                .map(OrderData::from)
+                .toList();
+        return new CourierDashboardData(courier.getStatus(), orders);
     }
 
     private void notifyCourierIdle(Courier c) {
@@ -129,7 +156,7 @@ public class DLVModule {
             throw new PermissionDeniedException("Order #" + orderId + " was not offered to you");
         }
         if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.IDLE) {
-            throw new IllegalStateException("Order #" + orderId + " has no pending offer (order " + order.getStatus()
+            throw new OrderRuleViolationException("Order #" + orderId + " has no pending offer (order " + order.getStatus()
                     + ", courier " + courier.getStatus() + ")");
         }
         return order;
@@ -137,24 +164,64 @@ public class DLVModule {
 
     //an offer is a READY order with a courier set, the courier stays IDLE until they accept
     private void offer(Order order, Courier courier) {
+        if (courier.getStatus() != CourierStatus.IDLE) {
+            throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
+                    + courier.getStatus() + ". Only idle couriers can be assigned an order.");
+        }
+        if (hasPendingOffer(courier)) {
+            throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
+                    + " already has an assigned order offer.");
+        }
         order.setCourier(courier);
         orderRepository.save(order);
     }
 
     @Transactional
-    public void confirmDelivery(Long courierId) {
-        Courier courier = findCourier(courierId);
-        Order order = orderRepository.findByCourier_AccountIdAndStatus(courierId, OrderStatus.PICKED_UP).stream()
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Courier #" + courierId + " has no picked-up order to deliver"));
+    public OrderResult confirmPickup(User user, Long orderId) {
+        roleValidator.requireRole(user, Role.COURIER, "confirm order pickups");
+        Courier courier = findCourier(user.getAccountId());
+        Order order = findAssignedOrder(orderId, courier);
+        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY) {
+            throw new OrderRuleViolationException("Order #" + orderId
+                    + " can only be picked up after you accept it");
+        }
+
+        order.markPickedUp();
+        courier.confirmPickup();
+        orderRepository.save(order);
+        courierRepository.save(courier);
+        Long eventId = eventManager.logEvent("Order #" + orderId + ": READY -> PICKED_UP by courier #" + courier.getAccountId()
+                + "; courier ASSIGNED -> CARRYING");
+        return new OrderResult("Order #" + orderId + " marked picked up", eventId, OrderData.from(order));
+    }
+
+    @Transactional
+    public OrderResult confirmDelivery(User user, Long orderId) {
+        roleValidator.requireRole(user, Role.COURIER, "confirm order deliveries");
+        Courier courier = findCourier(user.getAccountId());
+        Order order = findAssignedOrder(orderId, courier);
+        if (courier.getStatus() != CourierStatus.CARRYING || order.getStatus() != OrderStatus.PICKED_UP) {
+            throw new OrderRuleViolationException("Order #" + orderId
+                    + " can only be marked delivered after it has been picked up");
+        }
 
         order.markDelivered();
-        orderRepository.save(order);
         courier.confirmDelivery();
+        orderRepository.save(order);
         courierRepository.save(courier);
-        eventManager.logEvent("Order #" + order.getOrderId() + ": PICKED_UP -> DELIVERED by courier #" + courierId
+        Long eventId = eventManager.logEvent("Order #" + orderId + ": PICKED_UP -> DELIVERED by courier #" + courier.getAccountId()
                 + "; courier CARRYING -> IDLE");
         notifyCourierIdle(courier);
+        return new OrderResult("Order #" + orderId + " marked delivered", eventId, OrderData.from(order));
+    }
+
+    private Order findAssignedOrder(Long orderId, Courier courier) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order with id " + orderId + " not found"));
+        if (order.getCourier() == null || !order.getCourier().getAccountId().equals(courier.getAccountId())) {
+            throw new PermissionDeniedException("Order #" + orderId + " is not assigned to you");
+        }
+        return order;
     }
 
     @Transactional
@@ -207,13 +274,6 @@ public class DLVModule {
         Courier courier = courierRepository.findById(courierId).orElse(null);
         if (courier == null) {
             throw new NotFoundException("Courier with id " + courierId + " not found");
-        }
-
-        if (courier.getStatus() != CourierStatus.IDLE) {
-            throw new IllegalStateException("Cannot assign order to courier with status " + courier.getStatus());
-        }
-        if (hasPendingOffer(courier)) {
-            throw new IllegalStateException("Courier #" + courierId + " already has an order offered to them");
         }
 
         offer(order, courier);
