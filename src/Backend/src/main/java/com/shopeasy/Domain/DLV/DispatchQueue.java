@@ -29,6 +29,11 @@ public class DispatchQueue implements CourierStatusObserver {
     @PostConstruct
     void init() {
         dlvModule.subscribe(this);
+        refresh();
+    }
+
+    public void refresh() {
+        waitingOrders.clear();
         waitingOrders.addAll(orderRepository.findByStatusAndCourierIsNullOrderByReadyAtAsc(OrderStatus.READY));
     }
 

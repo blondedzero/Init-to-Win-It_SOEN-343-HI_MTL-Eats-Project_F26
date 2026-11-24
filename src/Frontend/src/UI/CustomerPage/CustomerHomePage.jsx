@@ -3,6 +3,12 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { getStores, STORESTATUS } from '../../api/Store'
 
+const STORE_STATUS_PRIORITY = {
+  [STORESTATUS.OPEN]: 0,
+  [STORESTATUS.PAUSED]: 1,
+  [STORESTATUS.CLOSED]: 2,
+}
+
 function distanceBetween(latitudeA, longitudeA, latitudeB, longitudeB) {
   const radians = (degrees) => degrees * Math.PI / 180
   const latitudeDelta = radians(latitudeB - latitudeA)
@@ -26,6 +32,15 @@ export default function CustomerHomePage() {
   const customerLatitude = Number(user.latitude)
   const customerLongitude = Number(user.longitude)
   const hasCustomerLocation = Number.isFinite(customerLatitude) && Number.isFinite(customerLongitude)
+  const sortedStores = [...stores].sort((a, b) => {
+    const statusA = a.status?.toUpperCase()
+    const statusB = b.status?.toUpperCase()
+    const priorityA = STORE_STATUS_PRIORITY[statusA] ?? STORE_STATUS_PRIORITY[STORESTATUS.CLOSED]
+    const priorityB = STORE_STATUS_PRIORITY[statusB] ?? STORE_STATUS_PRIORITY[STORESTATUS.CLOSED]
+
+    return priorityA - priorityB
+      || (a.storeName ?? '').localeCompare(b.storeName ?? '', undefined, { sensitivity: 'base' })
+  })
 
   return (
     <section className="customer-home">
@@ -33,7 +48,7 @@ export default function CustomerHomePage() {
       {error && <p className="dash-error" role="alert">{error}</p>}
       {!error && stores.length === 0 && <p className="dash-muted">No stores are available yet.</p>}
       <div className="scroll-list">
-        {stores.map((store) => {
+        {sortedStores.map((store) => {
           const status = store.status?.toUpperCase()
           const distance = hasCustomerLocation
             ? distanceBetween(customerLatitude, customerLongitude, store.latitude, store.longitude)

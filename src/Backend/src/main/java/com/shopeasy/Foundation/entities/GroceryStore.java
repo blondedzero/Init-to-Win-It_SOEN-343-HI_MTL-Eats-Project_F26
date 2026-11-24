@@ -29,6 +29,10 @@ public class GroceryStore extends User {
     @Column(nullable = false)
     private double latitude;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seed_initial_status")
+    private StoreStatus seedInitialStatus;
+
     protected GroceryStore() {}
 
     //Constructor
@@ -81,6 +85,14 @@ public class GroceryStore extends User {
 
     public void setStatus(StoreStatus status) {
         this.status = status;
+    }
+
+    public StoreStatus getSeedInitialStatus() {
+        return seedInitialStatus;
+    }
+
+    public void setSeedInitialStatus(StoreStatus seedInitialStatus) {
+        this.seedInitialStatus = seedInitialStatus;
     }
 
 }

@@ -39,6 +39,9 @@ npm run demo:mac
     - ```mvnw spring-boot:run``` in ```Backend/``` to build and start the backend server on ```localhost:8080```
 6. Open your web browser and navigate to [localhost:5173](http://localhost:5173/) to access the app
 
+## Reset simulation
+An operator can use **Reset simulation** to restore the state captured when the demo data was first seeded. Existing seed and startup data is preserved: its order, store, courier, and product states are restored. Active orders created after that baseline are canceled, stores added afterward are closed, and couriers added afterward are taken offline. Products added afterward are left unchanged. No accounts, orders, products, or history are deleted.
+
 ## Accounts to test the app
 <table>
     <tr>

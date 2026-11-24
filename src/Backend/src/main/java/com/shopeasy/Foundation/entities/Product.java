@@ -38,6 +38,13 @@ public class Product {
     @Column(nullable = false)
     private ProductStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seed_initial_status")
+    private ProductStatus seedInitialStatus;
+
+    @Column(name = "seed_initial_stock_quantity")
+    private Integer seedInitialStockQuantity;
+
     @Version
     private Long version;
 
@@ -131,5 +138,26 @@ public class Product {
 
     public boolean isAvailable() {
         return status == ProductStatus.AVAILABLE && stockQuantity > 0;
+    }
+
+    public ProductStatus getSeedInitialStatus() {
+        return seedInitialStatus;
+    }
+
+    public void setSeedInitialState(ProductStatus status, int stockQuantity) {
+        if (seedInitialStatus == null) {
+            seedInitialStatus = status;
+            seedInitialStockQuantity = stockQuantity;
+        }
+    }
+
+    public void restoreSeedInitialState() {
+        if (seedInitialStatus != null) {
+            if (seedInitialStockQuantity == null) {
+                throw new IllegalStateException("Product seed baseline is missing its stock quantity");
+            }
+            status = seedInitialStatus;
+            stockQuantity = seedInitialStockQuantity;
+        }
     }
 }

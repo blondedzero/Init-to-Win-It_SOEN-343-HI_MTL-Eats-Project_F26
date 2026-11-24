@@ -27,6 +27,14 @@ public class Order {
     @JoinColumn(name = "courier_id")          // nullable: no courier until one is assigned
     private Courier courier;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seed_initial_status")
+    private OrderStatus seedInitialStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seed_initial_courier_id")
+    private Courier seedInitialCourier;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
@@ -210,5 +218,45 @@ public class Order {
 
     public Refund getRefund() {
         return refund;
+    }
+
+    public OrderStatus getSeedInitialStatus() {
+        return seedInitialStatus;
+    }
+
+    public void captureSeedInitialState() {
+        if (seedInitialStatus == null) {
+            seedInitialStatus = status;
+            seedInitialCourier = courier;
+        }
+    }
+
+    public void restoreSeedInitialState() {
+        if (seedInitialStatus == null) {
+            return;
+        }
+
+        status = refund != null && seedInitialStatus != OrderStatus.REFUNDED
+                ? OrderStatus.REFUNDED
+                : seedInitialStatus;
+        courier = seedInitialCourier;
+        acceptedAt = switch (status) {
+            case ACCEPTED, PREPARING, READY, PICKED_UP, DELIVERED -> placedAt;
+            default -> null;
+        };
+        readyAt = switch (status) {
+            case READY, PICKED_UP, DELIVERED -> placedAt;
+            default -> null;
+        };
+        pickedUpAt = switch (status) {
+            case PICKED_UP, DELIVERED -> placedAt;
+            default -> null;
+        };
+        deliveredAt = status == OrderStatus.DELIVERED ? placedAt : null;
+        cancelledAt = switch (status) {
+            case REJECTED, CANCELED, REFUNDED -> placedAt;
+            default -> null;
+        };
+        rejectionReason = status == OrderStatus.REJECTED ? "Demo seed rejected order" : null;
     }
 }

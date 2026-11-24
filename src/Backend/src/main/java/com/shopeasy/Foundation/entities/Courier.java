@@ -19,6 +19,10 @@ public class Courier extends User {
     @Column(nullable = false)
     private CourierStatus status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seed_initial_status")
+    private CourierStatus seedInitialStatus;
+
     protected Courier() {}
 
     //Constructor
@@ -100,6 +104,14 @@ public class Courier extends User {
     }
     public void setStatus(CourierStatus status) {
         this.status = status;
+    }
+
+    public CourierStatus getSeedInitialStatus() {
+        return seedInitialStatus;
+    }
+
+    public void setSeedInitialStatus(CourierStatus seedInitialStatus) {
+        this.seedInitialStatus = seedInitialStatus;
     }
 
 }

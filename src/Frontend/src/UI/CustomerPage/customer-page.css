@@ -6,6 +6,10 @@
   font-family: Inter, system-ui, sans-serif;
 }
 
+.customer-home-title {
+  color: #111;
+}
+
 .scroll-list {
   max-height: 72vh;
   margin: 0 auto;

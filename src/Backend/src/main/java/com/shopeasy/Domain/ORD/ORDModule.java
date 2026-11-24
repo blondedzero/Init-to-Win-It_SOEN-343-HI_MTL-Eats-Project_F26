@@ -276,6 +276,12 @@ public class ORDModule {
         });
     }
 
+    public void resetSimulationQueues() {
+        queues.clear();
+        dispatchQueue.refresh();
+        dLVmodule.resetSimulationState();
+    }
+
     private Order findOwnOrder(User store, Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new NotFoundException("Order " + orderId + " does not exist"));

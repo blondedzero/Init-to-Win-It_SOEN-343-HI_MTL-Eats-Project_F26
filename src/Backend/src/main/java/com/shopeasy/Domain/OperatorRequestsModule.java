@@ -1,12 +1,10 @@
 package com.shopeasy.Domain;
 
-import com.shopeasy.Domain.GS.GSModule;
-import com.shopeasy.Domain.GS.StoreContextData;
+import com.shopeasy.ApplicationSeeder;
 import com.shopeasy.Domain.ORD.ORDModule;
 import com.shopeasy.Domain.ORD.CourierDisplayData;
 import com.shopeasy.Foundation.entities.Order;
 import com.shopeasy.Foundation.entities.OrderStatus;
-import com.shopeasy.Foundation.entities.StoreStatus;
 import com.shopeasy.Foundation.entities.CourierStatus;
 import com.shopeasy.Foundation.entities.Role;
 import com.shopeasy.Foundation.entities.User;
@@ -23,20 +21,21 @@ public class OperatorRequestsModule {
     UserRepository userRepository;
     CourierRepository courierRepository;
     RoleValidator roleValidator;
-    GSModule gsModule;
     ORDModule ordModule;
     EventManager eventManager;
+    ApplicationSeeder applicationSeeder;
 
     public OperatorRequestsModule(OrderRepository orderRepository, UserRepository userRepository,
                                   CourierRepository courierRepository, RoleValidator roleValidator,
-                                  GSModule gsModule, ORDModule ordModule, EventManager eventManager) {
+                                  ORDModule ordModule, EventManager eventManager,
+                                  ApplicationSeeder applicationSeeder) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.courierRepository = courierRepository;
         this.roleValidator = roleValidator;
-        this.gsModule = gsModule;
         this.ordModule = ordModule;
         this.eventManager = eventManager;
+        this.applicationSeeder = applicationSeeder;
     }
 
     @Transactional(readOnly = true)
@@ -59,23 +58,23 @@ public class OperatorRequestsModule {
     public void resetSimulation(User user) {
         roleValidator.requireRole(user, Role.OPERATOR, "reset the simulation");
 
-        List<StoreContextData> stores = gsModule.getAllStores(user);
-        int closedStores = 0;
-        for (StoreContextData store : stores) {
-            if (!StoreStatus.CLOSED.name().equals(store.status())) {
-                gsModule.closeStore(user, store.id());
-                closedStores++;
+        int canceledOrders = 0;
+        List<Order> orders = orderRepository.findAll();
+        for (Order order : orders) {
+            if (order.getSeedInitialStatus() != null) {
+                order.restoreSeedInitialState();
+            } else if (List.of(OrderStatus.PLACED, OrderStatus.ACCEPTED, OrderStatus.PREPARING,
+                    OrderStatus.READY, OrderStatus.PICKED_UP).contains(order.getStatus())) {
+                order.markCancelled();
+                orderRepository.save(order);
+                canceledOrders++;
             }
         }
 
-        List<Order> activeOrders = orderRepository.findByStatusIn(List.of(
-                OrderStatus.PLACED, OrderStatus.ACCEPTED, OrderStatus.PREPARING,
-                OrderStatus.READY, OrderStatus.PICKED_UP));
-        activeOrders.forEach(order -> ordModule.cancelOrder(user, order.getOrderId()));
-
-        courierRepository.findAll().forEach(courier -> courier.setStatus(CourierStatus.OFFLINE));
+        applicationSeeder.restoreInitialEntityStates();
+        ordModule.resetSimulationQueues();
         eventManager.logEvent("Simulation reset by operator " + user.getAccountId()
-                + ": canceled " + activeOrders.size() + " orders, closed " + closedStores
-                + " stores, and set all couriers offline");
+                + ": canceled " + canceledOrders
+                + " new active orders and restored the initial store, courier, and product states");
     }
 }

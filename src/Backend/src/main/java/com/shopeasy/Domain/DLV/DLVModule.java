@@ -170,6 +170,10 @@ public class DLVModule {
         return declinedBy.getOrDefault(orderId, Set.of()).contains(courierId);
     }
 
+    public void resetSimulationState() {
+        declinedBy.clear();
+    }
+
     private String withdrawOffer(Order order, Courier courier) {
         declinedBy.computeIfAbsent(order.getOrderId(), id -> ConcurrentHashMap.newKeySet()).add(courier.getAccountId());
         order.setCourier(null);

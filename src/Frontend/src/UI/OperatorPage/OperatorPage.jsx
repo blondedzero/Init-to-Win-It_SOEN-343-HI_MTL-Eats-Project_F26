@@ -85,7 +85,7 @@ export default function OperatorPage() {
   }
 
   async function handleResetSimulation() {
-    if (!window.confirm('Reset the simulation? This will cancel all active orders, close all stores, and set all couriers offline.')) {
+    if (!window.confirm('Restore the system to its initial state? New active orders will be canceled, new stores closed, new couriers taken offline, and seeded data restored. New products will be unchanged. No data will be deleted.')) {
       return
     }
 
@@ -95,7 +95,7 @@ export default function OperatorPage() {
     try {
       await resetSimulation()
       await load()
-      setSuccess('Simulation reset: active orders canceled, stores closed, and couriers set offline.')
+      setSuccess('System restored to its initial state. New active orders were canceled, new products were unchanged, and no data was deleted.')
     } catch (err) {
       setError(err.message)
     } finally {
