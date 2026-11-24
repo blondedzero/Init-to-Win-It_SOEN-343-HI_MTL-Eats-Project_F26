@@ -40,10 +40,10 @@ public class OperatorRequestsController extends Controller{
         return gsModule.getAllStores(user);
     }
 
-    @GetMapping("/stores/open-paused")
-    public List<StoreContextData> getAllOpenAndPausedStores(@RequestHeader(value = "Authorization", required = false) String authorization) {
+    @GetMapping("/stores/map")
+    public List<StoreContextData> getAllStoresForMap(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.getAllOpenAndPausedStores(user);
+        return gsModule.getAllStoresForMap(user);
     }
 
     @PostMapping("stores/{storeId}/open")

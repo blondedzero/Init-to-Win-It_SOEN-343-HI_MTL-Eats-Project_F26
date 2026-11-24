@@ -271,6 +271,9 @@ export default function MapCanvas({
                     <span style={{ color: '#dc2626', fontWeight: 'bold' }}>●</span> Long / Paused
                 </span>
                 <span>
+                    <span style={{ color: '#9ca3af', fontWeight: 'bold' }}>●</span> Closed
+                </span>
+                <span>
                     <span style={{ color: '#2563eb', fontWeight: 'bold' }}>▲</span> Courier
                 </span>
             </div>

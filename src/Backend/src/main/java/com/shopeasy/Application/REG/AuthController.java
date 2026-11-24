@@ -3,6 +3,7 @@ package com.shopeasy.Application.REG;
 import com.shopeasy.Domain.REG.*;
 import com.shopeasy.Domain.REG.factories.CourierData;
 import com.shopeasy.Domain.REG.factories.CustomerData;
+import com.shopeasy.Foundation.entities.Customer;
 import com.shopeasy.Domain.REG.factories.GroceryStoreData;
 import com.shopeasy.Domain.REG.factories.OperatorData;
 import com.shopeasy.Domain.REG.registrationRequests.CourierRegistrationRequest;
@@ -110,6 +111,11 @@ public class AuthController {
         body.put("email", user.getEmail());
         body.put("role", user.getRole().toString());
         body.put("userId", user.getAccountId().toString());
+
+        if (user instanceof Customer customer) {
+            body.put("latitude", String.valueOf(customer.getLatitude()));
+            body.put("longitude", String.valueOf(customer.getLongitude()));
+        }
 
         if (user instanceof GroceryStore store) {
             body.put("storeName", store.getStoreName());

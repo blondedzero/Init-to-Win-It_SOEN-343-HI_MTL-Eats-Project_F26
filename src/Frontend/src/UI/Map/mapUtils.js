@@ -45,7 +45,10 @@ export function getStoreColor(store) {
     const status = (store.status || 'OPEN').toUpperCase()
     const queueLength = Number(store.ordersInProgress ?? 0)
 
-    if (status === 'PAUSED' || status === 'CLOSED' || queueLength >= 6) {
+    if (status === 'CLOSED') {
+        return '#9ca3af' // Gray
+    }
+    if (status === 'PAUSED' || queueLength >= 6) {
         return '#dc2626' // Red
     }
     if (queueLength >= 3) {

@@ -1,44 +1,51 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 
 import MapCanvas from './MapCanvas'
-import { getAllCouriersOnDuty, getAllOpenAndPausedStores } from '../../api/OperatorRequests'
+import { getAllCouriersOnDuty, getAllStoresForMap } from '../../api/OperatorRequests'
+import { ROLE } from '../../api/EnumRoles'
 
 export default function MapWrapper() {
-  const [openAndPausedStores, setOpenAndPausedStores] = useState([])
+  const { user } = useOutletContext()
+  const [stores, setStores] = useState([])
   const [couriersOnDuty, setCouriersOnDuty] = useState([])
   const [error, setError] = useState('')
 
-  const load = useCallback(async() => {
-    const [storesResult, couriersResult] = await Promise.allSettled([
-      getAllOpenAndPausedStores(),
-      getAllCouriersOnDuty()
-    ])
-    const errors = []
-
-    if (storesResult.status === 'fulfilled') {
-      setOpenAndPausedStores(storesResult.value)
-    } else {
-      errors.push(storesResult.reason.message)
-    }
-
-    if (couriersResult.status === 'fulfilled') {
-      setCouriersOnDuty(couriersResult.value)
-    } else {
-      errors.push(couriersResult.reason.message)
-    }
-
-    setError(errors.join('; '))
-  }, [])
-
   useEffect(() => {
-    load()
-  }, [load])
+    let isMounted = true
+    const couriersRequest = user?.role === ROLE.OPERATOR
+      ? getAllCouriersOnDuty()
+      : Promise.resolve([])
+    Promise.allSettled([getAllStoresForMap(), couriersRequest])
+      .then(([storesResult, couriersResult]) => {
+        if (!isMounted) return
+        const errors = []
+
+        if (storesResult.status === 'fulfilled') {
+          setStores(storesResult.value)
+        } else {
+          errors.push(storesResult.reason.message)
+        }
+
+        if (couriersResult.status === 'fulfilled') {
+          setCouriersOnDuty(couriersResult.value)
+        } else {
+          errors.push(couriersResult.reason.message)
+        }
+
+        setError(errors.join('; '))
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [user?.role])
 
   return (
     <>
+      {error && <p className="dash-error" role="alert">{error}</p>}
       <div className="dash-title-row">
-       <MapCanvas stores={openAndPausedStores} couriers={couriersOnDuty}/>
+       <MapCanvas stores={stores} couriers={couriersOnDuty} user={user}/>
       </div>
     </>
   )

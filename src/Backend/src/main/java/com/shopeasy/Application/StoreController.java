@@ -37,7 +37,7 @@ public class StoreController extends Controller{
     @GetMapping
     public List<StoreContextData> getGSModule(@RequestHeader(value = "Authorization", required = false) String authorization) {
         authenticator.authenticate(authorization);
-        return gsModule.listOpenStores().stream()
+        return gsModule.listStores().stream()
                 .map(StoreContextData::from)
                 .toList();
     }

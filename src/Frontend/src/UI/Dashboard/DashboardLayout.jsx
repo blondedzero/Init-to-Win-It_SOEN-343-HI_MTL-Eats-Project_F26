@@ -46,9 +46,14 @@ export default function DashboardLayout() {
         <Link to={homePathFor(user.role)} className="dash-brand">ShopEasy</Link>
         <div className='header-nav'>
         {user.role != ROLE.STORE && <button onClick={() => navigate('/map')}>MAP</button>}
+
         {user.role == ROLE.OPERATOR && <button onClick={() => navigate('/operator/home')}>Manage System</button>}
+        
+        {user.role == ROLE.CUSTOMER && <button onClick={() => navigate('/customer/home')}>Browse Stores</button>}
         {user.role == ROLE.CUSTOMER && <button onClick={() => navigate('/customer/orders')}>My Orders</button>}
+        
         {user.role == ROLE.COURIER &&  <button onClick={() => navigate("/courier/home")}>Pending orders</button>}
+        
         {user.role == ROLE.STORE && <button onClick={() => navigate('/store/orders')}>Manage Orders</button>}
         {user.role == ROLE.STORE && <button onClick={() => navigate('/store/catalog')}>Manage Store Catalog</button>}
         <button onClick={() => navigate('/history')}>Order History</button>

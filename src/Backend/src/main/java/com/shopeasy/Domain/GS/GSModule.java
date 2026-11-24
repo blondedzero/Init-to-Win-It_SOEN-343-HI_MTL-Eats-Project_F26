@@ -41,8 +41,8 @@ public class GSModule {
         this.eventManager = eventManager;
     }
 
-    public List<GroceryStore> listOpenStores() {
-        return groceryStoreRepository.findByStatus(StoreStatus.OPEN);
+    public List<GroceryStore> listStores() {
+        return groceryStoreRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -263,11 +263,10 @@ public class GSModule {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreContextData> getAllOpenAndPausedStores(User user) {
+    public List<StoreContextData> getAllStoresForMap(User user) {
         //roleValidator.requireRole(user, Role.OPERATOR, "view all open and paused stores");
 
-        List<GroceryStore> stores = groceryStoreRepository.findByStatusIn(
-                List.of(StoreStatus.OPEN, StoreStatus.PAUSED));
+        List<GroceryStore> stores = groceryStoreRepository.findAll();
         if (stores.isEmpty()) {
             return List.of();
         }

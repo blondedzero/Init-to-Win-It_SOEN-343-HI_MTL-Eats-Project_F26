@@ -6,7 +6,7 @@ export const STORESTATUS = {
   PAUSED: 'PAUSED',
 }
 
-export function getOpenStores() {
+export function getStores() {
   return apiRequest('/api/stores')
 }
 

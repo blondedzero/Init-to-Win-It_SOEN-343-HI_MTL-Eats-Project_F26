@@ -1,54 +1,130 @@
 
-
 .customer-home {
   background: #d9d9d9;
-  min-height: 100vh;
-  padding: 24px 48px;
+  min-height: 100%;
+  padding: 12px 0;
   font-family: Inter, system-ui, sans-serif;
 }
 
-
 .scroll-list {
-  max-height: 70vh;
+  max-height: 72vh;
   margin: 0 auto;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  width:100vh;
-  background:#D9D9D9;
-  padding: 1vh;
-  border: 0.5vh solid ;
+  gap: 14px;
+  width: min(100%, 900px);
+  padding: 4px;
+}
+
+.customer-home-title {
+  width: min(100%, 900px);
+  margin: 0 auto 18px;
+  font-size: 1.6rem;
 }
 
 .store-row {
-    border-radius: 12vh;
-
+  border: 1px solid #c8c8c8;
+  border-left: 6px solid #15803d;
+  border-radius: 14px;
   background: #1e1e1e;
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: space-between;   
-  padding: 36px 28px;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+}
+
+.store-row-paused {
+  border-left-color: #eab308;
+}
+
+.store-row-closed {
+  border-left-color: #9ca3af;
+  background: #e5e7eb;
+  color: #6b7280;
 }
 
 .store-info {
   display: flex;
-  align-items: baseline;
-  gap: 16px;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.store-name     { font-size: 48px; font-weight: 400; }
-.store-distance { font-size: 26px; }
+.store-name {
+  margin: 0;
+  color: inherit;
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+
+.store-address,
+.store-distance {
+  color: inherit;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.store-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.store-status {
+  border-radius: 999px;
+  padding: 5px 11px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.store-status-open {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.store-status-paused {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.store-status-closed {
+  background: #d1d5db;
+  color: #4b5563;
+}
 
 .browse-button {
   background: #d9d9d9;
   color: #111;
-  border: 1px solid ;
+  border: 1px solid #b8b8b8;
   border-radius: 999px;
-  padding: 20px 36px;
-  font-size: 26px;
+  padding: 9px 18px;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
 }
-.browse-button:hover { background: #cfcfcf; }
+
+.browse-button:hover {
+  background: #cfcfcf;
+}
+
+.store-row-closed .browse-button {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+@media (max-width: 600px) {
+  .store-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .store-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
 

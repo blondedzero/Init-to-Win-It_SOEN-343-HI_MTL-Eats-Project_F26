@@ -10,8 +10,8 @@ export function getAllStores() {
   return opRequest('/stores/all')
 }
 
-export function getAllOpenAndPausedStores() {
-  return opRequest('/stores/open-paused')
+export function getAllStoresForMap() {
+  return opRequest('/stores/map')
 }
 
 export function openStore(storeId) {
