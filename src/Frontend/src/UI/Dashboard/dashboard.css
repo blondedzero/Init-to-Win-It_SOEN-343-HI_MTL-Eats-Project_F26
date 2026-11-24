@@ -25,6 +25,12 @@
   text-decoration: none;
 }
 
+.header-nav {
+  display: flex;
+  gap: 25px;
+}
+
+
 .dash-user {
   display: flex;
   align-items: center;
@@ -234,6 +240,10 @@
   border-radius: 999px;
   background: #e5e5e5;
   color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
 }
 
 .dash-badge-open,
@@ -338,6 +348,10 @@
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 8px;
+}
+
+.product-form {
+  margin: 25px 0px;
 }
 
 .output-console {

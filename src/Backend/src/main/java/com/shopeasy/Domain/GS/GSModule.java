@@ -7,11 +7,7 @@ import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
 import com.shopeasy.Foundation.entities.*;
-import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
-import com.shopeasy.Foundation.repositories.OrderRepository;
-import com.shopeasy.Foundation.repositories.ProductCategoryRepository;
-import com.shopeasy.Foundation.repositories.ProductRepository;
-import com.shopeasy.Foundation.repositories.StoreOrderCount;
+import com.shopeasy.Foundation.repositories.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -160,6 +156,14 @@ public class GSModule {
         return productRepository.findByStore_AccountId(store.getAccountId()).stream()
                 .sorted(Comparator.comparing(Product::getName))
                 .map(GSModule::toProductData)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> listCategories() {
+        return productCategoryRepository.findAll().stream()
+                .map(ProductCategory::getCategoryName)
+                .sorted(String.CASE_INSENSITIVE_ORDER)
                 .toList();
     }
 
@@ -313,7 +317,6 @@ public class GSModule {
                 .orElseGet(() -> productCategoryRepository.save(new ProductCategory(name)));
     }
 
-/**
     private static void validateProductRequest(ProductRequest req) {
         if (req == null) {
             throw new IllegalArgumentException("A product is required");
@@ -331,7 +334,6 @@ public class GSModule {
             throw new IllegalArgumentException("Category is required");
         }
     }
-*/
 
     private static ProductData toProductData(Product p) {
         return new ProductData(p.getProductId(), p.getName(), p.getDescription(),

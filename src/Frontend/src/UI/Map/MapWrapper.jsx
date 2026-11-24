@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
 
 import MapCanvas from './MapCanvas'
-import { getAllCouriersOnDuty, getAllOpenAndPausedStores } from '../api/OperatorRequests'
+import { getAllCouriersOnDuty, getAllOpenAndPausedStores } from '../../api/OperatorRequests'
 
 export default function MapWrapper() {
   const [openAndPausedStores, setOpenAndPausedStores] = useState([])
