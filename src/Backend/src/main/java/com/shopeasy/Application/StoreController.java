@@ -71,6 +71,12 @@ public class StoreController extends Controller{
         return gsModule.getMyProducts(user);
     }
 
+    @GetMapping("/categories")
+    public List<String> getCategories(@RequestHeader(value = "Authorization", required = false) String authorization) {
+        authenticator.authenticate(authorization);
+        return gsModule.listCategories();
+    }
+
     @PostMapping("/me/products")
     public ResponseEntity<ProductData> addProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
                                                   @RequestBody ProductRequest request) {

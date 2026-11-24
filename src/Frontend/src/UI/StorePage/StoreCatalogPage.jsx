@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { getMyProducts, addProduct, updateProduct, removeProduct, restoreProduct } from '../../api/Store'
+import { getMyProducts, getCategories, addProduct, updateProduct, removeProduct, restoreProduct } from '../../api/Store'
 import { logSuccess } from '../Console/consoleLog'
-import StoreNav from './StoreNav'
 import StoreStatusControl from './StoreStatusControl'
-import './store-pages.css'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
 
@@ -32,6 +30,7 @@ const STATUS_BADGE = {
 export default function StoreCatalogPage() {
   const { user } = useOutletContext()
   const [products, setProducts] = useState([])
+  const [categories, setCategories] = useState([])
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState(null)      // null = the form adds a new product
   const [error, setError] = useState('')
@@ -39,10 +38,11 @@ export default function StoreCatalogPage() {
 
   // --- loading data ---
   const load = useCallback(() => {
-    return getMyProducts()
-      .then((list) => {
+    return Promise.all([getMyProducts(), getCategories()])
+      .then(([productList, categoryList]) => {
         setError('')
-        setProducts(list)
+        setProducts(productList)
+        setCategories(categoryList)
       })
       .catch((err) => setError(err.message))
   }, [])
@@ -115,7 +115,6 @@ export default function StoreCatalogPage() {
 
   return (
     <>
-      <StoreNav />
       <div className="dash-title-row">
         <h2 className="dash-title">{user.storeName} — Catalog</h2>
         <StoreStatusControl />
@@ -132,7 +131,18 @@ export default function StoreCatalogPage() {
           </label>
           <label className="product-field">
             <span>Category</span>
-            <input className="dash-input" name="categoryName" value={form.categoryName} onChange={handleChange} placeholder="Produce" />
+            <select
+              className="dash-input"
+              name="categoryName"
+              value={form.categoryName}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
           </label>
           <label className="product-field">
             <span>Price ($)</span>

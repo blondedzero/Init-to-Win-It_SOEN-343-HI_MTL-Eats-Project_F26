@@ -13,7 +13,6 @@ import {
 import { logSuccess } from '../Console/consoleLog'
 import OrderCard, { OrderReadyCard } from './OrderCard'
 import StoreStatusControl from './StoreStatusControl'
-import StoreNav from './StoreNav'
 
 export default function StoreOrdersPage() {
   const { user } = useOutletContext()
@@ -66,7 +65,6 @@ export default function StoreOrdersPage() {
 
   return (
     <>
-      <StoreNav />
       <div className="dash-title-row">
         <h2 className="dash-title">{user.storeName}</h2>
         <StoreStatusControl />

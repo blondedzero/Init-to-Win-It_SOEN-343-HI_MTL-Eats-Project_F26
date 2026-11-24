@@ -27,6 +27,10 @@ export function getMyProducts() {
   return apiRequest('/api/stores/me/products')
 }
 
+export function getCategories() {
+  return apiRequest('/api/stores/categories')
+}
+
 export function addProduct(product) {
   return apiRequest('/api/stores/me/products', { method: 'POST', body: product })
 }
