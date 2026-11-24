@@ -12,8 +12,8 @@ import {
 } from '../../api/Orders'
 import { logSuccess } from '../Console/consoleLog'
 import OrderCard, { OrderReadyCard } from './OrderCard'
-// import StoreStatusControl from './StoreStatusControl'
-// import StoreNav from './StoreNav'
+import StoreStatusControl from './StoreStatusControl'
+import StoreNav from './StoreNav'
 
 export default function StoreOrdersPage() {
   const { user } = useOutletContext()
@@ -66,10 +66,10 @@ export default function StoreOrdersPage() {
 
   return (
     <>
-      {/* <StoreNav /> */}
+      <StoreNav />
       <div className="dash-title-row">
         <h2 className="dash-title">{user.storeName}</h2>
-        {/* <StoreStatusControl /> */}
+        <StoreStatusControl />
         <button type="button" className="dash-button dash-button-light" onClick={load}>Refresh</button>
       </div>
       {error && <p className="dash-error">{error}</p>}
