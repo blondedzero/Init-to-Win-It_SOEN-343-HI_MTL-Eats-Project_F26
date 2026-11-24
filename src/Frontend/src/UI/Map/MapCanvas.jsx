@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadGoogleMaps, getStoreColor, parseCoordinate } from './mapUtils'
-import { logCommand, logSuccess, logError } from './Console/consoleLog'
+import { logCommand, logSuccess, logError } from '../Console/consoleLog'
 
 export default function MapCanvas({
     stores = [],
