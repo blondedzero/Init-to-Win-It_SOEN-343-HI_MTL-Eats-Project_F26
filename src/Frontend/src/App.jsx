@@ -6,7 +6,8 @@ import TempAccountPage from './UI/TempAccountPage'
 import CustomerHomePage from './UI/CustomerPage/CustomerHomePage'
 import StoreMenuPage from './UI/CustomerPage/StoreMenuPage'
 import StoreOrdersPage from './UI/StorePage/StoreOrdersPage'
-// import StoreCatalogPage from './UI/StorePage/StoreCatalogPage'
+import StoreCatalogPage from './UI/StorePage/StoreCatalogPage'
+import StoreHistoryPage from './UI/StorePage/StoreHistoryPage'
 import DashboardLayout from './UI/Dashboard/DashboardLayout'
 import OperatorPage from './UI/OperatorPage/OperatorPage'
 import MapWrapper from './UI/Map/MapWrapper'
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
       {path:"/stores/:storeId", element: <StoreMenuPage/>},
       {path:"/customer/orders", element: <CustomerOrdersPage/>},
       {path:"/store/orders", element: <StoreOrdersPage/>},
-      // {path:"/store/catalog", element: <StoreCatalogPage/>},
+      {path:"/store/catalog", element: <StoreCatalogPage/>},
+      {path:"/store/history", element: <StoreHistoryPage/>},
       {path:"/operator/home", element: <OperatorPage/>},
       {path:"/courier/home", element: <CourierPage/>},
       {path:"/map", element: <MapWrapper/>},
