@@ -84,6 +84,9 @@ public class GSModule {
 
         GroceryStore store = groceryStoreRepository.findById(storeId)
                 .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
+        if (user.getRole() == Role.OPERATOR && store.getStatus() != StoreStatus.PAUSED) {
+            throw new IllegalStateException("An operator can only open a store from the paused state");
+        }
 
         int queueSize = orderRepository.countByStore_AccountIdAndStatusIn(store.getAccountId(), List.of(OrderStatus.ACCEPTED, OrderStatus.PREPARING));
 
@@ -111,8 +114,8 @@ public class GSModule {
 
     @Transactional
     public StoreContextData closeStore(User user, Long storeId) {
-        roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.STORE), "close a store");
-        if  (user.getRole() == Role.STORE && !user.getAccountId().equals(storeId)) {
+        roleValidator.requireRole(user, Role.STORE, "close a store");
+        if (!user.getAccountId().equals(storeId)) {
             throw new PermissionDeniedException("Cannot close another store");
         }
 

@@ -5,6 +5,8 @@ import com.shopeasy.Domain.DLV.DispatchQueue;
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.PRC.MockPaymentProcessor;
+import com.shopeasy.Domain.PRC.PRCModule;
+import com.shopeasy.Domain.PRC.PricingSummary;
 import com.shopeasy.Domain.RoleValidator;
 import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Domain.exceptions.PermissionDeniedException;
@@ -38,13 +40,14 @@ public class ORDModule {
     private final RoleValidator roleValidator;
     private final DLVModule dLVmodule;
     private final DispatchQueue dispatchQueue;
+    private final PRCModule prcModule;
 
     private final Map<Long, PreparationQueue> queues = new ConcurrentHashMap<>();
 
     public ORDModule(OrderRepository orderRepository, GroceryStoreRepository groceryStoreRepository,
                      ProductRepository productRepository, PaymentInfoRepository paymentInfoRepository,
                      MockPaymentProcessor paymentProcessor, EventManager eventManager,
-                     RoleValidator roleValidator, DLVModule dLVmodule, DispatchQueue dispatchQueue) {
+                     RoleValidator roleValidator, DLVModule dLVmodule, DispatchQueue dispatchQueue, PRCModule prcModule) {
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.productRepository = productRepository;
@@ -54,6 +57,7 @@ public class ORDModule {
         this.roleValidator = roleValidator;
         this.dLVmodule = dLVmodule;
         this.dispatchQueue = dispatchQueue;
+        this.prcModule = prcModule;
     }
 
     @Transactional
@@ -61,21 +65,52 @@ public class ORDModule {
         roleValidator.requireRole(user, Role.CUSTOMER, "place orders");
         Customer customer = (Customer) user;
 
+        Map<Long, Integer> quantities = mergeLines(requireRequest(request).lines());
+        GroceryStore store = requireOpenStore(request.storeId());
+        PaymentInfo paymentInfo = paymentInfoRepository.findById(customer.getAccountId())
+                .orElseThrow(() -> new OrderRuleViolationException("Customer does not have a payment method"));
+
+        Order order = buildOrder(customer, store, quantities, true);
+
+        order = prcModule.calculateOrderTotalCost(order);
+        order.markCharged(paymentProcessor.charge(paymentInfo, order.getTotalCost()));
+        Order saved = orderRepository.save(order);
+        Long eventId = eventManager.logEvent("Order " + saved.getOrderId() + ": placed (PLACED) by customer "
+                + customer.getAccountId() + " at store " + store.getAccountId());
+
+        return new OrderResult("Order #" + saved.getOrderId() + " placed at " + store.getStoreName(),
+                eventId, OrderData.from(saved));
+    }
+
+    @Transactional(readOnly = true)
+    public PricingSummary estimateOrder(User user, PlaceOrderRequest request) {
+        roleValidator.requireRole(user, Role.CUSTOMER, "estimate order totals");
+        PlaceOrderRequest validRequest = requireRequest(request);
+        Map<Long, Integer> quantities = mergeLines(validRequest.lines());
+        GroceryStore store = requireOpenStore(validRequest.storeId());
+        Order estimate = buildOrder((Customer) user, store, quantities, false);
+        return PricingSummary.from(prcModule.calculateOrderTotalCost(estimate));
+    }
+
+    private PlaceOrderRequest requireRequest(PlaceOrderRequest request) {
         if (request == null || request.storeId() == null) {
             throw new IllegalArgumentException("A store must be selected");
         }
-        Map<Long, Integer> quantities = mergeLines(request.lines());
+        return request;
+    }
 
-        GroceryStore store = groceryStoreRepository.findById(request.storeId())
-                .orElseThrow(() -> new NotFoundException("Store " + request.storeId() + " does not exist"));
-
+    private GroceryStore requireOpenStore(Long storeId) {
+        GroceryStore store = groceryStoreRepository.findById(storeId)
+                .orElseThrow(() -> new NotFoundException("Store " + storeId + " does not exist"));
         if (store.getStatus() != StoreStatus.OPEN) {
             throw new OrderRuleViolationException(store.getStoreName() + " is "
                     + store.getStatus().name().toLowerCase() + " and is not accepting orders");
         }
-        PaymentInfo paymentInfo = paymentInfoRepository.findById(customer.getAccountId())
-                .orElseThrow(() -> new OrderRuleViolationException("Customer does not have a payment method"));
+        return store;
+    }
 
+    private Order buildOrder(Customer customer, GroceryStore store, Map<Long, Integer> quantities,
+                             boolean reserveStock) {
         Order order = new Order(customer, store);
         for (Map.Entry<Long, Integer> line : quantities.entrySet()) {
             Product product = productRepository.findById(line.getKey())
@@ -91,17 +126,12 @@ public class ORDModule {
                 throw new OrderRuleViolationException(product.getName() + " has only "
                         + product.getStockQuantity() + " left in stock");
             }
-            product.removeFromStock(quantity);
+            if (reserveStock) {
+                product.removeFromStock(quantity);
+            }
             order.addItem(product, quantity);
         }
-
-        order.markCharged(paymentProcessor.charge(paymentInfo, order.getTotalCost()));
-        Order saved = orderRepository.save(order);
-        Long eventId = eventManager.logEvent("Order " + saved.getOrderId() + ": placed (PLACED) by customer "
-                + customer.getAccountId() + " at store " + store.getAccountId());
-
-        return new OrderResult("Order #" + saved.getOrderId() + " placed at " + store.getStoreName(),
-                eventId, OrderData.from(saved));
+        return order;
     }
 
     @Transactional(readOnly = true)

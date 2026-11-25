@@ -3,7 +3,9 @@ spring:
     name: ShopEasy
 
   config:
-    import: file:.env.local[.properties]
+    import: 
+      - file:.env.local[.properties]
+      - classpath:pricingRules.yaml
 
   datasource:
     url: jdbc:postgresql://ep-crimson-queen-b52hm9j1-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require

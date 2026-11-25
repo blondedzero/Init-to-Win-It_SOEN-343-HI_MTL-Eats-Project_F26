@@ -1,0 +1,7 @@
+prc:
+  rule-version: "1.0"
+  small-order-threshold: 5
+  small-order-fee: 10
+  service-fee-pct: 10
+  delivery-fee-pct: 5
+  tax-pct: 15

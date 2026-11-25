@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { COURIERSTATUS } from "../../api/Courier"
-import { assignOrderToCourier, cancelOrder, closeStore, openStore, pauseStore } from "../../api/OperatorRequests"
+import { assignOrderToCourier, cancelOrder, openStore, pauseStore } from "../../api/OperatorRequests"
 import { ORDERSTATUS } from "../../api/Orders"
 import { STORESTATUS } from "../../api/Store"
 import { TABS } from "./OperatorPage"
@@ -125,18 +125,11 @@ export function OperatorStoreCard({store, handleOperation, tab}) {
                     Pause Store
             </button>}
 
-            {store.status != STORESTATUS.OPEN && <button 
+            {store.status == STORESTATUS.PAUSED && <button 
                 className={`op-button-open`}
                 onClick={() => handleOperation(openStore, store.id)}
                 >
                     Open Store
-            </button>}
-
-            {store.status != STORESTATUS.CLOSED && <button 
-                className={`op-button-close`}
-                onClick={() => handleOperation(closeStore, store.id)}
-                >
-                    Close Store
             </button>}
             </>
         }

@@ -41,7 +41,13 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    private BigDecimal subtotal;
     private BigDecimal totalCost;
+    private BigDecimal serviceFee;
+    private BigDecimal smallOrderFee;
+    private BigDecimal deliveryFee;
+    private BigDecimal taxAmount;
+    private String pricingRuleVersion;
     private String deliveryAddress;
     private Instant placedAt;
     private Instant acceptedAt;
@@ -65,14 +71,16 @@ public class Order {
         this.deliveryAddress = customer.getAddress();
         this.placedAt = Instant.now();
         this.status = OrderStatus.PLACED;
+        this.subtotal = BigDecimal.ZERO;
         this.totalCost = BigDecimal.ZERO;
+        this.smallOrderFee = BigDecimal.ZERO;
         this.isCharged = false;
     }
 
     public void addItem(Product product, int quantity) {
         OrderItem item = new OrderItem(this, product, quantity);
         items.add(item);
-        totalCost = totalCost.add(item.getLineTotal());
+        subtotal = subtotal.add(item.getLineTotal());
     }
 
     public List<OrderItem> getItems() {
@@ -170,8 +178,54 @@ public class Order {
         return deliveryAddress;
     }
 
+    public BigDecimal getSubtotal() {return subtotal;}
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
+
     public BigDecimal getTotalCost() {
         return totalCost;
+    }
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public BigDecimal getDeliveryFee() {
+        return deliveryFee;
+    }
+    public void setDeliveryFee(BigDecimal deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
+
+    public BigDecimal getServiceFee() {
+        return serviceFee;
+    }
+    public void setServiceFee(BigDecimal serviceFee) {
+        this.serviceFee = serviceFee;
+    }
+
+    public BigDecimal getSmallOrderFee() {
+        return smallOrderFee;
+    }
+    public void setSmallOrderFee(BigDecimal smallOrderFee) {
+        this.smallOrderFee = smallOrderFee;
+    }
+
+    public BigDecimal getTaxAmount() {
+        return taxAmount;
+    }
+
+    public void setTaxAmount(BigDecimal taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public String getPricingRuleVersion() {
+        return pricingRuleVersion;
+    }
+
+    public void setPricingRuleVersion(String pricingRuleVersion) {
+        this.pricingRuleVersion = pricingRuleVersion;
     }
 
     public Instant getPlacedAt() {
