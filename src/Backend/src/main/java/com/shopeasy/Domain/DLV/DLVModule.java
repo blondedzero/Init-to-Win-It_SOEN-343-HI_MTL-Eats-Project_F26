@@ -226,9 +226,38 @@ public class DLVModule {
             throw new OrderRuleViolationException("Order #" + order.getOrderId()
                     + " must be ready before it can be assigned to a courier.");
         }
+        if (order.getCourier() != null) {
+            throw new OrderRuleViolationException(
+                    "Order #" + order.getOrderId() + " is already assigned."
+            );
+        }
         if (courier.getStatus() != CourierStatus.IDLE) {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
                     + courier.getStatus() + ". Only idle couriers can be assigned an order.");
+        }
+        if (hasPendingOffer(courier)) {
+            throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
+                    + " already has an assigned order offer.");
+        }
+
+        order.setCourier(courier);
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void assignByOperator(Order order, Courier courier) {
+        if (order.getStatus() != OrderStatus.READY) {
+            throw new OrderRuleViolationException("Order #" + order.getOrderId()
+                    + " must be ready before it can be assigned to a courier.");
+        }
+        if (courier.getStatus() != CourierStatus.IDLE) {
+            throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
+                    + courier.getStatus() + ". Only idle couriers can be assigned an order.");
+        }
+        if (order.getCourier() == courier) {
+            throw new OrderRuleViolationException(
+                    "Order #" + order.getOrderId() + " is already assigned to this courier."
+            );
         }
         if (hasPendingOffer(courier)) {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
@@ -353,7 +382,7 @@ public class DLVModule {
             throw new NotFoundException("Courier with id " + courierId + " not found");
         }
 
-        assign(order, courier);
+        assignByOperator(order, courier);
 
         Long eventId = eventManager.logEvent(String.format("Order #%d manually offered to courier #%d", orderId, courierId));
         return new OrderResult("Order manually offered to courier", eventId, OrderData.from(order));
