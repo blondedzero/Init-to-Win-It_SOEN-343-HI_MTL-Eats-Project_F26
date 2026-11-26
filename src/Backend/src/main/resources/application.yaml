@@ -4,7 +4,7 @@ spring:
 
   config:
     import: 
-      - file:.env.local[.properties]
+      - optional:file:.env.local[.properties]
       - classpath:pricingRules.yaml
 
   datasource:
