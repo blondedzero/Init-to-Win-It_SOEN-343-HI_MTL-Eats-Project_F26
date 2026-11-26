@@ -1,0 +1,71 @@
+3,1,9,0,3,"getOrderHistory@3-5@./Frontend\src\api\PRC\PRCRequests.js","./Frontend\src\api\PRC\PRCRequests.js","getOrderHistory","getOrderHistory ( )",3,5
+6,1,35,3,6,"refundOrder@7-12@./Frontend\src\api\PRC\PRCRequests.js","./Frontend\src\api\PRC\PRCRequests.js","refundOrder","refundOrder ( orderId , amount , reason )",7,12
+19,4,96,1,23,"validateAuthToken@3-25@./Frontend\src\api\REG\Auth.js","./Frontend\src\api\REG\Auth.js","validateAuthToken","validateAuthToken ( token )",3,25
+21,4,107,1,25,"getAuthenticatedUserData@27-51@./Frontend\src\api\REG\Auth.js","./Frontend\src\api\REG\Auth.js","getAuthenticatedUserData","getAuthenticatedUserData ( token )",27,51
+9,5,43,1,9,"homePathFor@4-12@./Frontend\src\api\REG\HomePath.js","./Frontend\src\api\REG\HomePath.js","homePathFor","homePathFor ( role )",4,12
+5,1,29,1,5,"getHomePath@14-18@./Frontend\src\api\REG\HomePath.js","./Frontend\src\api\REG\HomePath.js","getHomePath","getHomePath ( token )",14,18
+19,5,103,2,23,"login@3-25@./Frontend\src\api\REG\Login.js","./Frontend\src\api\REG\Login.js","login","login ( email , password )",3,25
+4,1,16,0,4,"logout@27-30@./Frontend\src\api\REG\Login.js","./Frontend\src\api\REG\Login.js","logout","logout ( )",27,30
+56,24,375,6,66,"register@4-69@./Frontend\src\api\REG\Register.js","./Frontend\src\api\REG\Register.js","register","register ( role , email , password , firstName , lastName , userDetails { } )",4,69
+3,2,18,0,3,"getAuthToken@4-6@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","getAuthToken","getAuthToken ( )",4,6
+1,1,5,0,1,"(anonymous)@27-27@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","(anonymous)","(anonymous)",27,27
+25,8,179,2,28,"apiRequest@8-35@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","apiRequest","apiRequest ( path , {} method 'GET' , body { } )",8,35
+3,1,9,0,3,"getCourierDashboard@10-12@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","getCourierDashboard","getCourierDashboard ( )",10,12
+3,1,9,0,3,"getCourierOffers@14-16@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","getCourierOffers","getCourierOffers ( )",14,16
+3,1,22,1,3,"changeCourierStatus@18-20@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","changeCourierStatus","changeCourierStatus ( status )",18,20
+3,1,22,1,3,"acceptDelivery@22-24@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","acceptDelivery","acceptDelivery ( orderId )",22,24
+3,1,22,1,3,"declineDelivery@26-28@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","declineDelivery","declineDelivery ( orderId )",26,28
+3,1,22,1,3,"cancelDeliveryAssignment@30-32@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","cancelDeliveryAssignment","cancelDeliveryAssignment ( orderId )",30,32
+3,1,22,1,3,"confirmPickup@34-36@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","confirmPickup","confirmPickup ( orderId )",34,36
+3,1,22,1,3,"confirmDelivery@38-40@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","confirmDelivery","confirmDelivery ( orderId )",38,40
+3,2,32,2,3,"opRequest@4-6@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","opRequest","opRequest ( route , {} method body { } )",4,6
+3,1,9,0,3,"getAllStores@9-11@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllStores","getAllStores ( )",9,11
+3,1,9,0,3,"getAllStoresForMap@13-15@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllStoresForMap","getAllStoresForMap ( )",13,15
+3,1,22,1,3,"openStore@17-19@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","openStore","openStore ( storeId )",17,19
+3,1,22,1,3,"pauseStore@21-23@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","pauseStore","pauseStore ( storeId )",21,23
+3,1,9,0,3,"getAllOrdersInProgress@26-28@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllOrdersInProgress","getAllOrdersInProgress ( )",26,28
+3,1,9,0,3,"getAllOrdersReady@30-32@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllOrdersReady","getAllOrdersReady ( )",30,32
+3,1,22,1,3,"cancelOrder@34-36@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","cancelOrder","cancelOrder ( orderId )",34,36
+3,1,27,2,3,"assignOrderToCourier@38-40@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","assignOrderToCourier","assignOrderToCourier ( courierId , orderId )",38,40
+3,1,15,0,3,"resetSimulation@42-44@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","resetSimulation","resetSimulation ( )",42,44
+3,1,9,0,3,"getAllCouriersOnDuty@47-49@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllCouriersOnDuty","getAllCouriersOnDuty ( )",47,49
+3,1,9,0,3,"getAllCouriersIdle@51-53@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllCouriersIdle","getAllCouriersIdle ( )",51,53
+3,1,26,2,3,"placeOrder@15-17@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","placeOrder","placeOrder ( storeId , lines )",15,17
+3,1,26,2,3,"estimateOrder@19-21@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","estimateOrder","estimateOrder ( storeId , lines )",19,21
+3,1,9,0,3,"getCustomerActiveOrders@23-25@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getCustomerActiveOrders","getCustomerActiveOrders ( )",23,25
+3,1,22,1,3,"cancelOwnOrder@27-29@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","cancelOwnOrder","cancelOwnOrder ( orderId )",27,29
+3,1,9,0,3,"getIncomingOrders@31-33@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getIncomingOrders","getIncomingOrders ( )",31,33
+3,1,9,0,3,"getQueue@35-37@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getQueue","getQueue ( )",35,37
+3,1,9,0,3,"getOrdersInPreparation@39-41@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getOrdersInPreparation","getOrdersInPreparation ( )",39,41
+3,1,9,0,3,"getReadyOrders@43-45@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getReadyOrders","getReadyOrders ( )",43,45
+3,1,22,1,3,"acceptOrder@47-49@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","acceptOrder","acceptOrder ( orderId )",47,49
+3,1,30,2,3,"rejectOrder@51-53@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","rejectOrder","rejectOrder ( orderId , reason )",51,53
+3,1,22,1,3,"startPreparing@55-57@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","startPreparing","startPreparing ( orderId )",55,57
+3,1,22,1,3,"markReady@59-61@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","markReady","markReady ( orderId )",59,61
+3,1,9,0,3,"getStores@9-11@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getStores","getStores ( )",9,11
+3,1,16,1,3,"getProducts@13-15@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getProducts","getProducts ( storeId )",13,15
+3,1,9,0,3,"getMyStore@18-20@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getMyStore","getMyStore ( )",18,20
+3,1,22,1,3,"changeStoreStatus@22-24@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","changeStoreStatus","changeStoreStatus ( status )",22,24
+3,1,9,0,3,"getMyProducts@26-28@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getMyProducts","getMyProducts ( )",26,28
+3,1,9,0,3,"getCategories@30-32@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getCategories","getCategories ( )",30,32
+3,1,20,1,3,"addProduct@34-36@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","addProduct","addProduct ( product )",34,36
+3,1,27,2,3,"updateProduct@38-40@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","updateProduct","updateProduct ( productId , product )",38,40
+3,1,21,1,3,"removeProduct@42-44@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","removeProduct","removeProduct ( productId )",42,44
+3,1,22,1,3,"restoreProduct@46-48@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","restoreProduct","restoreProduct ( productId )",46,48
+3,1,9,0,3,"getOrderHistory@50-52@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getOrderHistory","getOrderHistory ( )",50,52
+1,1,4,1,1,"(anonymous)@7-7@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",7,7
+4,1,50,2,4,"append@5-8@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","append","append ( level , text )",5,8
+3,1,11,1,3,"logCommand@10-12@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logCommand","logCommand ( text )",10,12
+3,1,11,1,3,"logSuccess@14-16@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logSuccess","logSuccess ( text )",14,16
+3,1,11,1,3,"logError@18-20@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logError","logError ( text )",18,20
+1,1,4,1,1,"(anonymous)@24-24@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",24,24
+4,1,17,0,4,"clearConsole@22-25@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","clearConsole","clearConsole ( )",22,25
+1,1,6,0,1,"(anonymous)@29-29@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",29,29
+4,1,16,1,4,"subscribe@27-30@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","subscribe","subscribe ( listener )",27,30
+3,1,6,0,3,"getEntries@32-34@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","getEntries","getEntries ( )",32,34
+7,3,38,0,7,"script.onload@24-30@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","script.onload","script.onload ( )",24,30
+4,1,16,0,4,"script.onerror@32-35@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","script.onerror","script.onerror ( )",32,35
+13,2,65,2,26,"(anonymous)@13-38@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","(anonymous)","(anonymous)",13,38
+10,4,53,1,37,"loadGoogleMaps@5-41@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","loadGoogleMaps","loadGoogleMaps ( apiKey )",5,41
+14,7,66,1,15,"getStoreColor@44-58@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","getStoreColor","getStoreColor ( store )",44,58
+5,5,38,1,6,"parseCoordinate@61-66@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","parseCoordinate","parseCoordinate ( val )",61,66
