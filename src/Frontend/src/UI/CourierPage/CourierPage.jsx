@@ -72,7 +72,7 @@ export default function CourierPage() {
   const hasActiveDelivery = dashboard?.status === COURIERSTATUS.CARRYING
     || (dashboard?.status === COURIERSTATUS.ASSIGNED
       && dashboard.orders.some((order) => order.courierAccepted))
-  const hasPendingOffer = dashboard?.status === COURIERSTATUS.ASSIGNED
+  const hasPendingOffer = dashboard?.status === COURIERSTATUS.IDLE
     && dashboard.orders.some((order) => !order.courierAccepted)
 
   return (
@@ -127,7 +127,7 @@ export default function CourierPage() {
             </ul>
             <p className="dash-total">Order total {money(order.totalCost)}</p>
             <div className="dash-actions">
-              {dashboard.status === COURIERSTATUS.ASSIGNED && !order.courierAccepted && (
+              {dashboard.status === COURIERSTATUS.IDLE && !order.courierAccepted && (
                 <>
                   <button
                     type="button"

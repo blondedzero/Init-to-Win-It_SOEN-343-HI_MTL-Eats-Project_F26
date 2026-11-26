@@ -50,6 +50,8 @@ public class OperatorRequestsModule {
     public List<CourierDisplayData> getAllCouriersIdle(User user) {
         roleValidator.requireRole(user, Role.OPERATOR, "view all couriers on duty");
         return courierRepository.findByStatusIn(List.of(CourierStatus.IDLE)).stream()
+                .filter(courier -> !orderRepository.existsByCourier_AccountIdAndStatus(
+                        courier.getAccountId(), OrderStatus.READY))
                 .map(CourierDisplayData::from)
                 .toList();
     }

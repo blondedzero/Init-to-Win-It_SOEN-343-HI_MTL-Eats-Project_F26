@@ -53,9 +53,8 @@ class CourierTest {
     }
 
     @Test
-    void decliningAnOfferReturnsCourierToIdle() {
+    void decliningAnOfferKeepsCourierIdle() {
         Courier courier = new Courier("courier@example.com", "hash", "Test", "Courier", 0, 0);
-        courier.setStatus(CourierStatus.ASSIGNED);
 
         courier.declineOrder();
 

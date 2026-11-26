@@ -126,11 +126,14 @@ public class DLVModule {
         Courier courier = findCourier(user.getAccountId());
         Order order = findOfferedOrder(orderId, courier);
 
+        courier.assignOrder();
+        courierRepository.save(courier);
         order.acceptCourierAssignment();
         orderRepository.save(order);
         declinedBy.remove(orderId);
 
-        Long eventId = eventManager.logEvent("Order #" + orderId + " accepted by courier #" + courier.getAccountId());
+        Long eventId = eventManager.logEvent("Order #" + orderId + " accepted by courier #" + courier.getAccountId()
+                + "; courier IDLE -> ASSIGNED");
         return new OrderResult("Order #" + orderId + " accepted", eventId, OrderData.from(order));
     }
 
@@ -210,7 +213,7 @@ public class DLVModule {
         if (order.getCourier() == null || !order.getCourier().getAccountId().equals(courier.getAccountId())) {
             throw new PermissionDeniedException("Order #" + orderId + " was not offered to you");
         }
-        if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.ASSIGNED
+        if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.IDLE
                 || order.isCourierAccepted()) {
             throw new OrderRuleViolationException("Order #" + orderId + " has no pending offer (order " + order.getStatus()
                     + ", courier " + courier.getStatus() + ")");
@@ -244,8 +247,6 @@ public class DLVModule {
         }
         order.setCourier(courier);
         orderRepository.save(order);
-        courier.assignOrder();
-        courierRepository.save(courier);
         if (oldCourier != null && oldCourier != courier) {
             notifyCourierIdle(oldCourier);
         }
