@@ -212,6 +212,8 @@ public class DLVModule {
         }
         order.setCourier(courier);
         orderRepository.save(order);
+        courier.setStatus(CourierStatus.ASSIGNED);
+        courierRepository.save(courier);
     }
 
     @Transactional

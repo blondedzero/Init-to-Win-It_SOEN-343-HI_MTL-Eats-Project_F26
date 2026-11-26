@@ -17,6 +17,7 @@ export default function OrderHistoryPage() {
     const [orderHistory, setOrderHistory] = useState([])
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const [isHistoryLoaded, setIsHistoryLoaded] = useState(false)
 
     const load = useCallback(async() => {
         const [orderHistoryResult] = await Promise.allSettled([
@@ -28,6 +29,7 @@ export default function OrderHistoryPage() {
           setOrderHistory([...orderHistoryResult.value].sort(
             (a, b) => getLastActionTimestamp(b) - getLastActionTimestamp(a)
           ))
+          setIsHistoryLoaded(true)
           console.log(orderHistoryResult.value)
         } else {
           errors.push(orderHistoryResult.reason.message)
@@ -60,8 +62,10 @@ export default function OrderHistoryPage() {
             <h1>Order history</h1>
             {error && <p className="dash-error">{error}</p>}
             {success && <p className="dash-success">{success}</p>}
-            {orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role} onRefund={handleRefund}/>)
-            :<>Order history is empty.</>}
+            {isHistoryLoaded ? 
+              orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role} onRefund={handleRefund}/>)
+              :<>Order history is empty.</>
+            :<>Loading order hisory...</>}
         </div>
         </>
     )
