@@ -52,6 +52,7 @@ public class DLVModule {
         Courier courier = findCourier(user.getAccountId());
         return orderRepository.findByCourier_AccountIdAndStatus(courier.getAccountId(), OrderStatus.READY)
                 .stream()
+                .filter(order -> !order.isCourierAccepted())
                 .map(OrderData::from)
                 .toList();
     }
@@ -95,9 +96,13 @@ public class DLVModule {
     public void goOffDuty(User user) {
         roleValidator.requireRole(user, Role.COURIER, "go offline");
         Courier courier = findCourier(user.getAccountId());
-        if (courier.getStatus() == CourierStatus.ASSIGNED || courier.getStatus() == CourierStatus.CARRYING) {
-            throw new OrderRuleViolationException("You cannot go offline while an order is assigned or being carried. "
-                    + "Complete the delivery first.");
+        List<Order> readyOrders = orderRepository.findByCourier_AccountIdAndStatus(
+                courier.getAccountId(), OrderStatus.READY);
+        boolean hasAcceptedAssignment = readyOrders.stream().anyMatch(Order::isCourierAccepted);
+        if (courier.getStatus() == CourierStatus.CARRYING || hasAcceptedAssignment
+                || (courier.getStatus() == CourierStatus.ASSIGNED && readyOrders.isEmpty())) {
+            throw new OrderRuleViolationException("You cannot go offline after accepting an order or while carrying it. "
+                    + "Decline an unaccepted offer or complete the delivery first.");
         }
         if (courier.getStatus() == CourierStatus.OFFLINE) {
             throw new OrderRuleViolationException("You are already offline.");
@@ -105,11 +110,14 @@ public class DLVModule {
 
         Long courierId = courier.getAccountId();
         CourierStatus previousStatus = courier.getStatus();
-        courier.goOffline();
+        if (previousStatus == CourierStatus.ASSIGNED) {
+            courier.goOfflineWithPendingOffer();
+        } else {
+            courier.goOffline();
+        }
         courierRepository.save(courier);
         eventManager.logEvent("Courier #" + courierId + ": " + previousStatus + " -> OFFLINE (off duty)");
-        orderRepository.findByCourier_AccountIdAndStatus(courierId, OrderStatus.READY)
-                .forEach(order -> withdrawOffer(order, courier));
+        readyOrders.forEach(order -> withdrawOffer(order, courier, false));
     }
 
     @Transactional
@@ -118,12 +126,11 @@ public class DLVModule {
         Courier courier = findCourier(user.getAccountId());
         Order order = findOfferedOrder(orderId, courier);
 
-        courier.acceptOrder();
-        courierRepository.save(courier);
+        order.acceptCourierAssignment();
+        orderRepository.save(order);
         declinedBy.remove(orderId);
 
-        Long eventId = eventManager.logEvent("Order #" + orderId + " accepted by courier #" + courier.getAccountId()
-                + "; courier IDLE -> ASSIGNED");
+        Long eventId = eventManager.logEvent("Order #" + orderId + " accepted by courier #" + courier.getAccountId());
         return new OrderResult("Order #" + orderId + " accepted", eventId, OrderData.from(order));
     }
 
@@ -134,7 +141,9 @@ public class DLVModule {
         Order order = findOfferedOrder(orderId, courier);
 
         courier.declineOrder();
+        courierRepository.save(courier);
         String outcome = withdrawOffer(order, courier);
+        notifyCourierIdle(courier);
 
         Long eventId = eventManager.logEvent("Order #" + orderId + " declined by courier #" + courier.getAccountId()
                 + "; " + outcome);
@@ -146,7 +155,8 @@ public class DLVModule {
         roleValidator.requireRole(user, Role.COURIER, "cancel an accepted delivery");
         Courier courier = findCourier(user.getAccountId());
         Order order = findAssignedOrder(orderId, courier);
-        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY) {
+        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY
+                || !order.isCourierAccepted()) {
             throw new OrderRuleViolationException("Order #" + orderId
                     + " can only be canceled before pickup and after acceptance");
         }
@@ -175,7 +185,14 @@ public class DLVModule {
     }
 
     private String withdrawOffer(Order order, Courier courier) {
-        declinedBy.computeIfAbsent(order.getOrderId(), id -> ConcurrentHashMap.newKeySet()).add(courier.getAccountId());
+        return withdrawOffer(order, courier, true);
+    }
+
+    private String withdrawOffer(Order order, Courier courier, boolean markDeclined) {
+        if (markDeclined) {
+            declinedBy.computeIfAbsent(order.getOrderId(), id -> ConcurrentHashMap.newKeySet())
+                    .add(courier.getAccountId());
+        }
         order.setCourier(null);
         orderRepository.save(order);
 
@@ -183,7 +200,7 @@ public class DLVModule {
         if (next == null) {
             return "no other idle courier, order waits in the dispatch queue";
         }
-        offer(order, next);
+        assign(order, next);
         return "offered to courier #" + next.getAccountId();
     }
 
@@ -193,15 +210,19 @@ public class DLVModule {
         if (order.getCourier() == null || !order.getCourier().getAccountId().equals(courier.getAccountId())) {
             throw new PermissionDeniedException("Order #" + orderId + " was not offered to you");
         }
-        if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.IDLE) {
+        if (order.getStatus() != OrderStatus.READY || courier.getStatus() != CourierStatus.ASSIGNED
+                || order.isCourierAccepted()) {
             throw new OrderRuleViolationException("Order #" + orderId + " has no pending offer (order " + order.getStatus()
                     + ", courier " + courier.getStatus() + ")");
         }
         return order;
     }
 
-    //an offer is a READY order with a courier set, the courier stays IDLE until they accept
-    private void offer(Order order, Courier courier) {
+    private void assign(Order order, Courier courier) {
+        if (order.getStatus() != OrderStatus.READY) {
+            throw new OrderRuleViolationException("Order #" + order.getOrderId()
+                    + " must be ready before it can be assigned to a courier.");
+        }
         if (courier.getStatus() != CourierStatus.IDLE) {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
                     + courier.getStatus() + ". Only idle couriers can be assigned an order.");
@@ -210,10 +231,24 @@ public class DLVModule {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
                     + " already has an assigned order offer.");
         }
+
+        Courier oldCourier = order.getCourier();
+        if (oldCourier != null && oldCourier != courier) {
+            if (oldCourier.getStatus() == CourierStatus.ASSIGNED) {
+                oldCourier.cancelAssignment();
+                courierRepository.save(oldCourier);
+            } else if (oldCourier.getStatus() != CourierStatus.IDLE) {
+                throw new OrderRuleViolationException("Order #" + order.getOrderId()
+                        + " cannot be reassigned while its courier is " + oldCourier.getStatus());
+            }
+        }
         order.setCourier(courier);
         orderRepository.save(order);
-        courier.setStatus(CourierStatus.ASSIGNED);
+        courier.assignOrder();
         courierRepository.save(courier);
+        if (oldCourier != null && oldCourier != courier) {
+            notifyCourierIdle(oldCourier);
+        }
     }
 
     @Transactional
@@ -221,7 +256,8 @@ public class DLVModule {
         roleValidator.requireRole(user, Role.COURIER, "confirm order pickups");
         Courier courier = findCourier(user.getAccountId());
         Order order = findAssignedOrder(orderId, courier);
-        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY) {
+        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY
+                || !order.isCourierAccepted()) {
             throw new OrderRuleViolationException("Order #" + orderId
                     + " can only be picked up after you accept it");
         }
@@ -274,7 +310,7 @@ public class DLVModule {
 
     @Transactional
     public void offerWaitingOrder(Order order, Courier courier) {
-        offer(order, courier);
+        assign(order, courier);
         eventManager.logEvent("Order #" + order.getOrderId() + " taken from the dispatch queue and offered to courier #"
                 + courier.getAccountId());
     }
@@ -296,7 +332,7 @@ public class DLVModule {
             Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. No idle courier available");
             return new OrderResult("Order #"+orderId+" Preparing -> Ready. No idle courier available", eventId, OrderData.from(order));
         }
-        offer(order, closetIdleCourier);
+        assign(order, closetIdleCourier);
 
         Long eventId = eventManager.logEvent("Order #"+orderId+" Preparing -> Ready. Order offered to courrier #"+closetIdleCourier.getAccountId());
         return new OrderResult("Order offered to courier", eventId, OrderData.from(order));
@@ -316,7 +352,7 @@ public class DLVModule {
             throw new NotFoundException("Courier with id " + courierId + " not found");
         }
 
-        offer(order, courier);
+        assign(order, courier);
 
         Long eventId = eventManager.logEvent(String.format("Order #%d manually offered to courier #%d", orderId, courierId));
         return new OrderResult("Order manually offered to courier", eventId, OrderData.from(order));

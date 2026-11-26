@@ -492,7 +492,8 @@ public class ApplicationSeeder implements ApplicationRunner {
                 order.markReady();
                 if (courier != null) {
                     order.setCourier(courier);
-                    courier.acceptOrder();
+                    courier.assignOrder();
+                    order.acceptCourierAssignment();
                 }
                 if (targetStatus == OrderStatus.PICKED_UP) {
                     if (courier == null) {

@@ -45,10 +45,13 @@ export function OperatorOrderCard({order, tab, handleOperation, stores = [], idl
         </p>
         {tab == TABS.ORDERS && 
         <div className="op-order-buttons">
-            {order.status == ORDERSTATUS.READY && order.courierId == null && <>
+            {order.status == ORDERSTATUS.READY && 
+               
+                <>
                 <button type="button" onClick={() => setShowCouriers((visible) => !visible)} aria-expanded={showCouriers} aria-controls={`courier-options-${order.orderId}`}>
-                    {showCouriers ? "Hide couriers" : "Assign courier"}
+                    {showCouriers ? "Hide couriers" :  order.courierId == null ? "Assign courier":"Reassign order"}
                 </button>
+            
                 {showCouriers && <div className="op-courier-options" id={`courier-options-${order.orderId}`}>
                     <p className="dash-muted">Available couriers, closest to the store first</p>
                     {couriersByDistance.length === 0

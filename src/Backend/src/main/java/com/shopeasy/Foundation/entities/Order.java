@@ -27,6 +27,9 @@ public class Order {
     @JoinColumn(name = "courier_id")          // nullable: no courier until one is assigned
     private Courier courier;
 
+    @Column(name = "courier_accepted")
+    private Boolean courierAccepted = false;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "seed_initial_status")
     private OrderStatus seedInitialStatus;
@@ -34,6 +37,9 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seed_initial_courier_id")
     private Courier seedInitialCourier;
+
+    @Column(name = "seed_initial_courier_accepted")
+    private Boolean seedInitialCourierAccepted;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
@@ -172,6 +178,18 @@ public class Order {
 
     public void setCourier(Courier courier) {
         this.courier = courier;
+        this.courierAccepted = false;
+    }
+
+    public boolean isCourierAccepted() {
+        return Boolean.TRUE.equals(courierAccepted);
+    }
+
+    public void acceptCourierAssignment() {
+        if (courier == null || status != OrderStatus.READY || isCourierAccepted()) {
+            throw new IllegalStateException("Order " + orderId + " has no pending courier offer to accept");
+        }
+        courierAccepted = true;
     }
 
     public String getDeliveryAddress() {
@@ -282,6 +300,7 @@ public class Order {
         if (seedInitialStatus == null) {
             seedInitialStatus = status;
             seedInitialCourier = courier;
+            seedInitialCourierAccepted = courierAccepted;
         }
     }
 
@@ -294,6 +313,7 @@ public class Order {
                 ? OrderStatus.REFUNDED
                 : seedInitialStatus;
         courier = seedInitialCourier;
+        courierAccepted = seedInitialCourierAccepted;
         acceptedAt = switch (status) {
             case ACCEPTED, PREPARING, READY, PICKED_UP, DELIVERED -> placedAt;
             default -> null;

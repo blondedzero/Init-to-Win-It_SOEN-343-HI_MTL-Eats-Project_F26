@@ -34,6 +34,35 @@ class CourierTest {
     }
 
     @Test
+    void assignedCourierCanGoOfflineWithPendingOffer() {
+        Courier courier = new Courier("courier@example.com", "hash", "Test", "Courier", 0, 0);
+        courier.assignOrder();
+
+        courier.goOfflineWithPendingOffer();
+
+        assertEquals(CourierStatus.OFFLINE, courier.getStatus());
+    }
+
+    @Test
+    void assigningAnOrderMarksCourierAsAssigned() {
+        Courier courier = new Courier("courier@example.com", "hash", "Test", "Courier", 0, 0);
+
+        courier.assignOrder();
+
+        assertEquals(CourierStatus.ASSIGNED, courier.getStatus());
+    }
+
+    @Test
+    void decliningAnOfferReturnsCourierToIdle() {
+        Courier courier = new Courier("courier@example.com", "hash", "Test", "Courier", 0, 0);
+        courier.setStatus(CourierStatus.ASSIGNED);
+
+        courier.declineOrder();
+
+        assertEquals(CourierStatus.IDLE, courier.getStatus());
+    }
+
+    @Test
     void acceptedAssignmentCanBeCanceledBeforePickup() {
         Courier courier = new Courier("courier@example.com", "hash", "Test", "Courier", 0, 0);
         courier.setStatus(CourierStatus.ASSIGNED);

@@ -51,7 +51,12 @@ public class Courier extends User {
         this.status = CourierStatus.OFFLINE;
     }
 
-    public void acceptOrder() {
+    public void goOfflineWithPendingOffer() {
+        requireStatus(CourierStatus.ASSIGNED, CourierStatus.OFFLINE);
+        this.status = CourierStatus.OFFLINE;
+    }
+
+    public void assignOrder() {
         requireStatus(CourierStatus.IDLE, CourierStatus.ASSIGNED);
         this.status = CourierStatus.ASSIGNED;
     }
@@ -62,9 +67,10 @@ public class Courier extends User {
     }
 
     public void declineOrder() {
-        if (status != CourierStatus.IDLE) {
+        if (status != CourierStatus.ASSIGNED) {
             throw new IllegalStateException("Courier " + getAccountId() + " is " + status + " and has no offer to decline");
         }
+        this.status = CourierStatus.IDLE;
     }
 
     public void confirmPickup() {

@@ -69,8 +69,11 @@ export default function CourierPage() {
     }
   }
 
-  const hasActiveDelivery = dashboard?.status === COURIERSTATUS.ASSIGNED
-    || dashboard?.status === COURIERSTATUS.CARRYING
+  const hasActiveDelivery = dashboard?.status === COURIERSTATUS.CARRYING
+    || (dashboard?.status === COURIERSTATUS.ASSIGNED
+      && dashboard.orders.some((order) => order.courierAccepted))
+  const hasPendingOffer = dashboard?.status === COURIERSTATUS.ASSIGNED
+    && dashboard.orders.some((order) => !order.courierAccepted)
 
   return (
     <>
@@ -83,7 +86,9 @@ export default function CourierPage() {
             className={`dash-button ${dashboard.status === COURIERSTATUS.OFFLINE ? '' : 'dash-button-light'}`}
             onClick={toggleDuty}
             disabled={statusBusy || hasActiveDelivery}
-            title={hasActiveDelivery ? 'Complete your assigned delivery before going offline.' : undefined}
+            title={hasActiveDelivery
+              ? 'Complete your accepted delivery before going offline.'
+              : hasPendingOffer ? 'Going offline will withdraw your pending offer.' : undefined}
           >
             {statusBusy ? 'Updating…' : dashboard.status === COURIERSTATUS.OFFLINE ? 'Go online' : 'Go offline'}
           </button>
@@ -94,7 +99,7 @@ export default function CourierPage() {
       </div>
       <p className="dash-muted">Manage your assigned delivery orders.</p>
       {hasActiveDelivery && (
-        <p className="dash-muted">Complete your assigned delivery before going offline.</p>
+        <p className="dash-muted">Complete your accepted delivery before going offline.</p>
       )}
       {error && <p className="dash-error" role="alert">{error}</p>}
       {success && <p className="dash-success" role="status">{success}</p>}
@@ -122,7 +127,7 @@ export default function CourierPage() {
             </ul>
             <p className="dash-total">Order total {money(order.totalCost)}</p>
             <div className="dash-actions">
-              {dashboard.status === COURIERSTATUS.IDLE && (
+              {dashboard.status === COURIERSTATUS.ASSIGNED && !order.courierAccepted && (
                 <>
                   <button
                     type="button"
@@ -142,7 +147,7 @@ export default function CourierPage() {
                   </button>
                 </>
               )}
-              {dashboard.status === COURIERSTATUS.ASSIGNED && (
+              {dashboard.status === COURIERSTATUS.ASSIGNED && order.courierAccepted && (
                 <>
                   <button
                     type="button"

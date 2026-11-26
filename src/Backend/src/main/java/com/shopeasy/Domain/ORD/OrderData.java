@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.List;
 
 public record OrderData(Long orderId, Long storeId, String storeName, Long courierId, String courierName,
+                        boolean courierAccepted,
                         String customerName, String status, String deliveryAddress,
                         BigDecimal totalCost, Instant placedAt, Instant readyAt, Instant canceledAt, Instant pickedUpAt, Instant deliveredAt, String rejectionReason,
                         RefundData refund, List<OrderLineData> lines, PricingSummary pricing) {
@@ -35,6 +36,7 @@ public record OrderData(Long orderId, Long storeId, String storeName, Long couri
         var refund = order.getRefund();
         return new OrderData(order.getOrderId(), order.getStore().getAccountId(), order.getStore().getStoreName(),
                 courier == null ? null : courier.getAccountId(), courier == null ? null : courier.getFullName(),
+                order.isCourierAccepted(),
                 order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName(),
                 order.getStatus().name(), order.getDeliveryAddress(), order.getTotalCost(), order.getPlacedAt(), order.getReadyAt(), order.getCancelledAt(), order.getPickedUpAt(), order.getDeliveredAt(),
                 order.getRejectionReason(), refund == null ? null : RefundData.from(refund),
