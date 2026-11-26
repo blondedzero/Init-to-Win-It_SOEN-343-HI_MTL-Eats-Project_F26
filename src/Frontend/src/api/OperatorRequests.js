@@ -22,10 +22,6 @@ export function pauseStore(storeId) {
   return opRequest(`/stores/${storeId}/pause`, {method: 'POST'})
 }
 
-export function closeStore(storeId) {
-  return opRequest(`/stores/${storeId}/close`, {method: 'POST'})
-}
-
 //ORDER OPERATIONS
 export function getAllOrdersInProgress() {
   return opRequest('/orders/in-progress')

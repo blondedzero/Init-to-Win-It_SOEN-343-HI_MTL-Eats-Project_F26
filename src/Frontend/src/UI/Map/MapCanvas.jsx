@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadGoogleMaps, getStoreColor, parseCoordinate } from './mapUtils'
 import { logCommand, logSuccess, logError } from '../Console/consoleLog'
+import { ROLE } from '../../api/EnumRoles'
 
 export default function MapCanvas({
     stores = [],
@@ -12,7 +13,7 @@ export default function MapCanvas({
     const mapInstanceRef = useRef(null)
     const markersRef = useRef([])           // Holds references to all active markers (can be used for cleanup and re-rendering)
     const infoWindowRef = useRef(null)
-
+    console.log(couriers)
     const [mapLoaded, setMapLoaded] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
 
@@ -94,7 +95,7 @@ export default function MapCanvas({
             const role = (user?.role || '').toUpperCase()
             const entityId = entity.accountId || entity.id || 'Unknown'
 
-            logCommand(`DASH: Selected ${type} #${entityId} as role: ${role || 'GUEST'}`)
+            //logCommand(`DASH: Selected ${type} #${entityId} as role: ${role || 'GUEST'}`)
 
             // Enforce role permission: Customers cannot inspect courier telemetry -> R-DASH-01 & Issue 5.7.1-4
             if (type === 'COURIER' && role === 'CUSTOMER') {
@@ -135,9 +136,12 @@ export default function MapCanvas({
 
             const contentHtml = `
             <div style="font-family: system-ui, sans-serif; font-size: 13px; color: #1f2937; padding: 2px;">
-            <strong>${name}</strong><br/>
+            <strong>${name} - #${store.id}</strong><br/>
             Status: ${store.status || 'OPEN'}<br/>
             Queue: <strong>${queueLength}</strong> orders
+            ${user?.role === ROLE.CUSTOMER
+                ? `<br/><a href="/stores/${encodeURIComponent(store.id)}" style="display:inline-block;margin-top:8px;color:#2563eb;">Browse menu</a>`
+                : ''}
             </div>
             `
 

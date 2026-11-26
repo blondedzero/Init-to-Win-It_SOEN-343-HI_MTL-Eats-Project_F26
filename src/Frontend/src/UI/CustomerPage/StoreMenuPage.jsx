@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getProducts } from '../../api/Store'
-import { placeOrder } from '../../api/Orders'
+import { estimateOrder, placeOrder } from '../../api/Orders'
 import { logSuccess } from '../Console/consoleLog'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
@@ -13,6 +13,7 @@ export default function StoreMenuPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [estimateResult, setEstimateResult] = useState(null)
 
   const loadMenu = useCallback(() => {
     return getProducts(storeId)
@@ -27,17 +28,40 @@ export default function StoreMenuPage() {
     loadMenu()
   }, [loadMenu])
 
+  const selected = menu
+    ? menu.products.filter((p) => p.status === 'AVAILABLE' && p.stockQuantity > 0 && quantities[p.productId] > 0)
+    : []
+  const lines = selected.map((p) => ({ productId: p.productId, quantity: quantities[p.productId] }))
+  const linesKey = JSON.stringify(lines)
+  const storeOpen = menu?.store.status === 'OPEN'
+
+  useEffect(() => {
+    if (!menu || !storeOpen || lines.length === 0) return
+
+    let active = true
+    const timer = setTimeout(async () => {
+      try {
+        const pricing = await estimateOrder(menu.store.id, JSON.parse(linesKey))
+        if (active) setEstimateResult({ linesKey, pricing, error: '' })
+      } catch (err) {
+        if (active) setEstimateResult({ linesKey, pricing: null, error: err.message })
+      }
+    }, 200)
+
+    return () => {
+      active = false
+      clearTimeout(timer)
+    }
+  }, [menu, storeOpen, lines.length, linesKey])
+
   if (!menu) {
     return error ? <p className="dash-error">{error}</p> : <p className="dash-muted">Loading products…</p>
   }
 
-  const storeOpen = menu.store.status === 'OPEN'
-  const selected = menu.products.filter((p) => p.status === 'AVAILABLE' && p.stockQuantity > 0 && quantities[p.productId] > 0)
-  const total = selected.reduce((sum, p) => sum + p.price * quantities[p.productId], 0)
-
   const disabledReason = !storeOpen
     ? `${menu.store.storeName} is ${menu.store.status.toLowerCase()} and is not accepting orders.`
     : selected.length === 0 ? 'Select at least one available item.' : ''
+  const currentEstimate = estimateResult?.linesKey === linesKey ? estimateResult : null
 
   const setQuantity = (productId, value) => {
     const quantity = Math.max(0, Math.floor(Number(value) || 0))
@@ -121,7 +145,18 @@ export default function StoreMenuPage() {
       </table>
 
       <div className="dash-checkout">
-        <span className="dash-total">Total: {money(total)}</span>
+        {selected.length > 0 && storeOpen && <div className="dash-pricing-summary">
+          {currentEstimate?.pricing ? <>
+            <span>Items subtotal: {money(currentEstimate.pricing.subtotal)}</span>
+            <span>Small order fee: {money(currentEstimate.pricing.smallOrderFee)}</span>
+            <span>Service fee: {money(currentEstimate.pricing.serviceFee)}</span>
+            <span>Delivery fee: {money(currentEstimate.pricing.deliveryFee)}</span>
+            <span>Tax: {money(currentEstimate.pricing.taxAmount)}</span>
+            <strong>Estimated total: {money(currentEstimate.pricing.totalCost)}</strong>
+          </> : currentEstimate?.error
+            ? <span className="dash-error">Could not estimate total: {currentEstimate.error}</span>
+            : <span className="dash-muted">Calculating order estimate…</span>}
+        </div>}
         <button
           type="button"
           className="dash-button"

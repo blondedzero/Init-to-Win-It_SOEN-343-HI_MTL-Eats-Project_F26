@@ -1,0 +1,16 @@
+#map-wrapper .gm-style-iw button.gm-ui-hover-effect {
+  top: 4px !important;
+  right: 4px !important;
+  width: 28px !important;
+  height: 28px !important;
+  opacity: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Adjust the close icon inside the button */
+#map-wrapper .gm-style-iw button.gm-ui-hover-effect > span {
+  margin: 4px !important;
+  background-color: #333 !important; /* Changes icon color (uses CSS mask) */
+}

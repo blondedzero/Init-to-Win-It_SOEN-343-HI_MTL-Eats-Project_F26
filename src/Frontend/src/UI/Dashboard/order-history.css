@@ -68,8 +68,17 @@
 }
 
 .history-line .refund-details,
-.history-line .refund-form {
+.history-line .refund-form,
+.history-line .pricing-details {
     grid-column: 1 / -1;
+}
+
+.history-line .pricing-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    color: #374151;
+    font-size: 0.9rem;
 }
 
 .history-line .refund-details {

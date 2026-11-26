@@ -44,6 +44,15 @@ export default function OrderHistoryLine({order, role, onRefund}) {
                 {order.status == ORDERSTATUS.REJECTED && order.rejectionReason &&
                     <span className="reason">Rejected: {order.rejectionReason}</span>}
             </div>
+            {order.pricing && <div className="pricing-details">
+                <strong>Pricing summary</strong>
+                <span>Items subtotal: {money(order.pricing.subtotal)}</span>
+                <span>Small order fee: {money(order.pricing.smallOrderFee)}</span>
+                <span>Service fee: {money(order.pricing.serviceFee)}</span>
+                <span>Delivery fee: {money(order.pricing.deliveryFee)}</span>
+                <span>Tax: {money(order.pricing.taxAmount)}</span>
+                {isOperator && <span>PRC rule version: {order.pricing.ruleVersion ?? 'Unavailable'}</span>}
+            </div>}
             {order.refund && <div className="refund-details">
                 <strong>Refund: {money(order.refund.amount)}</strong>
                 {isOperator && <span>Original charge unchanged: {money(order.totalCost)}</span>}

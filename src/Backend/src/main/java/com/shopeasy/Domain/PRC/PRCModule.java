@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.math.RoundingMode;
 
 @Service
 public class PRCModule {
@@ -30,15 +31,42 @@ public class PRCModule {
     private final PaymentInfoRepository paymentInfoRepository;
     private final MockPaymentProcessor paymentProcessor;
     private final EventManager eventManager;
+    private final PricingRules prcRules;
 
     public PRCModule(OrderRepository orderRepository, RoleValidator roleValidator,
                      PaymentInfoRepository paymentInfoRepository, MockPaymentProcessor paymentProcessor,
-                     EventManager eventManager) {
+                     EventManager eventManager, PricingRules prcRules) {
         this.orderRepository = orderRepository;
         this.roleValidator = roleValidator;
         this.paymentInfoRepository = paymentInfoRepository;
         this.paymentProcessor = paymentProcessor;
         this.eventManager = eventManager;
+        this.prcRules = prcRules;
+    }
+
+    @Transactional
+    public Order calculateOrderTotalCost(Order order) {
+        if (order.getItems().size() < prcRules.smallOrderThreshold()) {
+            order.setSmallOrderFee(prcRules.smallOrderFee());
+            order.setSubtotal(order.getSubtotal().add(order.getSmallOrderFee()));
+        }
+
+        order.setDeliveryFee(calculateFee(order.getSubtotal(), prcRules.deliveryFeePct()));
+        order.setServiceFee(calculateFee(order.getSubtotal(), prcRules.serviceFeePct()));
+        order.setTaxAmount(calculateFee(order.getSubtotal(), prcRules.taxPct()));
+
+        BigDecimal totalCost = order.getSubtotal()
+                .add(order.getDeliveryFee())
+                .add(order.getServiceFee())
+                .add(order.getTaxAmount());
+
+        order.setTotalCost(totalCost);
+        order.setPricingRuleVersion(prcRules.ruleVersion());
+        return order;
+    }
+
+    private BigDecimal calculateFee(BigDecimal subtotal, BigDecimal rate) {
+        return subtotal.multiply(rate).setScale(2, RoundingMode.HALF_UP);
     }
 
     @Transactional(readOnly = true)

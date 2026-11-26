@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom'
 import MapCanvas from './MapCanvas'
 import { getAllCouriersOnDuty, getAllStoresForMap } from '../../api/OperatorRequests'
 import { ROLE } from '../../api/EnumRoles'
+import './map.css'
 
 export default function MapWrapper() {
   const { user } = useOutletContext()
@@ -44,7 +45,7 @@ export default function MapWrapper() {
   return (
     <>
       {error && <p className="dash-error" role="alert">{error}</p>}
-      <div className="dash-title-row">
+      <div id='map-wrapper'>
        <MapCanvas stores={stores} couriers={couriersOnDuty} user={user}/>
       </div>
     </>

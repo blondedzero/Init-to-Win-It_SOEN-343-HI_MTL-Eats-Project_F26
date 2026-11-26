@@ -133,6 +133,7 @@ export default function OperatorPage() {
           stores={stores}
           idleCouriers={idleCouriers}
           handleOperation={handleOperation}
+          couriersOnDuty={couriersOnDuty}
         />}
       </div>
     </>
@@ -207,7 +208,7 @@ function ManageStoresTab({stores, handleOperation}) {
   )
 }
 
-function ManageOrdersTab({orders, stores, idleCouriers, handleOperation}) {
+function ManageOrdersTab({orders, stores, idleCouriers, handleOperation, couriersOnDuty}) {
   const ordersReady = orders.filter(order => order.status == ORDERSTATUS.READY)
   const ordersAccepted = orders.filter(order => order.status == ORDERSTATUS.ACCEPTED)
   const ordersPreparing = orders.filter(order => order.status == ORDERSTATUS.PREPARING)
@@ -230,12 +231,20 @@ function ManageOrdersTab({orders, stores, idleCouriers, handleOperation}) {
             ))}
           </section>
 
-            <section>
+          <section>
             <h3 className="dash-section-title">Orders Ready ({ordersReady.length})</h3>
             <p className="dash-muted">All current orders in the system</p>
             {ordersReady.map((order) => (
               <OperatorOrderCard key={order.orderId} order={order} stores={stores} idleCouriers={idleCouriers} tab={TABS.ORDERS} handleOperation={handleOperation}/>
             ))}
+          </section>
+
+          <section>
+          <h3 className="dash-section-title">Couriers on Duty ({couriersOnDuty.length})</h3>
+          <p className="dash-muted">All couriers on duty</p>
+          {couriersOnDuty.map((courier) => (
+            <OperatorCourierCard key={courier.id} courier={courier}/>
+          ))}
           </section>
       </div>
     )

@@ -1,5 +1,6 @@
 package com.shopeasy;
 
+import com.shopeasy.Domain.PRC.PRCModule;
 import com.shopeasy.Domain.REG.PasswordEncoder;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.*;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -62,6 +60,7 @@ public class ApplicationSeeder implements ApplicationRunner {
     private final SystemEventRepository systemEventRepository;
     private final JdbcTemplate jdbcTemplate;
     private final PasswordEncoder passwordEncoder = new PasswordEncoder();
+    private final PRCModule prcModule;
     private boolean seedDataAlreadyPresent;
 
     public ApplicationSeeder(
@@ -74,7 +73,8 @@ public class ApplicationSeeder implements ApplicationRunner {
             ProductRepository productRepository,
             OrderRepository orderRepository,
             SystemEventRepository systemEventRepository,
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate,
+            PRCModule prcModule) {
         this.userRepository = userRepository;
         this.groceryStoreRepository = groceryStoreRepository;
         this.courierRepository = courierRepository;
@@ -85,6 +85,7 @@ public class ApplicationSeeder implements ApplicationRunner {
         this.orderRepository = orderRepository;
         this.systemEventRepository = systemEventRepository;
         this.jdbcTemplate = jdbcTemplate;
+        this.prcModule = prcModule;
     }
 
     @Override
@@ -163,7 +164,7 @@ public class ApplicationSeeder implements ApplicationRunner {
 
             if (namesAtId.isEmpty()) {
                 if (!idsForName.isEmpty()) {
-                    throw new IllegalStateException("Product category already exists at an unexpected ID: "
+                    LOGGER.info("Product category already exists at an unexpected ID: "
                             + category.name());
                 }
                 jdbcTemplate.update(
@@ -172,14 +173,12 @@ public class ApplicationSeeder implements ApplicationRunner {
                         category.id(),
                         category.name());
             } else if (!category.name().equals(namesAtId.get(0))) {
-                throw new IllegalStateException("Product category ID " + category.id()
+                LOGGER.info("Product category ID " + category.id()
                         + " is already assigned to " + namesAtId.get(0));
             }
 
-            ProductCategory persisted = productCategoryRepository.findById(category.id())
-                    .orElseThrow(() -> new IllegalStateException(
-                            "Unable to load product category " + category.name()));
-            categories.put(category.id(), persisted);
+            Optional<ProductCategory> persisted = productCategoryRepository.findById(category.id());
+            persisted.ifPresent(productCategory -> categories.put(category.id(), productCategory));
         }
 
         jdbcTemplate.queryForObject("""
@@ -199,9 +198,11 @@ public class ApplicationSeeder implements ApplicationRunner {
                     "operator@email.com", passwordEncoder.hashPassword(DEMO_PASSWORD), "Demo", "Operator"));
         }
         if (!(user instanceof Operator operator)) {
-            throw new IllegalStateException("operator@email.com is already used by a non-operator account");
-        }
-        return operator;
+            user.setEmail(UUID.randomUUID().toString()+"@email.com");
+            userRepository.save(user);
+            return userRepository.save(new Operator(
+                    "operator@email.com", passwordEncoder.hashPassword(DEMO_PASSWORD), "Demo", "Operator"));
+        } else return operator;
     }
 
     private List<Customer> ensureCustomers() {
@@ -222,7 +223,9 @@ public class ApplicationSeeder implements ApplicationRunner {
                         latitude));
             }
             if (!(user instanceof Customer customer)) {
-                throw new IllegalStateException(email + " is already used by a non-customer account");
+                user.setPasswordHash(passwordEncoder.hashPassword(DEMO_PASSWORD));
+                userRepository.save(user);
+                continue;
             }
             customers.add(customer);
         }
@@ -256,11 +259,12 @@ public class ApplicationSeeder implements ApplicationRunner {
                 user = newStore;
             }
             if (!(user instanceof GroceryStore store)) {
-                throw new IllegalStateException(email + " is already used by a non-store account");
+                LOGGER.info(email + " is already used by a non-store account");
+            } else {
+                store.setStoreName(seed.name());
+                store.setStatus(seed.status());
+                stores.add(groceryStoreRepository.save(store));
             }
-            store.setStoreName(seed.name());
-            store.setStatus(seed.status());
-            stores.add(groceryStoreRepository.save(store));
         }
         return stores;
     }
@@ -281,17 +285,17 @@ public class ApplicationSeeder implements ApplicationRunner {
                         45.50 + (i * 0.004)));
             }
             if (!(user instanceof Courier courier)) {
-                throw new IllegalStateException(email + " is already used by a non-courier account");
+                LOGGER.info(email + " is already used by a non-courier account");
+            } else {
+                couriers.add(courier);
+                if (hasActiveOrder(courier)) {
+                    continue;
+                }
+                courier.setStatus(CourierStatus.IDLE);
+                Courier savedCourier = courierRepository.save(courier);
+                couriers.set(couriers.size() - 1, savedCourier);
+                availableCouriers.add(savedCourier);
             }
-            couriers.add(courier);
-            if (hasActiveOrder(courier)) {
-                continue;
-            }
-
-            courier.setStatus(CourierStatus.IDLE);
-            Courier savedCourier = courierRepository.save(courier);
-            couriers.set(couriers.size() - 1, savedCourier);
-            availableCouriers.add(savedCourier);
         }
         return new CourierSetup(couriers, availableCouriers);
     }
@@ -364,6 +368,14 @@ public class ApplicationSeeder implements ApplicationRunner {
             List<Courier> availableCouriers,
             Operator operator,
             Map<Long, List<Product>> productsByStore) {
+        Map<Long, Product> firstAvailableProducts = new HashMap<>();
+        for (GroceryStore store : stores) {
+            firstAvailableProduct(productsByStore, store).ifPresentOrElse(
+                    product -> firstAvailableProducts.put(store.getAccountId(), product),
+                    () -> LOGGER.warn("Skipping demo orders for store {}: no available product with stock",
+                            store.getStoreName()));
+        }
+
         if (availableCouriers.size() >= 5) {
             availableCouriers.get(4).setStatus(CourierStatus.OFFLINE);
         }
@@ -383,7 +395,7 @@ public class ApplicationSeeder implements ApplicationRunner {
         customerIndex = seedProgressOrders(
                 igaOrderStatuses,
                 igaCourierAssignments,
-                customers, stores.get(0), productsByStore, orderNumber, customerIndex, operator);
+                customers, stores.get(0), firstAvailableProducts, orderNumber, customerIndex, operator);
 
         Map<Integer, Courier> superCCourierAssignments = new HashMap<>();
         int nextCourierIndex = availableCouriers.isEmpty() ? 0 : 1;
@@ -398,17 +410,20 @@ public class ApplicationSeeder implements ApplicationRunner {
                         OrderStatus.PREPARING, OrderStatus.PREPARING,
                         OrderStatus.READY, OrderStatus.READY, OrderStatus.READY),
                 superCCourierAssignments,
-                customers, stores.get(1), productsByStore, orderNumber, customerIndex, operator);
+                customers, stores.get(1), firstAvailableProducts, orderNumber, customerIndex, operator);
 
         seedProgressOrders(
                 List.of(OrderStatus.PLACED, OrderStatus.PLACED, OrderStatus.PLACED),
                 Map.of(),
-                customers, stores.get(2), productsByStore, orderNumber, customerIndex, operator);
+                customers, stores.get(2), firstAvailableProducts, orderNumber, customerIndex, operator);
 
         for (int customerNumber = 0; customerNumber < customers.size(); customerNumber++) {
             Customer customer = customers.get(customerNumber);
             GroceryStore store = stores.get(customerNumber % 3);
-            Product product = firstAvailableProduct(productsByStore, store);
+            Product product = firstAvailableProducts.get(store.getAccountId());
+            if (product == null) {
+                continue;
+            }
 
             for (int i = 0; i < 2; i++) {
                 createOrder(customer, store, product, OrderStatus.REJECTED, null,
@@ -430,11 +445,14 @@ public class ApplicationSeeder implements ApplicationRunner {
             Map<Integer, Courier> courierAssignments,
             List<Customer> customers,
             GroceryStore store,
-            Map<Long, List<Product>> productsByStore,
+            Map<Long, Product> firstAvailableProducts,
             AtomicInteger orderNumber,
             int customerIndex,
             Operator operator) {
-        Product product = firstAvailableProduct(productsByStore, store);
+        Product product = firstAvailableProducts.get(store.getAccountId());
+        if (product == null) {
+            return customerIndex;
+        }
         for (int i = 0; i < statuses.size(); i++) {
             createOrder(
                     customers.get(customerIndex++ % customers.size()),
@@ -458,6 +476,7 @@ public class ApplicationSeeder implements ApplicationRunner {
             int orderNumber) {
         Order order = new Order(customer, store);
         order.addItem(product, 1);
+        order = prcModule.calculateOrderTotalCost(order);
 
         switch (targetStatus) {
             case PLACED -> {
@@ -477,12 +496,23 @@ public class ApplicationSeeder implements ApplicationRunner {
                 }
                 if (targetStatus == OrderStatus.PICKED_UP) {
                     if (courier == null) {
-                        throw new IllegalArgumentException("A picked-up demo order must have a courier");
+                        order.markReady();
+                    } else {
+                        order.markPickedUp();  
+                        courier.confirmPickup();
                     }
-                    order.markPickedUp();
-                    courier.confirmPickup();
                 }
             }
+
+            case DELIVERED -> {
+                if (order.getCourier() == null) {
+                    order.markReady();
+                } else {
+                    order.markDelivered();
+                    order.getCourier().setStatus(CourierStatus.IDLE);
+                }
+            }
+
             case REJECTED -> order.markRejected("Demo seed rejected order");
             case CANCELED -> order.markCancelled();
             case REFUNDED -> {
@@ -495,20 +525,16 @@ public class ApplicationSeeder implements ApplicationRunner {
                         operator.getAccountId(),
                         "demo-refund-v1-" + orderNumber));
             }
-            case DELIVERED -> throw new IllegalArgumentException(
-                    "Delivered orders are not part of the demo seed");
         }
         order.captureSeedInitialState();
         return orderRepository.save(order);
     }
 
-    private Product firstAvailableProduct(Map<Long, List<Product>> productsByStore, GroceryStore store) {
-        return productsByStore.get(store.getAccountId()).stream()
+    private Optional<Product> firstAvailableProduct(Map<Long, List<Product>> productsByStore, GroceryStore store) {
+        return productsByStore.getOrDefault(store.getAccountId(), List.of()).stream()
                 .filter(product -> product.getStatus() == ProductStatus.AVAILABLE
                         && product.getStockQuantity() > 0)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException(
-                        "No available demo product exists for " + store.getStoreName()));
+                .findFirst();
     }
 
     private record CategorySeed(Long id, String name) {}

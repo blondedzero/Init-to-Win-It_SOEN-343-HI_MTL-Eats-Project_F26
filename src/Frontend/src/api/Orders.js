@@ -16,6 +16,10 @@ export function placeOrder(storeId, lines) {
   return apiRequest('/api/orders', { method: 'POST', body: { storeId, lines } })
 }
 
+export function estimateOrder(storeId, lines) {
+  return apiRequest('/api/orders/estimate', { method: 'POST', body: { storeId, lines } })
+}
+
 export function getCustomerActiveOrders() {
   return apiRequest('/api/customer/orders/active')
 }

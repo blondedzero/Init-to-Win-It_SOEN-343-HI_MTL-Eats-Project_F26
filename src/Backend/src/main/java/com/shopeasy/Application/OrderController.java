@@ -4,6 +4,7 @@ import com.shopeasy.Domain.ORD.ORDModule;
 import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.ORD.OrderResult;
 import com.shopeasy.Domain.ORD.PlaceOrderRequest;
+import com.shopeasy.Domain.PRC.PricingSummary;
 import com.shopeasy.Domain.ORD.QueueData;
 import com.shopeasy.Foundation.entities.User;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,13 @@ public class OrderController extends Controller {
                                                   @RequestBody PlaceOrderRequest request) {
         User user = authenticator.authenticate(authorization);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordModule.placeOrder(user, request));
+    }
+
+    @PostMapping("/orders/estimate")
+    public PricingSummary estimateOrder(@RequestHeader(value = "Authorization", required = false) String authorization,
+                                        @RequestBody PlaceOrderRequest request) {
+        User user = authenticator.authenticate(authorization);
+        return ordModule.estimateOrder(user, request);
     }
 
     @GetMapping("/customer/orders/active")

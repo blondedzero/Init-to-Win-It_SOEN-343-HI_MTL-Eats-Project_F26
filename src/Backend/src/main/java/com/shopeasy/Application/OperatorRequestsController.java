@@ -58,12 +58,6 @@ public class OperatorRequestsController extends Controller{
         return gsModule.pauseStore(user, storeId);
     }
 
-    @PostMapping("stores/{storeId}/close")
-    public StoreContextData closeStore(@RequestHeader(value = "Authorization", required = false) String authorization, @PathVariable Long storeId) {
-        User user = authenticator.authenticate(authorization);
-        return gsModule.closeStore(user, storeId);
-    }
-
     //Order Operations
     @GetMapping("/orders/in-progress")
     public List<OrderData> getAllOrdersInProgress(@RequestHeader(value = "Authorization", required = false) String authorization) {

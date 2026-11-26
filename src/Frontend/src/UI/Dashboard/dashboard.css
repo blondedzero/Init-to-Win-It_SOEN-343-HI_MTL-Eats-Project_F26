@@ -233,6 +233,12 @@
   margin: 4px 0;
 }
 
+.dash-pricing-summary {
+  display: grid;
+  gap: 4px;
+  min-width: 220px;
+}
+
 .dash-badge {
   font-size: 0.72rem;
   font-weight: 700;
