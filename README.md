@@ -7,6 +7,12 @@ Maëlle Fieffé-Bédard; ID: 40231764, GitHub ID: maellefb, Role: Scrum Master. 
 Carlos Guevara Martinez; ID: 40227586, GitHub ID: carlos21guevara, Role: Database Specialist. <br>
 Nagha Abdoul-Aziz Kone; ID: 40307505, GitHub ID: osrlazlo, Role: Front End Developer. <br>
 
+## Instructions and Information
+- [How to build and run the app locally](#how-to-build-and-run-the-app-locally)
+- [How to run the app with Docker](#run-locally-with-docker)
+- [How to run characterization tests](#run-characterization-tests)
+- [Seeded accounts to test the app](#accounts-to-test-the-app)
+
 ## How to build and run the app locally
 
 ### Prerequisites
@@ -66,7 +72,7 @@ The app can be accessed by navigating to [http://localhost:5173](http://localhos
 Press `Ctrl+C` in the terminal to stop both servers.
 
 ## Accounts to test the app
-These accounts are created by the startup seed (`ApplicationSeeder`). All passwords are `test`.
+These accounts are created by the startup seed (`ApplicationSeeder`). All passwords are `test`. You may also add additional accounts by registering.
 <table>
     <tr>
         <th>Email</th>
