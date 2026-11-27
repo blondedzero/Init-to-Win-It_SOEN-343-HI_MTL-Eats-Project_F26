@@ -11,7 +11,6 @@ import com.shopeasy.Foundation.repositories.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -36,7 +35,7 @@ class DLVModuleCharacterizationTest {
     @Mock private EventManager eventManager;
     @Mock private RoleValidator roleValidator;
 
-    @InjectMocks private DLVModule module;
+    private DLVModule module;
 
     private Customer customer;
     private GroceryStore store;
@@ -48,6 +47,17 @@ class DLVModuleCharacterizationTest {
         store = new GroceryStore("store@test.com", "hash", "Sam", "Store",
                 "20 Main St", -73.55, 45.52, "Test Store");
         lenient().when(eventManager.logEvent(anyString())).thenReturn(700L);
+
+        CourierOrderLookup orderLookup = new CourierOrderLookup(courierRepository, orderRepository);
+        CourierStatusPublisher statusPublisher = new CourierStatusPublisher();
+        DistanceCalculator distanceCalculator = new DistanceCalculator();
+        CourierDispatchService dispatchService = new CourierDispatchService(courierRepository, orderRepository,
+                eventManager, roleValidator, orderLookup, statusPublisher, distanceCalculator);
+        DeliveryService deliveryService = new DeliveryService(courierRepository, orderRepository,
+                eventManager, roleValidator, orderLookup, statusPublisher);
+        CourierStatusService statusService = new CourierStatusService(courierRepository, orderRepository,
+                eventManager, roleValidator, orderLookup, statusPublisher, dispatchService);
+        module = new DLVModule(statusService, dispatchService, deliveryService);
     }
 
     @Test
