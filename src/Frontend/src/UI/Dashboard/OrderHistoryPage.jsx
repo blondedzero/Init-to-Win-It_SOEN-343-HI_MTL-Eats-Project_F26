@@ -1,9 +1,8 @@
 import { useOutletContext } from "react-router-dom";
 import { getOrderHistory, refundOrder } from "../../api/PRC/PRCRequests";
 import { useCallback, useEffect, useState } from "react";
-import OrderHistoryLine from "./OrderHistoryLine";
+import OrderHistoryLine from "./OrderHistory/OrderHistoryLine";
 import './order-history.css'
-import { ROLE } from "../../api/EnumRoles";
 
 function getLastActionTimestamp(order) {
     return [order.placedAt, order.deliveredAt, order.canceledAt, order.refund?.refundedAt].reduce((latest, timestamp) => {
