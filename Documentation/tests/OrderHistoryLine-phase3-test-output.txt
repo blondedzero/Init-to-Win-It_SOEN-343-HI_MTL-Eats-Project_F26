@@ -1,0 +1,11 @@
+npm notice run shopeasy@0.0.0 test
+npm notice run vitest run src/tests/OrderHistoryLine.test.jsx
+
+ RUN  v4.1.12 C:/Users/AK/Desktop/CONCORDIA/6. F26/SOEN 343/Project/src/Frontend
+
+
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+   Start at  23:28:18
+   Duration  1.05s (transform 76ms, setup 0ms, import 254ms, tests 112ms, environment 550ms)
+
