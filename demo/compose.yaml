@@ -9,13 +9,13 @@ x-demo:
 
 services:
   web:
-    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-frontend:ae276a139220a645065f9d334c7bbc75a1c8b9fd
+    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-frontend:805afb923f157461149312f738a5fa29b6019959
     depends_on:
       backend:
         condition: service_healthy
 
   backend:
-    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-backend:ae276a139220a645065f9d334c7bbc75a1c8b9fd
+    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-backend:805afb923f157461149312f738a5fa29b6019959
     depends_on:
       db:
         condition: service_healthy
