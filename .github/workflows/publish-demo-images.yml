@@ -143,6 +143,8 @@ jobs:
           REPO: ${{ github.event.repository.name }}
           SHA: ${{ github.sha }}
           REPOSITORY: ${{ github.repository }}
+          # Repository secret; empty if not set. Only the frontend uses it.
+          MAPS_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
         run: |
           set -euo pipefail
           owner="${OWNER,,}"
@@ -165,6 +167,7 @@ jobs:
               --provenance=false \
               --label "org.opencontainers.image.source=https://github.com/${REPOSITORY}" \
               --tag "$image" \
+              --build-arg "VITE_GOOGLE_MAPS_API_KEY=${MAPS_KEY:-}" \
               --push \
               "$dir"
             echo "::endgroup::"
