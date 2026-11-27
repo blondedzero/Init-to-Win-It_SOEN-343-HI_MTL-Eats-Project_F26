@@ -16,6 +16,9 @@ flowchart TB
                     regClient["REG client<br/>Auth.js · Login.js · Register.js"]
                     ordClient["ORD client<br/>Orders.js · Store.js"]
                     operatorClient["Operator client<br/>OperatorRequests.js"]
+                    storeClient["Store client<br/>Store.js"]
+                    prcClient["PRC client<br/>PRCRequests.js"]
+                    rvwClient["RVW client<br/>Reviews.js"]
                 end
                 dashboard -. "user actions" .-> api
             end
@@ -31,6 +34,8 @@ flowchart TB
                 orderController["ORD<br/>OrderController"]
                 operatorController["OperatorRequestsController"]
                 prcController["PRC<br/>LedgerController"]
+                courierController["CourierController"]
+                rvwController["RVW<br/>ReviewController"]
                 exceptionHandler["ApiExceptionHandler"]
             end
 
@@ -40,13 +45,14 @@ flowchart TB
                 ord["ORD <br/>ORDModule · OrderData · PreparationQueue<br/>..."]
                 prc["PRC <br/>PRCModule<br/>..."]
                 dlv["DLV <br/>DLVModule<br/>DispatchQueue<br/>..."]
+                rvw["RVW <br/>RVWModule"]
                 supporting["GSModule · OperatorRequestsModule<br/>..."]
             end
 
             subgraph foundation["Foundation"]
                 direction TB
-                entities["entities/<br/>User · Order · GroceryStore<br/>..."]
-                repositories["repositories/<br/>UserRepository · OrderRepository · GroceryStoreRepository<br/>..."]
+                entities["entities/<br/>User · Order · GroceryStore · Review<br/>..."]
+                repositories["repositories/<br/>UserRepository · OrderRepository · GroceryStoreRepository · ReviewRepository<br/>..."]
             end
 
 
@@ -66,8 +72,8 @@ flowchart TB
     classDef domainStyle fill:#fff99a,stroke:#555,color:#111
     classDef foundationStyle fill:#f6d5b8,stroke:#555,color:#111
     classDef databaseStyle fill:#eeeeee,stroke:#555,color:#111
-    class dashboard,regClient,ordClient,operatorClient uiStyle
-    class authController,orderController,operatorController,prcController,exceptionHandler appStyle
+    class dashboard,regClient,ordClient,operatorClient,storeClient,prcClient uiStyle
+    class authController,orderController,operatorController,prcController,exceptionHandler,courierController appStyle
     class reg,ord,prc,supporting,dlv domainStyle
     class entities,repositories foundationStyle
     class database databaseStyle
