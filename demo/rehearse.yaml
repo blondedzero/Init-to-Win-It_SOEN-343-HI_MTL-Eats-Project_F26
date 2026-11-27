@@ -1,0 +1,6 @@
+# Laptop-only overlay: publishes the public service so you can open http://localhost:8088.
+# docker compose -f demo/compose.yaml -f demo/rehearse.yaml up
+services:
+  web:
+    ports:
+      - "8088:80"

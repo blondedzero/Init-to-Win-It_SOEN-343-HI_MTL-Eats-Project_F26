@@ -1,0 +1,54 @@
+# ShopEasy on the SOEN 343 demo platform.
+#   web      nginx: serves the frontend build and proxies /api to backend (public)
+#   backend  Spring Boot API
+#   db       Postgres with a healthcheck and a named volume
+# Replace each image tag with the line printed by the "Publish demo images" workflow.
+x-demo:
+  web: web
+  port: 80
+
+services:
+  web:
+    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-frontend:0123456789abcdef0123456789abcdef01234567
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  backend:
+    image: ghcr.io/blondedzero/init-to-win-it_soen-343-hi_mtl-eats-project_f26-backend:0123456789abcdef0123456789abcdef01234567
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/app
+      SPRING_DATASOURCE_USERNAME: app
+      SPRING_DATASOURCE_PASSWORD: demo-password
+      # Demo-only signing key, not the team's real one
+      JWT_SECRET: 70dbe1fd59467682f8d22ae88e21eabd1b3067e306d5a4fa23e607177cee5b4f
+      # Trust the platform's X-Forwarded-* headers so same-origin requests pass the CORS check
+      SERVER_FORWARD_HEADERS_STRATEGY: framework
+      SPRING_JPA_SHOW_SQL: "false"
+      JAVA_TOOL_OPTIONS: -XX:MaxRAMPercentage=50
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/8080'"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: demo-password
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  dbdata:

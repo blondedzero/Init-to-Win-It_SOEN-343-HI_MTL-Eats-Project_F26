@@ -1,1 +1,1 @@
-export const BACKEND_ROUTE = import.meta.env.VITE_BACKEND_ROUTE ?? 'http://localhost:8080'
+export const BACKEND_ROUTE = import.meta.env.VITE_BACKEND_ROUTE ?? (import.meta.env.DEV ? 'http://localhost:8080' : '')
