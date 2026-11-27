@@ -176,51 +176,82 @@ public class ORDModule {
     @Transactional
     public OrderResult cancelOrder(User user, Long orderId) {
         roleValidator.requireRole(user, List.of(Role.OPERATOR, Role.CUSTOMER, Role.STORE), "cancel orders");
-
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order " + orderId + " does not exist"));
-
-        if (user.getRole() == Role.CUSTOMER
-                && !order.getCustomer().getAccountId().equals(user.getAccountId())) {
-            throw new PermissionDeniedException("Customers can only cancel their own orders");
-        }
-        // Customers may cancel only while the order is still placed; afterwards it is an operator action
-        if (user.getRole() == Role.CUSTOMER && order.getStatus() != OrderStatus.PLACED) {
-            throw new OrderRuleViolationException("Order #" + orderId + " is " + order.getStatus()
-                    + " and can no longer be canceled by the customer");
-        }
-        if (user.getRole() == Role.STORE
-                && !order.getStore().getAccountId().equals(user.getAccountId())) {
-            throw new PermissionDeniedException("Stores can only cancel their own orders");
-        }
+        Order order = findOrder(orderId);
+        requireOwnership(user, order, "cancel");
+        requireCancellable(user, order);
 
         OrderStatus previousStatus = order.getStatus();
-        if (previousStatus == OrderStatus.CANCELED || previousStatus == OrderStatus.REJECTED
-                || previousStatus == OrderStatus.DELIVERED || previousStatus == OrderStatus.REFUNDED) {
-            throw new OrderRuleViolationException("Order #" + orderId + " cannot be canceled because it is "
-                    + previousStatus.name().toLowerCase());
-        }
-        if (previousStatus == OrderStatus.ACCEPTED) {
-            queueFor(order.getStore().getAccountId()).remove(orderId);
-        }
-
-        for (OrderItem item : order.getItems()) {
-            item.getProduct().addToStock(item.getQuantity());
-        }
-
+        removeFromPreparationQueue(order);
+        restoreStock(order);
         order.markCancelled();
         orderRepository.save(order);
-
-        Courier courier = order.getCourier();
-        if (courier != null
-                && (courier.getStatus() == CourierStatus.ASSIGNED || courier.getStatus() == CourierStatus.CARRYING)) {
-            dLVmodule.releaseCourier(courier);
-        }
+        releaseActiveCourier(order);
 
         Long eventId = eventManager.logEvent("Order " + orderId + ": " + previousStatus
                 + " -> CANCELED by " + user.getRole().name().toLowerCase()
                 + " " + user.getAccountId());
         return new OrderResult("Order #" + orderId + " canceled", eventId, OrderData.from(order));
+    }
+
+    /**
+     * Refuses a customer who did not place the order, or a store that did not receive it.
+     * Other roles (operators, couriers) are NOT checked here: callers must restrict the role
+     * first with {@link RoleValidator#requireRole}.
+     *
+     * @param verb the action named in the refusal message, e.g. "cancel" or "rate"
+     */
+    public void requireOwnership(User user, Order order, String verb) {
+        if (user.getRole() == Role.CUSTOMER
+                && !order.getCustomer().getAccountId().equals(user.getAccountId())) {
+            throw new PermissionDeniedException("Customers can only " + verb + " their own orders");
+        }
+        if (user.getRole() == Role.STORE
+                && !order.getStore().getAccountId().equals(user.getAccountId())) {
+            throw new PermissionDeniedException("Stores can only " + verb + " their own orders");
+        }
+    }
+
+    private Order findOrder(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order " + orderId + " does not exist"));
+    }
+
+    private void requireCancellable(User user, Order order) {
+        OrderStatus status = order.getStatus();
+        // Customers may cancel only while the order is still placed; afterwards it is an operator action
+        if (user.getRole() == Role.CUSTOMER && status != OrderStatus.PLACED) {
+            throw new OrderRuleViolationException("Order #" + order.getOrderId() + " is " + status
+                    + " and can no longer be canceled by the customer");
+        }
+        if (isFinished(status)) {
+            throw new OrderRuleViolationException("Order #" + order.getOrderId() + " cannot be canceled because it is "
+                    + status.name().toLowerCase());
+        }
+    }
+
+    private static boolean isFinished(OrderStatus status) {
+        return status == OrderStatus.CANCELED || status == OrderStatus.REJECTED
+                || status == OrderStatus.DELIVERED || status == OrderStatus.REFUNDED;
+    }
+
+    private void removeFromPreparationQueue(Order order) {
+        if (order.getStatus() == OrderStatus.ACCEPTED) {
+            queueFor(order.getStore().getAccountId()).remove(order.getOrderId());
+        }
+    }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getItems()) {
+            item.getProduct().addToStock(item.getQuantity());
+        }
+    }
+
+    private void releaseActiveCourier(Order order) {
+        Courier courier = order.getCourier();
+        if (courier != null
+                && (courier.getStatus() == CourierStatus.ASSIGNED || courier.getStatus() == CourierStatus.CARRYING)) {
+            dLVmodule.releaseCourier(courier);
+        }
     }
 
     @Transactional(readOnly = true)
