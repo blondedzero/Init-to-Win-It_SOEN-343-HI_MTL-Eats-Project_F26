@@ -5,6 +5,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# Browser key baked into the bundle by Vite; empty by default (the map page then shows a message)
+ARG VITE_GOOGLE_MAPS_API_KEY=
 RUN npm run build
 
 FROM nginx:1.27-alpine
