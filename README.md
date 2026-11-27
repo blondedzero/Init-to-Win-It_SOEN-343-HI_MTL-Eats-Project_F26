@@ -133,6 +133,16 @@ To run one characterization test, replace the class name below with the desired 
 
 For macOS or Linux, use `./mvnw` instead of `.\mvnw.cmd`. Current characterization test classes are `DLVModuleCharacterizationTest`, `ORDModuleCancelOrderCharacterizationTest`, `GSModuleCharacterisationTest`, and `StoreContextDataCharacterisationTest`.
 
+### Frontend component tests
+From the repository root, enter `src/Frontend` and run the test suite:
+
+```powershell
+cd src/Frontend
+npm test
+```
+
+To run only the `OrderHistoryLine` tests, use `npm test -- src/tests/OrderHistoryLine.test.jsx`.
+
 ## Run locally with Docker
 Requires Docker Desktop. The stack is `web` (nginx serving the frontend build and proxying `/api`), `backend` (Spring Boot) and `db` (Postgres 17). The database starts empty and is initialized by the app's seed data.
 

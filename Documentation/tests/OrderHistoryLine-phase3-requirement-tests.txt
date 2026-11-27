@@ -1,0 +1,56 @@
+OrderHistoryLine - Phase 3 Requirement Test Documentation
+=========================================================
+
+This document summarizes the characterization tests for the OrderHistoryLine
+React component. The test file is:
+src/Frontend/src/tests/OrderHistoryLine.test.jsx
+
+Customer and operator order history
+-----------------------------------
+The tests verify that customers see the store name while operators see the
+customer name. They also characterize rendering of order lines, total cost,
+delivery time, pricing rule version, and operator-specific refund information.
+
+Relevant tests:
+- shows customers the store name, order details, and delivery time
+- shows operators the customer name, pricing rule, and refund details
+
+
+Order status details
+--------------------
+The rejected-order test verifies that the rejection reason and timestamp are
+shown. The component uses canceledAt as the timestamp for rejected orders.
+
+Relevant test:
+- shows a rejected order reason and its rejection time
+
+
+Refund eligibility and submission
+----------------------------------
+The tests verify that refund controls are available to operators for delivered
+or canceled orders only when the order has not already been refunded. They also
+characterize the refund form's initial amount, submitted order ID, amount and
+reason, and whether the form closes based on the onRefund callback result.
+
+Relevant tests:
+- offers refunds to operators only for eligible delivered orders
+- offers refunds to operators only for eligible canceled orders
+- offers refunds to operators only for eligible ready orders
+- offers refunds to operators only for eligible already refunded orders
+- submits the entered refund and closes the form when successful
+- keeps the refund form open when the refund callback reports failure
+
+
+How the tests pass
+------------------
+Vitest runs the tests in jsdom, and React Testing Library renders the component
+and exercises its visible controls. A test passes when all expected content,
+conditional controls, callback arguments and resulting form state match the
+current component behavior.
+
+The captured raw test output is in:
+Documentation/tests/OrderHistoryLine-phase3-test-output.txt
+
+The recorded run reports:
+Test Files  1 passed (1)
+Tests       9 passed (9)
