@@ -1,6 +1,7 @@
 package com.shopeasy.Application;
 
 
+import com.shopeasy.Domain.GS.CatalogModule;
 import com.shopeasy.Domain.GS.GSModule;
 import com.shopeasy.Domain.GS.ProductData;
 import com.shopeasy.Domain.GS.ProductRequest;
@@ -28,10 +29,12 @@ import java.util.List;
 @RequestMapping("/api/stores")
 public class StoreController extends Controller{
     private final GSModule gsModule;
+    private final CatalogModule catalogModule;
 
-    public StoreController(GSModule gsModule, RequestAuthenticator authenticator) {
+    public StoreController(GSModule gsModule, CatalogModule catalogModule, RequestAuthenticator authenticator) {
         super(authenticator);
         this.gsModule = gsModule;
+        this.catalogModule = catalogModule;
     }
 
     @GetMapping
@@ -68,20 +71,20 @@ public class StoreController extends Controller{
     @GetMapping("/me/products")
     public List<ProductData> getMyProducts(@RequestHeader(value = "Authorization", required = false) String authorization) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.getMyProducts(user);
+        return catalogModule.getMyProducts(user);
     }
 
     @GetMapping("/categories")
     public List<String> getCategories(@RequestHeader(value = "Authorization", required = false) String authorization) {
         authenticator.authenticate(authorization);
-        return gsModule.listCategories();
+        return catalogModule.listCategories();
     }
 
     @PostMapping("/me/products")
     public ResponseEntity<ProductData> addProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
                                                   @RequestBody ProductRequest request) {
         User user = authenticator.authenticate(authorization);
-        return ResponseEntity.status(HttpStatus.CREATED).body(gsModule.addProduct(user, request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(catalogModule.addProduct(user, request));
     }
 
     @PutMapping("/me/products/{productId}")
@@ -89,21 +92,21 @@ public class StoreController extends Controller{
                                      @PathVariable Long productId,
                                      @RequestBody ProductRequest request) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.updateProduct(user, productId, request);
+        return catalogModule.updateProduct(user, productId, request);
     }
 
     @DeleteMapping("/me/products/{productId}")
     public ProductData removeProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
                                      @PathVariable Long productId) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.removeProduct(user, productId);
+        return catalogModule.removeProduct(user, productId);
     }
 
     @PostMapping("/me/products/{productId}/restore")
     public ProductData restoreProduct(@RequestHeader(value = "Authorization", required = false) String authorization,
                                       @PathVariable Long productId) {
         User user = authenticator.authenticate(authorization);
-        return gsModule.restoreProduct(user, productId);
+        return catalogModule.restoreProduct(user, productId);
     }
 
     @GetMapping("/me/orders/history")
