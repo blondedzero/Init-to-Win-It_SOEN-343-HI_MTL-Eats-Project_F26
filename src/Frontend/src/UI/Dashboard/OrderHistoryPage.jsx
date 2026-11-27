@@ -1,5 +1,7 @@
 import { useOutletContext } from "react-router-dom";
 import { getOrderHistory, refundOrder } from "../../api/PRC/PRCRequests";
+import { getRatingScale, rateOrder } from "../../api/Reviews";
+import { ROLE } from "../../api/EnumRoles";
 import { useCallback, useEffect, useState } from "react";
 import OrderHistoryLine from "./OrderHistory/OrderHistoryLine";
 import './order-history.css'
@@ -17,6 +19,7 @@ export default function OrderHistoryPage() {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
     const [isHistoryLoaded, setIsHistoryLoaded] = useState(false)
+    const [ratingScale, setRatingScale] = useState(null)
 
     const load = useCallback(async() => {
         const [orderHistoryResult] = await Promise.allSettled([
@@ -50,10 +53,29 @@ export default function OrderHistoryPage() {
             return false
         }
     }
-    
+
+    async function handleRate(orderId, storeScore, courierScore) {
+        setError('')
+        setSuccess('')
+        try {
+            await rateOrder(orderId, storeScore, courierScore)
+            await load()
+            setSuccess(`Order #${orderId} rated successfully.`)
+            return true
+        } catch (err) {
+            setError(err.message)
+            return false
+        }
+    }
+
       useEffect(() => {
         load()
       }, [load])
+
+      useEffect(() => {
+        if (user.role !== ROLE.CUSTOMER) return
+        getRatingScale().then(setRatingScale).catch((err) => setError(err.message))
+      }, [user.role])
 
     return(
         <>
@@ -62,7 +84,7 @@ export default function OrderHistoryPage() {
             {error && <p className="dash-error">{error}</p>}
             {success && <p className="dash-success">{success}</p>}
             {isHistoryLoaded ? 
-              orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role} onRefund={handleRefund}/>)
+              orderHistory.length > 0? orderHistory.map(order => <OrderHistoryLine key={order.orderId} order={order} role={user.role} onRefund={handleRefund} onRate={handleRate} ratingScale={ratingScale}/>)
               :<>Order history is empty.</>
             :<>Loading order hisory...</>}
         </div>

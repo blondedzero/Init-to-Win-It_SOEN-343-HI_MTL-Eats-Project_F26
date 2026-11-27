@@ -69,6 +69,8 @@
 
 .history-line .refund-details,
 .history-line .refund-form,
+.history-line .rating-details,
+.history-line .rating-form,
 .history-line .pricing-details {
     grid-column: 1 / -1;
 }
@@ -81,7 +83,8 @@
     font-size: 0.9rem;
 }
 
-.history-line .refund-details {
+.history-line .refund-details,
+.history-line .rating-details {
     display: flex;
     flex-wrap: wrap;
     gap: 6px 16px;
@@ -90,17 +93,21 @@
 }
 
 .history-line .refund-toggle,
-.history-line .refund-form button {
+.history-line .refund-form button,
+.history-line .rating-toggle,
+.history-line .rating-form > button {
     width: fit-content;
 }
 
-.history-line .refund-form {
+.history-line .refund-form,
+.history-line .rating-form {
     display: grid;
     gap: 10px;
     max-width: 420px;
 }
 
-.history-line .refund-form label {
+.history-line .refund-form label,
+.history-line .rating-form label {
     display: grid;
     gap: 4px;
     font-size: 0.9rem;

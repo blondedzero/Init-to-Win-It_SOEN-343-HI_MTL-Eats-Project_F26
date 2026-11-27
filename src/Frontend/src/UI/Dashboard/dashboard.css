@@ -27,7 +27,27 @@
 
 .header-nav {
   display: flex;
-  gap: 25px;
+  gap: 10px;
+}
+
+.dash-nav-button {
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 7px 14px;
+  background: #2a2a2a;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.dash-nav-button:hover {
+  background: #3a3a3a;
+}
+
+.dash-nav-button.active {
+  background: #fff;
+  border-color: #fff;
+  color: #111;
 }
 
 
@@ -158,6 +178,55 @@
 .dash-button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.dash-button-square {
+  border-radius: 6px;
+}
+
+.star-rating {
+  display: inline-flex;
+  gap: 2px;
+  vertical-align: middle;
+}
+
+.star {
+  color: #d1d5db;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.star-filled {
+  color: #f59e0b;
+}
+
+.star-display {
+  position: relative;
+  display: inline-block;
+}
+
+.star-row {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.star-display .star {
+  padding-right: 2px;
+}
+
+.star-row-filled {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.star-button {
+  border: none;
+  background: none;
+  padding: 0 2px;
+  font-size: 1.6rem;
+  cursor: pointer;
 }
 
 .dash-button-light {

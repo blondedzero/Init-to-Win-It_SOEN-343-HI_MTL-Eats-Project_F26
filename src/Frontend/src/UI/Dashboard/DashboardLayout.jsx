@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { getAuthenticatedUserData } from '../../api/REG/Auth'
 import { logout } from '../../api/REG/Login'
 import { getAuthToken } from '../../api/Client'
@@ -45,18 +45,18 @@ export default function DashboardLayout() {
       <header className="dash-header">
         <Link to={homePathFor(user.role)} className="dash-brand">ShopEasy</Link>
         <div className='header-nav'>
-        {user.role != ROLE.STORE && <button onClick={() => navigate('/map')}>MAP</button>}
+        {user.role != ROLE.STORE && <NavLink to="/map" className="dash-nav-button">MAP</NavLink>}
 
-        {user.role == ROLE.OPERATOR && <button onClick={() => navigate('/operator/home')}>Manage System</button>}
-        
-        {user.role == ROLE.CUSTOMER && <button onClick={() => navigate('/customer/home')}>Browse Stores</button>}
-        {user.role == ROLE.CUSTOMER && <button onClick={() => navigate('/customer/orders')}>My Orders</button>}
-        
-        {user.role == ROLE.COURIER &&  <button onClick={() => navigate("/courier/home")}>Pending orders</button>}
-        
-        {user.role == ROLE.STORE && <button onClick={() => navigate('/store/orders')}>Manage Orders</button>}
-        {user.role == ROLE.STORE && <button onClick={() => navigate('/store/catalog')}>Manage Store Catalog</button>}
-        <button onClick={() => navigate('/history')}>Order History</button>
+        {user.role == ROLE.OPERATOR && <NavLink to="/operator/home" className="dash-nav-button">Manage System</NavLink>}
+
+        {user.role == ROLE.CUSTOMER && <NavLink to="/customer/home" className="dash-nav-button">Browse Stores</NavLink>}
+        {user.role == ROLE.CUSTOMER && <NavLink to="/customer/orders" className="dash-nav-button">My Orders</NavLink>}
+
+        {user.role == ROLE.COURIER && <NavLink to="/courier/home" className="dash-nav-button">Pending orders</NavLink>}
+
+        {user.role == ROLE.STORE && <NavLink to="/store/orders" className="dash-nav-button">Manage Orders</NavLink>}
+        {user.role == ROLE.STORE && <NavLink to="/store/catalog" className="dash-nav-button">Manage Store Catalog</NavLink>}
+        <NavLink to="/history" className="dash-nav-button">Order History</NavLink>
         </div>
         
         <div className="dash-user">

@@ -3,6 +3,7 @@ package com.shopeasy.Domain;
 import com.shopeasy.ApplicationSeeder;
 import com.shopeasy.Domain.ORD.ORDModule;
 import com.shopeasy.Domain.ORD.CourierDisplayData;
+import com.shopeasy.Domain.RVW.RVWModule;
 import com.shopeasy.Foundation.entities.Order;
 import com.shopeasy.Foundation.entities.OrderStatus;
 import com.shopeasy.Foundation.entities.CourierStatus;
@@ -24,11 +25,12 @@ public class OperatorRequestsModule {
     ORDModule ordModule;
     EventManager eventManager;
     ApplicationSeeder applicationSeeder;
+    RVWModule rvwModule;
 
     public OperatorRequestsModule(OrderRepository orderRepository, UserRepository userRepository,
                                   CourierRepository courierRepository, RoleValidator roleValidator,
                                   ORDModule ordModule, EventManager eventManager,
-                                  ApplicationSeeder applicationSeeder) {
+                                  ApplicationSeeder applicationSeeder, RVWModule rvwModule) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.courierRepository = courierRepository;
@@ -36,6 +38,7 @@ public class OperatorRequestsModule {
         this.ordModule = ordModule;
         this.eventManager = eventManager;
         this.applicationSeeder = applicationSeeder;
+        this.rvwModule = rvwModule;
     }
 
     @Transactional(readOnly = true)
@@ -75,8 +78,10 @@ public class OperatorRequestsModule {
 
         applicationSeeder.restoreInitialEntityStates();
         ordModule.resetSimulationQueues();
+        long removedRatings = rvwModule.resetSimulationRatings();
         eventManager.logEvent("Simulation reset by operator " + user.getAccountId()
                 + ": canceled " + canceledOrders
-                + " new active orders and restored the initial store, courier, and product states");
+                + " new active orders, removed " + removedRatings
+                + " ratings and restored the initial store, courier, and product states");
     }
 }
