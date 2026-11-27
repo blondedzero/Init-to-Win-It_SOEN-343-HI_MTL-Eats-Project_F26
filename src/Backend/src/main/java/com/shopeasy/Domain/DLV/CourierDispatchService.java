@@ -5,7 +5,6 @@ import com.shopeasy.Domain.ORD.OrderData;
 import com.shopeasy.Domain.ORD.OrderResult;
 import com.shopeasy.Domain.ORD.exceptions.OrderRuleViolationException;
 import com.shopeasy.Domain.RoleValidator;
-import com.shopeasy.Domain.exceptions.NotFoundException;
 import com.shopeasy.Foundation.entities.*;
 import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
@@ -93,11 +92,8 @@ class CourierDispatchService {
         roleValidator.requireRole(user, Role.COURIER, "cancel an accepted delivery");
         Courier courier = courierOrderLookup.findCourier(user.getAccountId());
         Order order = courierOrderLookup.findAssignedOrder(orderId, courier);
-        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY
-                || !order.isCourierAccepted()) {
-            throw new OrderRuleViolationException("Order #" + orderId
-                    + " can only be canceled before pickup and after acceptance");
-        }
+        courierOrderLookup.requireCourierState(courier, order, "Order #" + orderId
+                + " can only be canceled before pickup and after acceptance");
 
         courier.cancelAssignment();
         courierRepository.save(courier);
@@ -157,11 +153,18 @@ class CourierDispatchService {
     }
 
     private void assign(Order order, Courier courier) {
+        requireAssignable(order, courier, false);
+
+        order.setCourier(courier);
+        orderRepository.save(order);
+    }
+
+    private void requireAssignable(Order order, Courier courier, boolean allowReassignment) {
         if (order.getStatus() != OrderStatus.READY) {
             throw new OrderRuleViolationException("Order #" + order.getOrderId()
                     + " must be ready before it can be assigned to a courier.");
         }
-        if (order.getCourier() != null) {
+        if (!allowReassignment && order.getCourier() != null) {
             throw new OrderRuleViolationException(
                     "Order #" + order.getOrderId() + " is already assigned."
             );
@@ -170,26 +173,7 @@ class CourierDispatchService {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
                     + courier.getStatus() + ". Only idle couriers can be assigned an order.");
         }
-        if (hasPendingOffer(courier)) {
-            throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
-                    + " already has an assigned order offer.");
-        }
-
-        order.setCourier(courier);
-        orderRepository.save(order);
-    }
-
-    @Transactional
-    public void assignByOperator(Order order, Courier courier) {
-        if (order.getStatus() != OrderStatus.READY) {
-            throw new OrderRuleViolationException("Order #" + order.getOrderId()
-                    + " must be ready before it can be assigned to a courier.");
-        }
-        if (courier.getStatus() != CourierStatus.IDLE) {
-            throw new OrderRuleViolationException("Courier #" + courier.getAccountId() + " is "
-                    + courier.getStatus() + ". Only idle couriers can be assigned an order.");
-        }
-        if (order.getCourier() == courier) {
+        if (allowReassignment && order.getCourier() == courier) {
             throw new OrderRuleViolationException(
                     "Order #" + order.getOrderId() + " is already assigned to this courier."
             );
@@ -198,6 +182,11 @@ class CourierDispatchService {
             throw new OrderRuleViolationException("Courier #" + courier.getAccountId()
                     + " already has an assigned order offer.");
         }
+    }
+
+    @Transactional
+    public void assignByOperator(Order order, Courier courier) {
+        requireAssignable(order, courier, true);
 
         Courier oldCourier = order.getCourier();
         if (oldCourier != null && oldCourier != courier) {
@@ -225,10 +214,7 @@ class CourierDispatchService {
 
     @Transactional
     public OrderResult assignOrderToClosestCourier(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElse(null);
-        if (order == null) {
-            throw new NotFoundException("Order with id " + orderId + " not found");
-        }
+        Order order = courierOrderLookup.findOrder(orderId);
         GroceryStore store = order.getStore();
         Courier closestIdleCourier = findClosestCourier(store, orderId);
         if (closestIdleCourier == null || closestIdleCourier.getStatus() != CourierStatus.IDLE) {
@@ -247,15 +233,8 @@ class CourierDispatchService {
     public OrderResult assignOrderToCourier(User user, Long orderId, Long courierId) {
         roleValidator.requireRole(user, Role.OPERATOR, "manually assign order to courier");
 
-        Order order = orderRepository.findById(orderId).orElse(null);
-        if (order == null) {
-            throw new NotFoundException("Order with id " + orderId + " not found");
-        }
-
-        Courier courier = courierRepository.findById(courierId).orElse(null);
-        if (courier == null) {
-            throw new NotFoundException("Courier with id " + courierId + " not found");
-        }
+        Order order = courierOrderLookup.findOrder(orderId);
+        Courier courier = courierOrderLookup.findCourier(courierId);
 
         assignByOperator(order, courier);
 

@@ -49,4 +49,11 @@ class CourierOrderLookup {
         }
         return order;
     }
+
+    void requireCourierState(Courier courier, Order order, String failureMessage) {
+        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY
+                || !order.isCourierAccepted()) {
+            throw new OrderRuleViolationException(failureMessage);
+        }
+    }
 }

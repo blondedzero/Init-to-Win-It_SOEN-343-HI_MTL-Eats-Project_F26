@@ -37,11 +37,8 @@ class DeliveryService {
         roleValidator.requireRole(user, Role.COURIER, "confirm order pickups");
         Courier courier = courierOrderLookup.findCourier(user.getAccountId());
         Order order = courierOrderLookup.findAssignedOrder(orderId, courier);
-        if (courier.getStatus() != CourierStatus.ASSIGNED || order.getStatus() != OrderStatus.READY
-                || !order.isCourierAccepted()) {
-            throw new OrderRuleViolationException("Order #" + orderId
-                    + " can only be picked up after you accept it");
-        }
+        courierOrderLookup.requireCourierState(courier, order, "Order #" + orderId
+                + " can only be picked up after you accept it");
 
         order.markPickedUp();
         courier.confirmPickup();
