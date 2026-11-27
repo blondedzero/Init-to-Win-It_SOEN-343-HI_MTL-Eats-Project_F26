@@ -53,6 +53,18 @@
 3,1,21,1,3,"removeProduct@42-44@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","removeProduct","removeProduct ( productId )",42,44
 3,1,22,1,3,"restoreProduct@46-48@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","restoreProduct","restoreProduct ( productId )",46,48
 3,1,9,0,3,"getOrderHistory@50-52@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getOrderHistory","getOrderHistory ( )",50,52
+23,2,103,1,23,"createOrder@9-31@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","createOrder","createOrder ( overrides { } )",9,31
+1,1,4,0,1,"(anonymous)@33-33@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",33,33
+9,1,107,0,10,"(anonymous)@36-45@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",36,45
+19,1,153,0,20,"(anonymous)@47-66@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",47,66
+10,1,69,0,11,"(anonymous)@68-78@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",68,78
+9,1,52,4,11,"(anonymous)@85-95@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",85,95
+1,1,16,0,1,"(anonymous)@108-108@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",108,108
+1,1,20,0,1,"(anonymous)@109-109@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",109,109
+12,1,137,0,14,"(anonymous)@97-110@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",97,110
+1,1,16,0,1,"(anonymous)@120-120@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",120,120
+9,1,113,0,11,"(anonymous)@112-122@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",112,122
+13,1,131,0,89,"(anonymous)@35-123@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",35,123
 1,1,4,1,1,"(anonymous)@7-7@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",7,7
 4,1,50,2,4,"append@5-8@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","append","append ( level , text )",5,8
 3,1,11,1,3,"logCommand@10-12@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logCommand","logCommand ( text )",10,12
@@ -119,6 +131,20 @@
 1,1,13,1,1,"(anonymous)@138-138@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",138,138
 21,7,106,1,27,"(anonymous)@117-143@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",117,143
 71,17,467,0,167,"StoreMenuPage@9-175@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","StoreMenuPage","StoreMenuPage ( )",9,175
+1,1,2,1,1,"(anonymous)@7-7@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","(anonymous)","(anonymous)",7,7
+9,3,63,1,10,"OrderDetails@4-13@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","OrderDetails","OrderDetails ( {} order )",4,13
+8,2,44,1,9,"OrderHeader@1-9@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderHeader.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderHeader.jsx","OrderHeader","OrderHeader ( {} order isCustomer )",1,9
+11,6,98,1,12,"OrderTimestamps@4-15@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderTimestamps.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderTimestamps.jsx","OrderTimestamps","OrderTimestamps ( {} order )",4,15
+12,3,78,1,13,"PricingSummary@3-15@./Frontend\src\UI\Dashboard\OrderHistory\components\PricingSummary.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\PricingSummary.jsx","PricingSummary","PricingSummary ( {} pricing isOperator )",3,15
+10,3,66,1,11,"RefundDetails@3-13@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundDetails.jsx","RefundDetails","RefundDetails ( {} refund totalCost isOperator )",3,13
+10,2,49,1,10,"submitRefund@10-19@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","submitRefund","submitRefund ( event )",10,19
+1,1,3,1,1,"(anonymous)@23-23@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",23,23
+1,1,8,0,1,"(anonymous)@23-23@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",23,23
+1,1,9,1,1,"(anonymous)@36-36@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",36,36
+1,1,9,1,1,"(anonymous)@45-45@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",45,45
+31,4,140,1,51,"RefundSection@4-54@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","RefundSection","RefundSection ( {} order onRefund )",4,54
+13,4,98,1,15,"OrderHistoryLine@10-24@./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","OrderHistoryLine","OrderHistoryLine ( {} order role onRefund )",10,24
+4,3,33,2,4,"canRefund@4-7@./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","canRefund","canRefund ( order , role )",4,7
 1,1,6,1,1,"(anonymous)@23-23@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",23,23
 8,3,34,1,8,"(anonymous)@25-32@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",25,32
 11,2,52,0,18,"(anonymous)@16-33@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",16,33
@@ -132,14 +158,6 @@
 1,1,5,0,1,"(anonymous)@58-58@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",58,58
 1,1,5,0,1,"(anonymous)@59-59@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",59,59
 31,11,231,0,64,"DashboardLayout@11-74@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","DashboardLayout","DashboardLayout ( )",11,74
-1,1,5,1,1,"money@5-5@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","money","money ( value )",5,5
-10,2,49,1,10,"submitRefund@18-27@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","submitRefund","submitRefund ( event )",18,27
-1,1,2,1,1,"(anonymous)@42-42@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","(anonymous)","(anonymous)",42,42
-1,1,3,1,1,"(anonymous)@64-64@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","(anonymous)","(anonymous)",64,64
-1,1,8,0,1,"(anonymous)@64-64@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","(anonymous)","(anonymous)",64,64
-1,1,9,1,1,"(anonymous)@77-77@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","(anonymous)","(anonymous)",77,77
-1,1,9,1,1,"(anonymous)@86-86@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","(anonymous)","(anonymous)",86,86
-69,21,535,1,90,"OrderHistoryLine@7-96@./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistoryLine.jsx","OrderHistoryLine","OrderHistoryLine ( {} order role onRefund )",7,96
 4,2,29,2,4,"(anonymous)@9-12@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",9,12
 3,1,38,1,6,"getLastActionTimestamp@8-13@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","getLastActionTimestamp","getLastActionTimestamp ( order )",8,13
 1,1,9,2,1,"(anonymous)@30-30@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",30,30
@@ -317,4 +335,6 @@
 3,1,6,0,3,"(anonymous)@50-52@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","(anonymous)","(anonymous)",50,52
 5,1,26,0,7,"logout@47-53@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","logout","logout ( )",47,53
 21,5,124,0,64,"TempAccountPage@8-71@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","TempAccountPage","TempAccountPage ( )",8,71
+1,1,10,1,1,"money@1-1@./Frontend\src\utils\format.js","./Frontend\src\utils\format.js","money","money ( value )",1,1
+1,1,13,1,1,"formatDateTime@3-3@./Frontend\src\utils\format.js","./Frontend\src\utils\format.js","formatDateTime","formatDateTime ( value )",3,3
 3,1,9,0,3,"App@37-39@./Frontend\src\App.jsx","./Frontend\src\App.jsx","App","App ( )",37,39
