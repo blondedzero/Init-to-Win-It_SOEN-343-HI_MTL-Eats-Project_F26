@@ -7,40 +7,63 @@ Maëlle Fieffé-Bédard; ID: 40231764, GitHub ID: maellefb, Role: Scrum Master. 
 Carlos Guevara Martinez; ID: 40227586, GitHub ID: carlos21guevara, Role: Database Specialist. <br>
 Nagha Abdoul-Aziz Kone; ID: 40307505, GitHub ID: osrlazlo, Role: Front End Developer. <br>
 
-## How to build and run a demo of the app
-1. Pull the code from ```main```
-2. Add a .env file in ```src/Backend``` for the Neon database connection. You can add your own or get it from our team
+## How to build and run the app locally
+
+### Prerequisites
+- Node.js 22 or newer
+- Java 21
+- npm
+
+### 1. Configure the backend
+Create `src/Backend/.env.local` with credentials for a PostgreSQL/Neon database:
+
+```properties
+PGUSER=<database username>
+PGPASSWORD=<database password>
+JWT_SECRET=<generated JWT signing key>
 ```
-PGUSER=[your neon db username]
-PGPASSWORD=[your neon db password]
-JWT_SECRET=[your generated jwt key]
+
+Ask a team member for the shared development database credentials, or provide credentials for your own PostgreSQL database.
+
+***Alternatively, you can run the app with a local demo PostgreSQL database through a Docker Container by following [these instructions](#run-locally-with-docker)***
+
+### 2. Configure the frontend
+Create `src/Frontend/.env.local` with a Google Maps API key:
+
+```properties
+VITE_GOOGLE_MAPS_API_KEY=<Google Maps API key>
 ```
-3. Add a .env file in ```src/Frontend``` for the Google Maps API key.
-```
-VITE_GOOGLE_MAPS_API_KEY=[ypur gppgle maps api key]
-```
-4. Navigate to folder ```src/``` that contains ```Frontend/``` and ```Backend/```
-5. Open the command line from the folder
-6. Run the following command to install the node modules needed for the frontend 
-```
+
+The Google Maps key is optional. If it is omitted, the rest of the app can still run, but the map page will show a configuration message. You can get a free rate limited Google Maps API demo key [here](https://mapsplatform.google.com/maps-demo-key/)
+
+### 3. Install dependencies
+From the repository root, enter the `src` directory and install the frontend and demo-runner dependencies:
+
+```powershell
+cd src
 npm run install:all
-``` 
-5. If you're on WindowsOS, run the following command to build and start the app 
 ```
+
+### 4. Start the app
+On Windows:
+
+```powershell
 npm run demo
 ```
-If you're on MacOS, run the following command to build and start the app 
-```
+
+On macOS or Linux:
+
+```bash
 npm run demo:mac
 ```
 
-- This will automatically run 2 commands with ```concurrently```
-    - ```npm run dev``` in ```Frontend/``` to build and start the server that serves the frontend on ```localhost:5173```
-    - ```mvnw spring-boot:run``` in ```Backend/``` to build and start the backend server on ```localhost:8080```
-6. Open your web browser and navigate to [localhost:5173](http://localhost:5173/) to access the app
+These commands start both the frontend and backend together:
+- Frontend: [http://localhost:5173](http://localhost:5173/)
+- Backend: [http://localhost:8080](http://localhost:8080/)
 
-## Reset simulation
-An operator can use **Reset simulation** to restore the state captured when the demo data was first seeded. Existing seed and startup data is preserved. Active orders created after that baseline are canceled, stores added afterward are closed, and couriers added afterward are taken offline.
+The app can be accessed by navigating to [http://localhost:5173](http://localhost:5173/) 
+
+Press `Ctrl+C` in the terminal to stop both servers.
 
 ## Accounts to test the app
 These accounts are created by the startup seed (`ApplicationSeeder`). All passwords are `test`.
@@ -72,18 +95,59 @@ These accounts are created by the startup seed (`ApplicationSeeder`). All passwo
     </tr>
 </table>
 
-## Run with Docker (SOEN 343 demo platform)
-Requires Docker Desktop. The stack is `web` (nginx serving the frontend build and proxying `/api`), `backend` (Spring Boot) and `db` (Postgres 17), and starts with no `.env` file and an empty database that the seed fills.
+## Reset simulation
+An operator can use **Reset simulation** to restore the state captured when the demo data was first seeded. Existing seed and startup data is preserved. Active orders created after that baseline are canceled, stores added afterward are closed, and couriers added afterward are taken offline.
 
-1. Build the images locally, tagged with the names used in `demo/compose.yaml`:
-```
-docker build --platform linux/amd64 -t <backend image from demo/compose.yaml> src/Backend
-docker build --platform linux/amd64 -t <frontend image from demo/compose.yaml> src/Frontend
-```
-2. Start the stack and open [localhost:8088](http://localhost:8088/):
-```
-docker compose -f demo/compose.yaml -f demo/rehearse.yaml up
-```
-3. Stop it and delete its data with `docker compose -f demo/compose.yaml -f demo/rehearse.yaml down -v`
+## Run characterization tests
+The characterization tests are in `src/Backend`. From the repository root, enter that directory:
 
-On every push to `main`, the `Publish demo images` GitHub workflow builds both images and publishes them to GHCR. Its run summary prints the `image:` lines to paste into `demo/compose.yaml` before submitting it on the platform. The Google Maps key is not included in the images, so the map page shows a message instead of the map.
+```powershell
+cd src/Backend
+```
+
+Run all characterization tests (the pattern matches both `Characterization` and `Characterisation`):
+
+On Windows:
+
+```powershell
+.\mvnw.cmd "-Dtest=*Character*Test" test
+```
+
+On macOS or Linux:
+
+```bash
+./mvnw '-Dtest=*Character*Test' test
+```
+
+To run one characterization test, replace the class name below with the desired test class:
+
+```powershell
+.\mvnw.cmd -Dtest=DLVModuleCharacterizationTest test
+```
+
+For macOS or Linux, use `./mvnw` instead of `.\mvnw.cmd`. Current characterization test classes are `DLVModuleCharacterizationTest`, `ORDModuleCancelOrderCharacterizationTest`, `GSModuleCharacterisationTest`, and `StoreContextDataCharacterisationTest`.
+
+## Run locally with Docker
+Requires Docker Desktop. The stack is `web` (nginx serving the frontend build and proxying `/api`), `backend` (Spring Boot) and `db` (Postgres 17). The database starts empty and is initialized by the app's seed data.
+
+Create `src/Frontend/.env.local` with a Google Maps API key:
+
+```properties
+VITE_GOOGLE_MAPS_API_KEY=<Google Maps API key>
+```
+
+The Google Maps key is optional. If it is omitted, the rest of the app can still run, but the map page will show a configuration message. You can get a free rate limited Google Maps API demo key [here](https://mapsplatform.google.com/maps-demo-key/)
+
+From the repository root, build and start the local Docker stack:
+
+```bash
+docker compose --env-file src/Frontend/.env.local -f demo/compose.yaml -f demo/rehearse.yaml up --build
+```
+
+The local overlay builds the backend and frontend images; Compose passes the key from `.env.local` into the frontend build. The key is embedded in the browser bundle, so use a Google Maps key restricted to the required APIs and your development domains. If you do not need the map, omit `--env-file` and the app still runs.
+
+Open [http://localhost:8088](http://localhost:8088/). Stop the stack with `Ctrl+C`, then remove its containers and database volume with:
+
+```
+docker compose -f demo/compose.yaml -f demo/rehearse.yaml down -v
+```

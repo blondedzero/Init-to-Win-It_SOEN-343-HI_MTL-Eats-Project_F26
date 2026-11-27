@@ -1,6 +1,13 @@
-# Laptop-only overlay: publishes the public service so you can open http://localhost:8088.
-# docker compose -f demo/compose.yaml -f demo/rehearse.yaml up
+# Laptop-only overlay: builds local images and publishes the app at http://localhost:8088.
 services:
   web:
+    build:
+      context: ../src/Frontend
+      args:
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
     ports:
       - "8088:80"
+
+  backend:
+    build:
+      context: ../src/Backend
