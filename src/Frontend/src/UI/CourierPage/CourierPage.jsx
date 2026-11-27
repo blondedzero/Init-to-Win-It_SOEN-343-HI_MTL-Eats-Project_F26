@@ -10,6 +10,7 @@ import {
   getCourierDashboard,
 } from '../../api/Courier'
 import { logSuccess } from '../Console/consoleLog'
+import CourierRating from './CourierRating'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
 
@@ -98,6 +99,7 @@ export default function CourierPage() {
         </button>
       </div>
       <p className="dash-muted">Manage your assigned delivery orders.</p>
+      <CourierRating />
       {hasActiveDelivery && (
         <p className="dash-muted">Complete your accepted delivery before going offline.</p>
       )}

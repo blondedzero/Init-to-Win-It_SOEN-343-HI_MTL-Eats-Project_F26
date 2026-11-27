@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getProducts } from '../../api/Store'
 import { estimateOrder, placeOrder } from '../../api/Orders'
 import { logSuccess } from '../Console/consoleLog'
+import StoreRating from './StoreRating'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
 
@@ -98,6 +99,7 @@ export default function StoreMenuPage() {
         <span className={`dash-badge dash-badge-${menu.store.status.toLowerCase()}`}>{menu.store.status}</span>
       </div>
       <p className="dash-muted">{menu.store.address}</p>
+      <StoreRating storeId={storeId} />
 
       <table className="dash-table">
         <thead>

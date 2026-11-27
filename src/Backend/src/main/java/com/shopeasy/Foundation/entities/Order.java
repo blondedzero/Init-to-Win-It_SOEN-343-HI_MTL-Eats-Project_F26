@@ -69,6 +69,9 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Refund refund;
 
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    private Rating rating;
+
     protected Order() {}
 
     public Order(Customer customer, GroceryStore store) {
@@ -290,6 +293,10 @@ public class Order {
 
     public Refund getRefund() {
         return refund;
+    }
+
+    public Rating getRating() {
+        return rating;
     }
 
     public OrderStatus getSeedInitialStatus() {

@@ -437,6 +437,11 @@ public class ApplicationSeeder implements ApplicationRunner {
                 createOrder(customer, store, product, OrderStatus.REFUNDED, null,
                         operator, orderNumber.getAndIncrement());
             }
+            if (!availableCouriers.isEmpty()) {
+                createOrder(customer, store, product, OrderStatus.DELIVERED,
+                        availableCouriers.get(customerNumber % availableCouriers.size()),
+                        operator, orderNumber.getAndIncrement());
+            }
         }
     }
 
@@ -506,12 +511,14 @@ public class ApplicationSeeder implements ApplicationRunner {
             }
 
             case DELIVERED -> {
-                if (order.getCourier() == null) {
-                    order.markReady();
-                } else {
-                    order.markDelivered();
-                    order.getCourier().setStatus(CourierStatus.IDLE);
-                }
+                order.markAccepted();
+                order.markPreparing();
+                order.markReady();
+                order.setCourier(courier);
+                order.acceptCourierAssignment();
+                order.markPickedUp();
+                order.markDelivered();
+                order.markCharged("demo-charge-v1-" + orderNumber);
             }
 
             case REJECTED -> order.markRejected("Demo seed rejected order");
