@@ -43,6 +43,7 @@ npm run demo:mac
 An operator can use **Reset simulation** to restore the state captured when the demo data was first seeded. Existing seed and startup data is preserved. Active orders created after that baseline are canceled, stores added afterward are closed, and couriers added afterward are taken offline.
 
 ## Accounts to test the app
+These accounts are created by the startup seed (`ApplicationSeeder`). All passwords are `test`.
 <table>
     <tr>
         <th>Email</th>
@@ -50,32 +51,17 @@ An operator can use **Reset simulation** to restore the state captured when the 
         <th>Role</th>
     </tr>
     <tr>
-        <td>customer@email.com</td>
+        <td>customer1@email.com ... customer4@email.com</td>
         <td>test</td>
         <td>Customer</td>
     </tr>
     <tr>
-        <td>store@iga.com</td>
+        <td>store@iga.com, store@superc.com, store@walmart.com, store@provigo.com, store@maxi.com</td>
         <td>test</td>
         <td>Grocery Store</td>
     </tr>
     <tr>
-        <td>store@superc.com</td>
-        <td>superc</td>
-        <td>Grocery Store</td>
-    </tr>
-    <tr>
-        <td>courier@email.com</td>
-        <td>test</td>
-        <td>Courier</td>
-    </tr>
-    <tr>
-        <td>courier2@email.com</td>
-        <td>test</td>
-        <td>Courier</td>
-    </tr>
-    <tr>
-        <td>courier3@email.com</td>
+        <td>courier1@email.com ... courier6@email.com</td>
         <td>test</td>
         <td>Courier</td>
     </tr>
@@ -85,3 +71,19 @@ An operator can use **Reset simulation** to restore the state captured when the 
         <td>Operator</td>
     </tr>
 </table>
+
+## Run with Docker (SOEN 343 demo platform)
+Requires Docker Desktop. The stack is `web` (nginx serving the frontend build and proxying `/api`), `backend` (Spring Boot) and `db` (Postgres 17), and starts with no `.env` file and an empty database that the seed fills.
+
+1. Build the images locally, tagged with the names used in `demo/compose.yaml`:
+```
+docker build --platform linux/amd64 -t <backend image from demo/compose.yaml> src/Backend
+docker build --platform linux/amd64 -t <frontend image from demo/compose.yaml> src/Frontend
+```
+2. Start the stack and open [localhost:8088](http://localhost:8088/):
+```
+docker compose -f demo/compose.yaml -f demo/rehearse.yaml up
+```
+3. Stop it and delete its data with `docker compose -f demo/compose.yaml -f demo/rehearse.yaml down -v`
+
+On every push to `main`, the `Publish demo images` GitHub workflow builds both images and publishes them to GHCR. Its run summary prints the `image:` lines to paste into `demo/compose.yaml` before submitting it on the platform. The Google Maps key is not included in the images, so the map page shows a message instead of the map.
