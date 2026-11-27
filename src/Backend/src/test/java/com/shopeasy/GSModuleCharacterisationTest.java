@@ -2,6 +2,7 @@ package com.shopeasy;
 
 import com.shopeasy.Domain.EventManager;
 import com.shopeasy.Domain.GS.GSModule;
+import com.shopeasy.Domain.GS.StoreAccess;
 import com.shopeasy.Domain.GS.ProductData;
 import com.shopeasy.Domain.GS.StoreContextData;
 import com.shopeasy.Domain.GS.StoreMenuData;
@@ -65,8 +66,8 @@ class GSModuleCharacterisationTest {
     @BeforeEach
     void setUp() {
         RoleValidator roleValidator = new RoleValidator() {};   // protected constructor
-        module = new GSModule(groceryStoreRepository, productRepository, productCategoryRepository,
-                roleValidator, orderRepository, eventManager);
+        module = new GSModule(groceryStoreRepository, productRepository, orderRepository,
+                roleValidator, new StoreAccess(groceryStoreRepository, roleValidator), eventManager);
 
         store = storeWithId(10L, "Test Market", StoreStatus.CLOSED);
         otherStore = storeWithId(20L, "Other Market", StoreStatus.OPEN);
