@@ -1,0 +1,96 @@
+DLV Module - Phase 3 Requirement Test Documentation
+====================================================
+
+This document summarizes how the DLV module characterization tests cover
+R-DLV-01 through R-DLV-04. The test class is:
+com.shopeasy.Domain.DLV.DLVModuleCharacterizationTest
+
+R-DLV-01 - Assign an order only after the restaurant marks it ready
+-------------------------------------------------------------------
+The ready state is required by the assignment and offer behavior in DLVModule.
+The tests build an order through ACCEPTED -> PREPARING -> READY before assignment
+and verify assignment uses that READY order.
+
+Relevant tests:
+- automaticAssignmentChoosesNearestEligibleIdleCourier
+- automaticAssignmentLeavesOrderUnassignedWhenNoCourierIsAvailable
+- operatorCanReassignReadyOrderFromAnAssignedCourier
+- manualAssignmentRejectsCourierWhoIsNotIdle
+
+These tests pass when the order is assigned only to an eligible courier and
+remains unassigned when no courier is available.
+
+
+R-DLV-02 - Select an idle on-duty courier and do not reassign an accepted
+order except by operator command
+------------------------------------------------------------------------------
+The module tests the automatic selection of the nearest eligible IDLE courier.
+It also verifies that an accepted assignment blocks the courier from going
+offline and that reassignment of an assigned courier is performed through the
+manual operator assignment method.
+
+Relevant tests:
+- automaticAssignmentChoosesNearestEligibleIdleCourier
+- acceptedCourierCannotGoOffDuty
+- operatorCanReassignReadyOrderFromAnAssignedCourier
+- manualAssignmentRejectsCourierWhoIsNotIdle
+
+Passing confirms the expected courier is assigned, carrying couriers are
+excluded, and reassignment occurs only through the operator command in the
+tested scenario.
+
+
+R-DLV-03 - Allow at most one order per courier and prevent offline while
+carrying an order
+-------------------------------------------------------------------------------
+The tests characterize one-offer and state-transition constraints. A courier
+with an accepted assignment cannot go offline, and a CARRYING courier is
+explicitly rejected from going offline.
+
+Relevant tests:
+- acceptOfferMovesCourierToAssignedAndMarksOrderAccepted
+- acceptedCourierCannotGoOffDuty
+- courierWithUnacceptedOfferCanGoOffDutyAndOfferIsWithdrawn
+- carryingCourierCannotGoOffDuty
+- cancelAcceptedAssignmentReleasesCourierAndWithdrawsOrderOffer
+
+Passing confirms that accepted assignments and carrying couriers retain their
+active state, while an unaccepted offer or canceled assignment can be withdrawn
+and the courier released.
+
+
+R-DLV-04 - Hold orders with no available courier and retry when a courier
+becomes idle
+------------------------------------------------------------------------------
+The test automaticAssignmentLeavesOrderUnassignedWhenNoCourierIsAvailable
+verifies that an order remains unassigned when no idle courier is available,
+which represents holding the order in the dispatch queue.
+
+The decline, delivery, and release behavior notifies idle couriers/observers,
+and the existing observer and assignment tests characterize the mechanisms used
+when a courier becomes idle.
+
+Relevant tests:
+- automaticAssignmentLeavesOrderUnassignedWhenNoCourierIsAvailable
+- declineOfferRemovesOfferAndRecordsDeclinedCourier
+- confirmDeliveryMovesOrderToDeliveredAndCourierBackToIdle
+- observerCanBeUnsubscribed
+
+Passing confirms the no-courier state leaves the order unassigned and that
+state changes used to make a courier idle trigger observer notifications.
+
+
+How the tests pass
+------------------
+JUnit invokes each test method. A test passes when every assertion succeeds,
+every expected exception is thrown with the expected type, and all verified
+Mockito interactions occur.
+
+Examples:
+- assertEquals verifies courier/order state or result values.
+- assertNull verifies an order has no courier.
+- assertThrows verifies an invalid operation is rejected.
+- verify verifies that repositories, events, or observers receive calls.
+
+The Maven result determines the overall outcome. A successful run reports:
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 0
