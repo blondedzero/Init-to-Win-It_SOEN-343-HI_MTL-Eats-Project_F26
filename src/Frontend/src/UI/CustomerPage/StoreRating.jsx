@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getStoreRating } from '../../api/Reviews'
-import RatingSummary from '../RatingSummary'
+import RatingSummary from '../Rating/RatingSummary'
 
 export default function StoreRating({ storeId }) {
   const [rating, setRating] = useState(null)

@@ -2,6 +2,7 @@ import './customer-page.css'
 import { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import { getStores, STORESTATUS } from '../../api/Store'
+import StoreRating from './StoreRating'
 
 const STORE_STATUS_PRIORITY = {
   [STORESTATUS.OPEN]: 0,
@@ -61,6 +62,7 @@ export default function CustomerHomePage() {
             <article key={store.id} className={`store-row store-row-${status?.toLowerCase() ?? 'closed'}`}>
               <div className="store-info">
                 <h3 className="store-name">{store.storeName}</h3>
+                <StoreRating storeId={store.id} />
                 <span className="store-address">{store.address}</span>
                 <span className="store-distance">
                   {distance === null ? 'Distance unavailable' : `${distance.toFixed(1)} km away`}

@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import StarRating from '../../../StarRating'
+import StarRating from '../../../Rating/StarRating'
 
-export default function RatingSection({ order, scale, onRate }) {
-    const [showRatingForm, setShowRatingForm] = useState(false)
+export default function RatingSection({ order, scale, onRate, isOpen, onToggle, error, success }) {
     const [storeScore, setStoreScore] = useState(0)
     const [courierScore, setCourierScore] = useState(0)
     const [submitting, setSubmitting] = useState(false)
@@ -12,8 +11,7 @@ export default function RatingSection({ order, scale, onRate }) {
         event.preventDefault()
         setSubmitting(true)
         try {
-            const rated = await onRate(order.orderId, storeScore, courierScore)
-            if (rated) setShowRatingForm(false)
+            await onRate(order.orderId, storeScore, courierScore)
         } finally {
             setSubmitting(false)
         }
@@ -22,10 +20,10 @@ export default function RatingSection({ order, scale, onRate }) {
     return (
         <>
             <button type="button" className="dash-button dash-button-square rating-toggle"
-                    onClick={() => setShowRatingForm((shown) => !shown)}>
-                {showRatingForm ? 'Hide rating form' : 'Rate order'}
+                    onClick={onToggle}>
+                {isOpen ? 'Hide rating form' : 'Rate order'}
             </button>
-            {showRatingForm && <form className="rating-form" onSubmit={submitRating}>
+            {isOpen && <form className="rating-form" onSubmit={submitRating}>
                 <label>
                     Store ({order.storeName})
                     <StarRating value={storeScore} max={scale.maxScore} onChange={setStoreScore}
@@ -39,6 +37,8 @@ export default function RatingSection({ order, scale, onRate }) {
                 <button type="submit" className="dash-button dash-button-square" disabled={submitting || !complete}>
                     {submitting ? 'Submitting...' : 'Submit rating'}
                 </button>
+                {error && <p role="alert" className="dash-error">{error}</p>}
+                {success && <p role="status" className="dash-success">{success}</p>}
             </form>}
         </>
     )

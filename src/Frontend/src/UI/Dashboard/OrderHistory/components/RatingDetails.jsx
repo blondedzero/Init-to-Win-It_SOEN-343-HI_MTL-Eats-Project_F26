@@ -1,5 +1,5 @@
 import { formatDateTime } from '../../../../utils/format'
-import StarRating from '../../../StarRating'
+import StarRating from '../../../Rating/StarRating'
 
 export default function RatingDetails({ rating, maxScore }) {
     const max = maxScore ?? 5

@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createRoot } from 'react-dom/client'
 import { loadGoogleMaps, getStoreColor, parseCoordinate } from './mapUtils'
 import { logCommand, logSuccess, logError } from '../Console/consoleLog'
-import { ROLE } from '../../api/EnumRoles'
+import StorePopupContent from './StorePopupContent'
 
 export default function MapCanvas({
     stores = [],
@@ -13,13 +14,21 @@ export default function MapCanvas({
     const mapInstanceRef = useRef(null)
     const markersRef = useRef([])           // Holds references to all active markers (can be used for cleanup and re-rendering)
     const infoWindowRef = useRef(null)
+    const infoWindowRootRef = useRef(null)
     console.log(couriers)
     const [mapLoaded, setMapLoaded] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
 
+    const unmountInfoWindowContent = useCallback(() => {
+        infoWindowRootRef.current?.unmount()
+        infoWindowRootRef.current = null
+    }, [])
+
     // Initialize Google Map on mount
     useEffect(() => {
         let isMounted = true
+        let closeListener = null
+        const mapContainer = mapContainerRef.current
         const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
         // Output console logs for every command and error -> R-DASH-06 and Issue 5.7.1-5
@@ -27,10 +36,10 @@ export default function MapCanvas({
 
         loadGoogleMaps(apiKey)
         .then((maps) => {
-            if (!isMounted || !mapContainerRef.current) return
+            if (!isMounted || !mapContainer) return
 
             // Default center on Montreal before bounds scale to dataset
-            mapInstanceRef.current = new maps.Map(mapContainerRef.current, {
+            mapInstanceRef.current = new maps.Map(mapContainer, {
                 center: { lat: 45.5017, lng: -73.5673 },
                 zoom: 12,
                 mapTypeControl: false,
@@ -39,6 +48,7 @@ export default function MapCanvas({
             })
 
             infoWindowRef.current = new maps.InfoWindow()
+            closeListener = infoWindowRef.current.addListener('closeclick', unmountInfoWindowContent)
             setMapLoaded(true)
             logSuccess('DASH: Map canvas initialized successfully.')
         })
@@ -50,12 +60,14 @@ export default function MapCanvas({
 
         return () => {
             isMounted = false
+            unmountInfoWindowContent()
+            closeListener?.remove()
             // Clears the map container DOM element so that the map can be re-initialized if the component is remounted 
-            if (mapContainerRef.current) {
-                mapContainerRef.current.innerHTML = ''
+            if (mapContainer) {
+                mapContainer.innerHTML = ''
             }
         }
-    }, [])
+    }, [unmountInfoWindowContent])
 
     // Render markers and adjust viewport bounds when data updates
     useEffect(() => {
@@ -63,6 +75,9 @@ export default function MapCanvas({
 
         const maps = window.google.maps
         const map = mapInstanceRef.current
+
+        unmountInfoWindowContent()
+        infoWindowRef.current.close()
 
         // Clear existing markers before redrawing
         markersRef.current.forEach((marker) => marker.setMap(null))
@@ -93,9 +108,6 @@ export default function MapCanvas({
 
         const handleMarkerClick = (type, entity, marker, contentHtml) => {
             const role = (user?.role || '').toUpperCase()
-            const entityId = entity.accountId || entity.id || 'Unknown'
-
-            //logCommand(`DASH: Selected ${type} #${entityId} as role: ${role || 'GUEST'}`)
 
             // Enforce role permission: Customers cannot inspect courier telemetry -> R-DASH-01 & Issue 5.7.1-4
             if (type === 'COURIER' && role === 'CUSTOMER') {
@@ -103,7 +115,22 @@ export default function MapCanvas({
                 return
             }
 
-            infoWindowRef.current.setContent(contentHtml)
+            unmountInfoWindowContent()
+            if (type === 'STORE') {
+                const content = document.createElement('div')
+                const root = createRoot(content)
+                root.render(
+                    <StorePopupContent
+                        store={entity}
+                        queueLength={Number(entity.ordersInProgress ?? 0)}
+                        user={user}
+                    />,
+                )
+                infoWindowRootRef.current = root
+                infoWindowRef.current.setContent(content)
+            } else {
+                infoWindowRef.current.setContent(contentHtml)
+            }
             infoWindowRef.current.open(map, marker)
 
             if (typeof onSelectEntity === 'function') {
@@ -134,19 +161,8 @@ export default function MapCanvas({
                 },
             })
 
-            const contentHtml = `
-            <div style="font-family: system-ui, sans-serif; font-size: 13px; color: #1f2937; padding: 2px;">
-            <strong>${name} - #${store.id}</strong><br/>
-            Status: ${store.status || 'OPEN'}<br/>
-            Queue: <strong>${queueLength}</strong> orders
-            ${user?.role === ROLE.CUSTOMER
-                ? `<br/><a href="/stores/${encodeURIComponent(store.id)}" style="display:inline-block;margin-top:8px;color:#2563eb;">Browse menu</a>`
-                : ''}
-            </div>
-            `
-
             marker.addListener('click', () => {
-                handleMarkerClick('STORE', store, marker, contentHtml)
+                handleMarkerClick('STORE', store, marker)
             })
 
             markersRef.current.push(marker)
@@ -195,7 +211,7 @@ export default function MapCanvas({
         } else {
             map.fitBounds(bounds, 50)
         }
-    }, [mapLoaded, stores, couriers, user, onSelectEntity])
+    }, [mapLoaded, stores, couriers, user, onSelectEntity, unmountInfoWindowContent])
 
     // Gracefully handles empty datasets or missing coordinates with a warning message overlay -> R-DASH-06 & Issue 5.7.1-6
     const hasData =

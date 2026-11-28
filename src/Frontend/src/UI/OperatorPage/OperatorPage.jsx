@@ -22,6 +22,7 @@ export default function OperatorPage() {
   const [success, setSuccess] = useState('')
   const [resetting, setResetting] = useState(false)
   const [tab, setTab] = useState(TABS.OVERVIEW)
+  const [isLoaded, setIsLoaded] = useState(false)
   const navigate = useNavigate()
 
   const load = useCallback(async() => {
@@ -59,6 +60,7 @@ export default function OperatorPage() {
     }
 
     setError(errors.join('; '))
+    setIsLoaded(true)
   }, [])
 
   useEffect(() => {
@@ -120,6 +122,7 @@ export default function OperatorPage() {
         <button type="button" className="operator-tab" aria-pressed={tab === TABS.STORES} onClick={() => setTab(TABS.STORES)}>Stores</button>
         <button type="button" className="operator-tab" aria-pressed={tab === TABS.ORDERS} onClick={() => setTab(TABS.ORDERS)}>Orders & Couriers</button>
       </div>
+      {isLoaded ?
       <div className='tab-container'>
         {tab == TABS.OVERVIEW && <OverviewTab 
           ordersReady={ordersInProgress.filter(order => order.status == ORDERSTATUS.READY)}
@@ -135,7 +138,7 @@ export default function OperatorPage() {
           handleOperation={handleOperation}
           couriersOnDuty={couriersOnDuty}
         />}
-      </div>
+      </div>:<><br/><i>Loading system data...</i></>}
     </>
   )
 }
@@ -143,7 +146,7 @@ export default function OperatorPage() {
 function OverviewTab({ordersReady, stores, couriersOnDuty}) {
   return(
       <>
-      <div className="dash-columns">
+      <div className="dash-columns dash-columns-three">
         <section>
           <h3 className="dash-section-title">All Orders Ready ({ordersReady.length})</h3>
           <p className="dash-muted">All current orders in the system</p>
@@ -179,7 +182,7 @@ function ManageStoresTab({stores, handleOperation}) {
 
   return(
     <>
-      <div className="dash-columns">        
+      <div className="dash-columns dash-columns-three">
         <section>
           <h3 className="dash-section-title">Open Stores ({openStores.length})</h3>
           <p className="dash-muted">All open stores</p>

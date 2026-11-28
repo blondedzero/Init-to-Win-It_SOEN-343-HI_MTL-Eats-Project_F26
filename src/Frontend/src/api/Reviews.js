@@ -12,6 +12,10 @@ export function getMyCourierRating() {
   return apiRequest('/api/courier/me/rating')
 }
 
+export function getCourierRating(courierId) {
+  return apiRequest(`/api/couriers/${courierId}/rating`)
+}
+
 export function getRatingScale() {
   return apiRequest('/api/ratings/scale')
 }

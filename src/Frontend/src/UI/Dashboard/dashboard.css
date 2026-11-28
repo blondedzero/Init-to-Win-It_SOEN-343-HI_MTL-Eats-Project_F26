@@ -229,6 +229,10 @@
   cursor: pointer;
 }
 
+.refund-section {
+  border: 2px solid red;
+}
+
 .dash-button-light {
   background: #d9d9d9;
   color: #111;
@@ -349,6 +353,10 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
   margin-top: 16px;
+}
+
+.dash-columns-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .dash-card {
