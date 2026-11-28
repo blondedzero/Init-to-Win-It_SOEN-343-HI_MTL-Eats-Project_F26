@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
-import OrderHistoryLine from '../UI/Dashboard/OrderHistoryLine'
+import OrderHistoryLine from '../UI/Dashboard/OrderHistory/OrderHistoryLine'
 import { ORDERSTATUS } from '../api/Orders'
 import { ROLE } from '../api/EnumRoles'
 
@@ -30,11 +31,28 @@ function createOrder(overrides = {}) {
     }
 }
 
+function OrderHistoryLineHarness(props) {
+    const [activeForm, setActiveForm] = useState(null)
+    const onToggleForm = (orderId, component) => {
+        setActiveForm((current) =>
+            current?.orderId === orderId && current.component === component
+                ? null
+                : { orderId, component }
+        )
+    }
+
+    return <OrderHistoryLine {...props} activeForm={activeForm} onToggleForm={onToggleForm} />
+}
+
+function renderLine(props) {
+    return render(<OrderHistoryLineHarness {...props} />)
+}
+
 afterEach(() => cleanup())
 
 describe('OrderHistoryLine', () => {
     it('shows customers the store name, order details, and delivery time', () => {
-        render(<OrderHistoryLine order={createOrder()} role={ROLE.CUSTOMER} onRefund={vi.fn()} />)
+        renderLine({ order: createOrder(), role: ROLE.CUSTOMER, onRefund: vi.fn() })
 
         expect(screen.getByText('Fresh Market')).toBeTruthy()
         expect(screen.queryByText('Customer Example')).toBeNull()
@@ -54,7 +72,7 @@ describe('OrderHistoryLine', () => {
                 operatorId: 7,
             },
         })
-        render(<OrderHistoryLine order={order} role={ROLE.OPERATOR} onRefund={vi.fn()} />)
+        renderLine({ order, role: ROLE.OPERATOR, onRefund: vi.fn() })
 
         expect(screen.getByText('Customer Example')).toBeTruthy()
         expect(screen.queryByText('Fresh Market')).toBeNull()
@@ -71,7 +89,7 @@ describe('OrderHistoryLine', () => {
             canceledAt: deliveredAt,
             rejectionReason: 'Store could not fulfill the order',
         })
-        render(<OrderHistoryLine order={order} role={ROLE.CUSTOMER} onRefund={vi.fn()} />)
+        renderLine({ order, role: ROLE.CUSTOMER, onRefund: vi.fn() })
 
         expect(screen.getByText(`Rejected at: ${new Date(deliveredAt).toLocaleString()}`)).toBeTruthy()
         expect(screen.getByText('Rejected: Store could not fulfill the order')).toBeTruthy()
@@ -83,20 +101,18 @@ describe('OrderHistoryLine', () => {
         ['ready', ORDERSTATUS.READY, null, false],
         ['already refunded', ORDERSTATUS.DELIVERED, { amount: 5, refundedAt: deliveredAt, reason: 'Prior refund' }, false],
     ])('offers refunds to operators only for eligible %s orders', (_label, status, refund, canRefund) => {
-        render(
-            <OrderHistoryLine
-                order={createOrder({ status, refund })}
-                role={ROLE.OPERATOR}
-                onRefund={vi.fn()}
-            />,
-        )
+        renderLine({
+            order: createOrder({ status, refund }),
+            role: ROLE.OPERATOR,
+            onRefund: vi.fn(),
+        })
 
         expect(Boolean(screen.queryByRole('button', { name: 'Refund order' }))).toBe(canRefund)
     })
 
-    it('submits the entered refund and closes the form when successful', async () => {
+    it('submits the entered refund values', async () => {
         const onRefund = vi.fn().mockResolvedValue(true)
-        render(<OrderHistoryLine order={createOrder()} role={ROLE.OPERATOR} onRefund={onRefund} />)
+        renderLine({ order: createOrder(), role: ROLE.OPERATOR, onRefund })
 
         fireEvent.click(screen.getByRole('button', { name: 'Refund order' }))
         const amountInput = screen.getByLabelText(/Refund amount/)
@@ -106,12 +122,12 @@ describe('OrderHistoryLine', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Confirm refund' }))
 
         await waitFor(() => expect(onRefund).toHaveBeenCalledWith(52, 5.25, 'Missing item'))
-        await waitFor(() => expect(screen.queryByRole('button', { name: 'Confirm refund' })).toBeNull())
+        expect(screen.getByRole('button', { name: 'Confirm refund' })).toBeTruthy()
     })
 
     it('keeps the refund form open when the refund callback reports failure', async () => {
         const onRefund = vi.fn().mockResolvedValue(false)
-        render(<OrderHistoryLine order={createOrder()} role={ROLE.OPERATOR} onRefund={onRefund} />)
+        renderLine({ order: createOrder(), role: ROLE.OPERATOR, onRefund })
 
         fireEvent.click(screen.getByRole('button', { name: 'Refund order' }))
         fireEvent.change(screen.getByLabelText('Reason'), { target: { value: 'Missing item' } })

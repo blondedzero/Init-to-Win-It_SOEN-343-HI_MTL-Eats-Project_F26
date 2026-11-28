@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { money } from '../../../../utils/format'
 
-export default function RefundSection({ order, onRefund }) {
-    const [showRefundForm, setShowRefundForm] = useState(false)
+export default function RefundSection({ order, onRefund, isOpen, onToggle, error, success }) {
     const [refundAmount, setRefundAmount] = useState(String(order.totalCost))
     const [refundReason, setRefundReason] = useState('')
     const [submitting, setSubmitting] = useState(false)
@@ -11,8 +10,7 @@ export default function RefundSection({ order, onRefund }) {
         event.preventDefault()
         setSubmitting(true)
         try {
-            const refunded = await onRefund(order.orderId, Number(refundAmount), refundReason)
-            if (refunded) setShowRefundForm(false)
+            await onRefund(order.orderId, Number(refundAmount), refundReason)
         } finally {
             setSubmitting(false)
         }
@@ -20,10 +18,11 @@ export default function RefundSection({ order, onRefund }) {
 
     return (
         <>
-            <button type="button" className="refund-toggle" onClick={() => setShowRefundForm((shown) => !shown)}>
-                {showRefundForm ? 'Hide refund form' : 'Refund order'}
+            <button type="button" className="refund-toggle" onClick={onToggle}>
+                {isOpen ? 'Hide refund form' : 'Refund order'}
             </button>
-            {showRefundForm && <form className="refund-form" onSubmit={submitRefund}>
+            {isOpen &&
+            <form className="refund-form" onSubmit={submitRefund}>
                 <label>
                     Refund amount (max {money(order.totalCost)})
                     <input
@@ -48,6 +47,8 @@ export default function RefundSection({ order, onRefund }) {
                 <button type="submit" disabled={submitting}>
                     {submitting ? 'Processing...' : 'Confirm refund'}
                 </button>
+                {error && <p role="alert" className="dash-error">{error}</p>}
+                {success && <p role="status" className="dash-success">{success}</p>}
             </form>}
         </>
     )

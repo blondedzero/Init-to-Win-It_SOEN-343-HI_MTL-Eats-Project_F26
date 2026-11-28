@@ -1,13 +1,8 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from 'react'
 import { clearConsole, getEntries, subscribe } from './consoleLog'
 
 export default function OutputConsole() {
   const entries = useSyncExternalStore(subscribe, getEntries)
-  const bottomRef = useRef(null)
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ block: 'nearest' })
-  }, [entries])
 
   return (
     <section className="output-console">
@@ -22,7 +17,6 @@ export default function OutputConsole() {
             <span className="console-time">{entry.time}</span> {entry.text}
           </div>
         ))}
-        <div ref={bottomRef} />
       </div>
     </section>
   )

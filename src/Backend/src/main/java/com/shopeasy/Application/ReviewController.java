@@ -44,6 +44,14 @@ public class ReviewController extends Controller {
         return rvwModule.getCourierRating(user);
     }
 
+    @GetMapping("/couriers/{courierId}/rating")
+    public RatingSummaryData getCourierRatingById(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @PathVariable Long courierId) {
+        authenticator.authenticate(authorization);
+        return rvwModule.getCourierRating(courierId);
+    }
+
     @GetMapping("/ratings/scale")
     public RatingRules getRatingScale(@RequestHeader(value = "Authorization", required = false) String authorization) {
         authenticator.authenticate(authorization);

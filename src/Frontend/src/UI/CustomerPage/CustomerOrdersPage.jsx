@@ -1,21 +1,49 @@
 import { useCallback, useEffect, useState } from 'react'
 import { cancelOwnOrder, getCustomerActiveOrders, ORDERSTATUS } from '../../api/Orders'
+import { getCourierRating } from '../../api/Reviews'
 import { logSuccess } from '../Console/consoleLog'
 
 const money = (value) => `$${Number(value).toFixed(2)}`
 
+function courierRatingLabel(courierRating) {
+  if (!courierRating || courierRating.loading) return 'Loading courier rating...'
+  if (courierRating.error) return `Average rating unavailable: ${courierRating.error}`
+
+  const { averageScore, maxScore, ratingCount } = courierRating.summary
+  if (averageScore == null) return 'Courier rating: Not rated yet'
+  return `Courier rating: ${averageScore.toFixed(1)} / ${maxScore} (${ratingCount} ratings)`
+}
+
 export default function CustomerOrdersPage() {
   const [orders, setOrders] = useState([])
+  const [courierRatings, setCourierRatings] = useState({})
   const [error, setError] = useState('')
   const [busyOrderId, setBusyOrderId] = useState(null)
 
-  const load = useCallback(() => {
-    return getCustomerActiveOrders()
-      .then((activeOrders) => {
-        setError('')
-        setOrders(activeOrders)
-      })
-      .catch((err) => setError(err.message))
+  const load = useCallback(async () => {
+    try {
+      const activeOrders = await getCustomerActiveOrders()
+      setError('')
+      setOrders(activeOrders)
+
+      const courierIds = [...new Set(
+        activeOrders
+          .map((order) => order.courierId)
+          .filter((courierId) => courierId != null)
+      )]
+      setCourierRatings(Object.fromEntries(courierIds.map((courierId) => [courierId, { loading: true }])))
+
+      const ratings = await Promise.all(courierIds.map(async (courierId) => {
+        try {
+          return [courierId, { summary: await getCourierRating(courierId) }]
+        } catch (err) {
+          return [courierId, { error: err.message || 'Could not load courier rating' }]
+        }
+      }))
+      setCourierRatings(Object.fromEntries(ratings))
+    } catch (err) {
+      setError(err.message)
+    }
   }, [])
 
   useEffect(() => {
@@ -55,6 +83,16 @@ export default function CustomerOrdersPage() {
           <p className="dash-muted">
             {order.storeName} · placed {new Date(order.placedAt).toLocaleString()}
           </p>
+          {order.courierId == null ? (
+            <p className="dash-muted">Courier: Not assigned yet</p>
+          ) : (
+            <>
+              <p className="dash-muted">
+                Courier: {order.courierName || `Courier #${order.courierId}`}
+              </p>
+              <p className="dash-muted">{courierRatingLabel(courierRatings[order.courierId])}</p>
+            </>
+          )}
           <ul className="dash-lines">
             {order.lines.map((line) => (
               <li key={line.productId}>{line.quantity} × {line.name}</li>

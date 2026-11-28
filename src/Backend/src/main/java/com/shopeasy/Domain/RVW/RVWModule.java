@@ -10,6 +10,7 @@ import com.shopeasy.Foundation.entities.OrderStatus;
 import com.shopeasy.Foundation.entities.Rating;
 import com.shopeasy.Foundation.entities.Role;
 import com.shopeasy.Foundation.entities.User;
+import com.shopeasy.Foundation.repositories.CourierRepository;
 import com.shopeasy.Foundation.repositories.GroceryStoreRepository;
 import com.shopeasy.Foundation.repositories.OrderRepository;
 import com.shopeasy.Foundation.repositories.RatingRepository;
@@ -21,17 +22,20 @@ public class RVWModule {
     private final RatingRepository ratingRepository;
     private final OrderRepository orderRepository;
     private final GroceryStoreRepository groceryStoreRepository;
+    private final CourierRepository courierRepository;
     private final ORDModule ordModule;
     private final RoleValidator roleValidator;
     private final EventManager eventManager;
     private final RatingRules ratingRules;
 
     public RVWModule(RatingRepository ratingRepository, OrderRepository orderRepository,
-                     GroceryStoreRepository groceryStoreRepository, ORDModule ordModule,
+                     GroceryStoreRepository groceryStoreRepository, CourierRepository courierRepository,
+                     ORDModule ordModule,
                      RoleValidator roleValidator, EventManager eventManager, RatingRules ratingRules) {
         this.ratingRepository = ratingRepository;
         this.orderRepository = orderRepository;
         this.groceryStoreRepository = groceryStoreRepository;
+        this.courierRepository = courierRepository;
         this.ordModule = ordModule;
         this.roleValidator = roleValidator;
         this.eventManager = eventManager;
@@ -75,7 +79,14 @@ public class RVWModule {
     @Transactional(readOnly = true)
     public RatingSummaryData getCourierRating(User user) {
         roleValidator.requireRole(user, Role.COURIER, "view a courier rating");
-        Long courierId = user.getAccountId();
+        return getCourierRating(user.getAccountId());
+    }
+
+    @Transactional(readOnly = true)
+    public RatingSummaryData getCourierRating(Long courierId) {
+        if (!courierRepository.existsById(courierId)) {
+            throw new NotFoundException("Courier " + courierId + " does not exist");
+        }
         return summarize(courierId, ratingRepository.averageCourierScore(courierId),
                 ratingRepository.countByCourier_AccountId(courierId));
     }
