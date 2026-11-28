@@ -1,0 +1,390 @@
+3,1,9,0,3,"getOrderHistory@3-5@./Frontend\src\api\PRC\PRCRequests.js","./Frontend\src\api\PRC\PRCRequests.js","getOrderHistory","getOrderHistory ( )",3,5
+6,1,35,3,6,"refundOrder@7-12@./Frontend\src\api\PRC\PRCRequests.js","./Frontend\src\api\PRC\PRCRequests.js","refundOrder","refundOrder ( orderId , amount , reason )",7,12
+19,4,96,1,23,"validateAuthToken@3-25@./Frontend\src\api\REG\Auth.js","./Frontend\src\api\REG\Auth.js","validateAuthToken","validateAuthToken ( token )",3,25
+21,4,107,1,25,"getAuthenticatedUserData@27-51@./Frontend\src\api\REG\Auth.js","./Frontend\src\api\REG\Auth.js","getAuthenticatedUserData","getAuthenticatedUserData ( token )",27,51
+9,5,43,1,9,"homePathFor@4-12@./Frontend\src\api\REG\HomePath.js","./Frontend\src\api\REG\HomePath.js","homePathFor","homePathFor ( role )",4,12
+5,1,29,1,5,"getHomePath@14-18@./Frontend\src\api\REG\HomePath.js","./Frontend\src\api\REG\HomePath.js","getHomePath","getHomePath ( token )",14,18
+19,5,103,2,23,"login@3-25@./Frontend\src\api\REG\Login.js","./Frontend\src\api\REG\Login.js","login","login ( email , password )",3,25
+4,1,16,0,4,"logout@27-30@./Frontend\src\api\REG\Login.js","./Frontend\src\api\REG\Login.js","logout","logout ( )",27,30
+56,24,375,6,66,"register@4-69@./Frontend\src\api\REG\Register.js","./Frontend\src\api\REG\Register.js","register","register ( role , email , password , firstName , lastName , userDetails { } )",4,69
+3,2,18,0,3,"getAuthToken@4-6@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","getAuthToken","getAuthToken ( )",4,6
+1,1,5,0,1,"(anonymous)@27-27@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","(anonymous)","(anonymous)",27,27
+25,8,179,2,28,"apiRequest@8-35@./Frontend\src\api\Client.js","./Frontend\src\api\Client.js","apiRequest","apiRequest ( path , {} method 'GET' , body { } )",8,35
+3,1,9,0,3,"getCourierDashboard@10-12@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","getCourierDashboard","getCourierDashboard ( )",10,12
+3,1,9,0,3,"getCourierOffers@14-16@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","getCourierOffers","getCourierOffers ( )",14,16
+3,1,22,1,3,"changeCourierStatus@18-20@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","changeCourierStatus","changeCourierStatus ( status )",18,20
+3,1,22,1,3,"acceptDelivery@22-24@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","acceptDelivery","acceptDelivery ( orderId )",22,24
+3,1,22,1,3,"declineDelivery@26-28@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","declineDelivery","declineDelivery ( orderId )",26,28
+3,1,22,1,3,"cancelDeliveryAssignment@30-32@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","cancelDeliveryAssignment","cancelDeliveryAssignment ( orderId )",30,32
+3,1,22,1,3,"confirmPickup@34-36@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","confirmPickup","confirmPickup ( orderId )",34,36
+3,1,22,1,3,"confirmDelivery@38-40@./Frontend\src\api\Courier.js","./Frontend\src\api\Courier.js","confirmDelivery","confirmDelivery ( orderId )",38,40
+3,2,32,2,3,"opRequest@4-6@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","opRequest","opRequest ( route , {} method body { } )",4,6
+3,1,9,0,3,"getAllStores@9-11@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllStores","getAllStores ( )",9,11
+3,1,9,0,3,"getAllStoresForMap@13-15@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllStoresForMap","getAllStoresForMap ( )",13,15
+3,1,22,1,3,"openStore@17-19@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","openStore","openStore ( storeId )",17,19
+3,1,22,1,3,"pauseStore@21-23@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","pauseStore","pauseStore ( storeId )",21,23
+3,1,9,0,3,"getAllOrdersInProgress@26-28@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllOrdersInProgress","getAllOrdersInProgress ( )",26,28
+3,1,9,0,3,"getAllOrdersReady@30-32@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllOrdersReady","getAllOrdersReady ( )",30,32
+3,1,22,1,3,"cancelOrder@34-36@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","cancelOrder","cancelOrder ( orderId )",34,36
+3,1,27,2,3,"assignOrderToCourier@38-40@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","assignOrderToCourier","assignOrderToCourier ( courierId , orderId )",38,40
+3,1,15,0,3,"resetSimulation@42-44@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","resetSimulation","resetSimulation ( )",42,44
+3,1,9,0,3,"getAllCouriersOnDuty@47-49@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllCouriersOnDuty","getAllCouriersOnDuty ( )",47,49
+3,1,9,0,3,"getAllCouriersIdle@51-53@./Frontend\src\api\OperatorRequests.js","./Frontend\src\api\OperatorRequests.js","getAllCouriersIdle","getAllCouriersIdle ( )",51,53
+3,1,26,2,3,"placeOrder@15-17@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","placeOrder","placeOrder ( storeId , lines )",15,17
+3,1,26,2,3,"estimateOrder@19-21@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","estimateOrder","estimateOrder ( storeId , lines )",19,21
+3,1,9,0,3,"getCustomerActiveOrders@23-25@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getCustomerActiveOrders","getCustomerActiveOrders ( )",23,25
+3,1,22,1,3,"cancelOwnOrder@27-29@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","cancelOwnOrder","cancelOwnOrder ( orderId )",27,29
+3,1,9,0,3,"getIncomingOrders@31-33@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getIncomingOrders","getIncomingOrders ( )",31,33
+3,1,9,0,3,"getQueue@35-37@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getQueue","getQueue ( )",35,37
+3,1,9,0,3,"getOrdersInPreparation@39-41@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getOrdersInPreparation","getOrdersInPreparation ( )",39,41
+3,1,9,0,3,"getReadyOrders@43-45@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","getReadyOrders","getReadyOrders ( )",43,45
+3,1,22,1,3,"acceptOrder@47-49@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","acceptOrder","acceptOrder ( orderId )",47,49
+3,1,30,2,3,"rejectOrder@51-53@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","rejectOrder","rejectOrder ( orderId , reason )",51,53
+3,1,22,1,3,"startPreparing@55-57@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","startPreparing","startPreparing ( orderId )",55,57
+3,1,22,1,3,"markReady@59-61@./Frontend\src\api\Orders.js","./Frontend\src\api\Orders.js","markReady","markReady ( orderId )",59,61
+3,1,34,3,3,"rateOrder@3-5@./Frontend\src\api\Reviews.js","./Frontend\src\api\Reviews.js","rateOrder","rateOrder ( orderId , storeScore , courierScore )",3,5
+3,1,16,1,3,"getStoreRating@7-9@./Frontend\src\api\Reviews.js","./Frontend\src\api\Reviews.js","getStoreRating","getStoreRating ( storeId )",7,9
+3,1,9,0,3,"getMyCourierRating@11-13@./Frontend\src\api\Reviews.js","./Frontend\src\api\Reviews.js","getMyCourierRating","getMyCourierRating ( )",11,13
+3,1,16,1,3,"getCourierRating@15-17@./Frontend\src\api\Reviews.js","./Frontend\src\api\Reviews.js","getCourierRating","getCourierRating ( courierId )",15,17
+3,1,9,0,3,"getRatingScale@19-21@./Frontend\src\api\Reviews.js","./Frontend\src\api\Reviews.js","getRatingScale","getRatingScale ( )",19,21
+3,1,9,0,3,"getStores@9-11@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getStores","getStores ( )",9,11
+3,1,16,1,3,"getProducts@13-15@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getProducts","getProducts ( storeId )",13,15
+3,1,9,0,3,"getMyStore@18-20@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getMyStore","getMyStore ( )",18,20
+3,1,22,1,3,"changeStoreStatus@22-24@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","changeStoreStatus","changeStoreStatus ( status )",22,24
+3,1,9,0,3,"getMyProducts@26-28@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getMyProducts","getMyProducts ( )",26,28
+3,1,9,0,3,"getCategories@30-32@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getCategories","getCategories ( )",30,32
+3,1,20,1,3,"addProduct@34-36@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","addProduct","addProduct ( product )",34,36
+3,1,27,2,3,"updateProduct@38-40@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","updateProduct","updateProduct ( productId , product )",38,40
+3,1,21,1,3,"removeProduct@42-44@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","removeProduct","removeProduct ( productId )",42,44
+3,1,22,1,3,"restoreProduct@46-48@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","restoreProduct","restoreProduct ( productId )",46,48
+3,1,9,0,3,"getOrderHistory@50-52@./Frontend\src\api\Store.js","./Frontend\src\api\Store.js","getOrderHistory","getOrderHistory ( )",50,52
+5,1,29,0,5,"(anonymous)@7-11@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",7,11
+3,1,13,0,3,"(anonymous)@13-15@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",13,15
+13,2,47,1,13,"createOrder@17-29@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","createOrder","createOrder ( overrides { } )",17,29
+1,1,4,0,1,"(anonymous)@31-31@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",31,31
+13,1,64,0,13,"(anonymous)@33-45@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",33,45
+8,1,65,0,9,"(anonymous)@48-56@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",48,56
+10,1,43,0,12,"(anonymous)@58-69@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",58,69
+4,1,22,0,24,"(anonymous)@47-70@./Frontend\src\tests\CustomerOrdersPage.test.jsx","./Frontend\src\tests\CustomerOrdersPage.test.jsx","(anonymous)","(anonymous)",47,70
+23,2,103,1,23,"createOrder@10-32@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","createOrder","createOrder ( overrides { } )",10,32
+3,3,19,1,4,"(anonymous)@37-40@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",37,40
+5,1,16,2,7,"onToggleForm@36-42@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","onToggleForm","onToggleForm ( orderId , component )",36,42
+5,1,32,1,12,"OrderHistoryLineHarness@34-45@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","OrderHistoryLineHarness","OrderHistoryLineHarness ( props )",34,45
+3,1,14,1,3,"renderLine@47-49@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","renderLine","renderLine ( props )",47,49
+1,1,4,0,1,"(anonymous)@51-51@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",51,51
+9,1,110,0,10,"(anonymous)@54-63@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",54,63
+19,1,154,0,20,"(anonymous)@65-84@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",65,84
+10,1,70,0,11,"(anonymous)@86-96@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",86,96
+8,1,55,4,9,"(anonymous)@103-111@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",103,111
+1,1,16,0,1,"(anonymous)@124-124@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",124,124
+12,1,150,0,14,"(anonymous)@113-126@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",113,126
+1,1,16,0,1,"(anonymous)@136-136@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",136,136
+9,1,114,0,11,"(anonymous)@128-138@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",128,138
+13,1,131,0,87,"(anonymous)@53-139@./Frontend\src\tests\OrderHistoryLine.test.jsx","./Frontend\src\tests\OrderHistoryLine.test.jsx","(anonymous)","(anonymous)",53,139
+3,1,13,0,3,"(anonymous)@10-12@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",10,12
+4,1,21,0,4,"(anonymous)@14-17@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",14,17
+4,1,21,0,4,"(anonymous)@19-22@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",19,22
+19,2,82,2,19,"createOrder@24-42@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","createOrder","createOrder ( orderId , overrides { } )",24,42
+4,1,22,1,4,"renderOrderHistory@44-47@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","renderOrderHistory","renderOrderHistory ( role )",44,47
+6,1,61,1,6,"submitRating@49-54@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","submitRating","submitRating ( form )",49,54
+1,1,4,0,1,"(anonymous)@56-56@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",56,56
+7,1,51,0,7,"(anonymous)@58-64@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",58,64
+11,1,146,0,14,"(anonymous)@67-80@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",67,80
+15,1,191,0,17,"(anonymous)@82-98@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",82,98
+27,1,213,0,29,"(anonymous)@100-128@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",100,128
+14,1,151,0,16,"(anonymous)@130-145@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",130,145
+24,1,168,0,26,"(anonymous)@147-172@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",147,172
+7,1,52,0,108,"(anonymous)@66-173@./Frontend\src\tests\OrderHistoryPage.test.jsx","./Frontend\src\tests\OrderHistoryPage.test.jsx","(anonymous)","(anonymous)",66,173
+1,1,4,1,1,"(anonymous)@7-7@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",7,7
+4,1,50,2,4,"append@5-8@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","append","append ( level , text )",5,8
+3,1,11,1,3,"logCommand@10-12@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logCommand","logCommand ( text )",10,12
+3,1,11,1,3,"logSuccess@14-16@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logSuccess","logSuccess ( text )",14,16
+3,1,11,1,3,"logError@18-20@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","logError","logError ( text )",18,20
+1,1,4,1,1,"(anonymous)@24-24@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",24,24
+4,1,17,0,4,"clearConsole@22-25@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","clearConsole","clearConsole ( )",22,25
+1,1,6,0,1,"(anonymous)@29-29@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","(anonymous)","(anonymous)",29,29
+4,1,16,1,4,"subscribe@27-30@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","subscribe","subscribe ( listener )",27,30
+3,1,6,0,3,"getEntries@32-34@./Frontend\src\UI\Console\consoleLog.js","./Frontend\src\UI\Console\consoleLog.js","getEntries","getEntries ( )",32,34
+5,1,25,1,5,"(anonymous)@15-19@./Frontend\src\UI\Console\OutputConsole.jsx","./Frontend\src\UI\Console\OutputConsole.jsx","(anonymous)","(anonymous)",15,19
+13,2,47,0,20,"OutputConsole@4-23@./Frontend\src\UI\Console\OutputConsole.jsx","./Frontend\src\UI\Console\OutputConsole.jsx","OutputConsole","OutputConsole ( )",4,23
+1,1,5,1,1,"money@15-15@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","money","money ( value )",15,15
+4,1,10,1,4,"(anonymous)@26-29@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",26,29
+1,1,7,1,1,"(anonymous)@30-30@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",30,30
+5,1,23,0,8,"(anonymous)@24-31@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",24,31
+3,1,5,0,3,"(anonymous)@33-35@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",33,35
+15,2,64,2,15,"respondToOffer@37-51@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","respondToOffer","respondToOffer ( orderId , respond )",37,51
+19,4,89,0,19,"toggleDuty@53-71@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","toggleDuty","toggleDuty ( )",53,71
+1,1,4,1,1,"(anonymous)@75-75@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",75,75
+1,1,5,1,1,"(anonymous)@77-77@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",77,77
+3,1,21,1,3,"(anonymous)@126-128@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",126,128
+1,1,9,0,1,"(anonymous)@138-138@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",138,138
+1,1,9,0,1,"(anonymous)@146-146@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",146,146
+1,1,9,0,1,"(anonymous)@158-158@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",158,158
+1,1,9,0,1,"(anonymous)@166-166@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",166,166
+1,1,9,0,1,"(anonymous)@177-177@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",177,177
+47,9,221,1,74,"(anonymous)@112-185@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","(anonymous)","(anonymous)",112,185
+46,18,276,0,172,"CourierPage@17-188@./Frontend\src\UI\CourierPage\CourierPage.jsx","./Frontend\src\UI\CourierPage\CourierPage.jsx","CourierPage","CourierPage ( )",17,188
+1,1,5,0,1,"(anonymous)@9-9@./Frontend\src\UI\CourierPage\CourierRating.jsx","./Frontend\src\UI\CourierPage\CourierRating.jsx","(anonymous)","(anonymous)",9,9
+3,1,17,0,3,"(anonymous)@8-10@./Frontend\src\UI\CourierPage\CourierRating.jsx","./Frontend\src\UI\CourierPage\CourierRating.jsx","(anonymous)","(anonymous)",8,10
+5,1,30,0,9,"CourierRating@5-13@./Frontend\src\UI\CourierPage\CourierRating.jsx","./Frontend\src\UI\CourierPage\CourierRating.jsx","CourierRating","CourierRating ( )",5,13
+1,1,11,1,1,"radians@14-14@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","radians","radians ( degrees )",14,14
+9,1,102,4,9,"distanceBetween@13-21@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","distanceBetween","distanceBetween ( latitudeA , longitudeA , latitudeB , longitudeB )",13,21
+1,1,7,1,1,"(anonymous)@30-30@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","(anonymous)","(anonymous)",30,30
+3,1,18,0,3,"(anonymous)@29-31@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","(anonymous)","(anonymous)",29,31
+8,6,79,2,9,"(anonymous)@36-44@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","(anonymous)","(anonymous)",36,44
+1,1,5,0,1,"(anonymous)@78-78@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","(anonymous)","(anonymous)",78,78
+26,7,115,1,34,"(anonymous)@52-85@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","(anonymous)","(anonymous)",52,85
+19,5,144,0,67,"CustomerHomePage@23-89@./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","./Frontend\src\UI\CustomerPage\CustomerHomePage.jsx","CustomerHomePage","CustomerHomePage ( )",23,89
+1,1,5,1,1,"money@6-6@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","money","money ( value )",6,6
+7,5,46,1,8,"courierRatingLabel@8-15@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","courierRatingLabel","courierRatingLabel ( courierRating )",8,15
+1,1,4,1,1,"(anonymous)@31-31@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",31,31
+1,1,4,1,1,"(anonymous)@32-32@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",32,32
+1,1,10,1,1,"(anonymous)@34-34@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",34,34
+7,3,39,1,7,"(anonymous)@36-42@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",36,42
+17,2,105,0,25,"(anonymous)@23-47@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",23,47
+3,1,5,0,3,"(anonymous)@49-51@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",49,51
+13,2,52,1,13,"cancel@53-65@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","cancel","cancel ( orderId )",53,65
+3,1,21,1,3,"(anonymous)@97-99@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",97,99
+1,1,7,0,1,"(anonymous)@107-107@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",107,107
+30,4,142,1,37,"(anonymous)@77-113@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","(anonymous)","(anonymous)",77,113
+20,3,122,0,100,"CustomerOrdersPage@17-116@./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","./Frontend\src\UI\CustomerPage\CustomerOrdersPage.jsx","CustomerOrdersPage","CustomerOrdersPage ( )",17,116
+1,1,5,1,1,"money@8-8@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","money","money ( value )",8,8
+4,1,10,1,4,"(anonymous)@21-24@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",21,24
+1,1,7,1,1,"(anonymous)@25-25@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",25,25
+5,1,24,0,8,"(anonymous)@19-26@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",19,26
+3,1,5,0,3,"(anonymous)@28-30@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",28,30
+1,3,21,1,1,"(anonymous)@33-33@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",33,33
+1,1,19,1,1,"(anonymous)@35-35@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",35,35
+8,4,66,0,8,"(anonymous)@43-50@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",43,50
+4,1,9,0,4,"(anonymous)@52-55@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",52,55
+6,4,39,0,18,"(anonymous)@39-56@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",39,56
+1,1,6,1,1,"(anonymous)@69-69@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",69,69
+1,1,13,1,1,"(anonymous)@71-71@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",71,71
+8,3,73,2,8,"setQuantity@67-74@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","setQuantity","setQuantity ( productId , value )",67,74
+1,1,19,1,1,"(anonymous)@81-81@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",81,81
+17,2,81,0,17,"handlePlaceOrder@76-92@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","handlePlaceOrder","handlePlaceOrder ( )",76,92
+1,1,13,1,1,"(anonymous)@140-140@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",140,140
+21,7,106,1,27,"(anonymous)@119-145@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","(anonymous)","(anonymous)",119,145
+72,17,471,0,168,"StoreMenuPage@10-177@./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","./Frontend\src\UI\CustomerPage\StoreMenuPage.jsx","StoreMenuPage","StoreMenuPage ( )",10,177
+1,1,5,0,1,"(anonymous)@9-9@./Frontend\src\UI\CustomerPage\StoreRating.jsx","./Frontend\src\UI\CustomerPage\StoreRating.jsx","(anonymous)","(anonymous)",9,9
+3,1,18,0,3,"(anonymous)@8-10@./Frontend\src\UI\CustomerPage\StoreRating.jsx","./Frontend\src\UI\CustomerPage\StoreRating.jsx","(anonymous)","(anonymous)",8,10
+5,1,34,1,9,"StoreRating@5-13@./Frontend\src\UI\CustomerPage\StoreRating.jsx","./Frontend\src\UI\CustomerPage\StoreRating.jsx","StoreRating","StoreRating ( {} storeId )",5,13
+1,1,2,1,1,"(anonymous)@7-7@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","(anonymous)","(anonymous)",7,7
+9,3,63,1,10,"OrderDetails@4-13@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderDetails.jsx","OrderDetails","OrderDetails ( {} order )",4,13
+8,2,44,1,9,"OrderHeader@1-9@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderHeader.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderHeader.jsx","OrderHeader","OrderHeader ( {} order isCustomer )",1,9
+11,6,98,1,12,"OrderTimestamps@4-15@./Frontend\src\UI\Dashboard\OrderHistory\components\OrderTimestamps.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\OrderTimestamps.jsx","OrderTimestamps","OrderTimestamps ( {} order )",4,15
+12,3,78,1,13,"PricingSummary@3-15@./Frontend\src\UI\Dashboard\OrderHistory\components\PricingSummary.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\PricingSummary.jsx","PricingSummary","PricingSummary ( {} pricing isOperator )",3,15
+10,2,53,1,11,"RatingDetails@4-14@./Frontend\src\UI\Dashboard\OrderHistory\components\RatingDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RatingDetails.jsx","RatingDetails","RatingDetails ( {} rating maxScore )",4,14
+9,1,35,1,9,"submitRating@10-18@./Frontend\src\UI\Dashboard\OrderHistory\components\RatingSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RatingSection.jsx","submitRating","submitRating ( event )",10,18
+30,9,172,1,42,"RatingSection@4-45@./Frontend\src\UI\Dashboard\OrderHistory\components\RatingSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RatingSection.jsx","RatingSection","RatingSection ( {} order scale onRate isOpen onToggle error success )",4,45
+10,3,66,1,11,"RefundDetails@3-13@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundDetails.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundDetails.jsx","RefundDetails","RefundDetails ( {} refund totalCost isOperator )",3,13
+9,1,38,1,9,"submitRefund@9-17@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","submitRefund","submitRefund ( event )",9,17
+1,1,9,1,1,"(anonymous)@35-35@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",35,35
+1,1,9,1,1,"(anonymous)@44-44@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","(anonymous)","(anonymous)",44,44
+33,6,153,1,52,"RefundSection@4-55@./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","./Frontend\src\UI\Dashboard\OrderHistory\components\RefundSection.jsx","RefundSection","RefundSection ( {} order onRefund isOpen onToggle error success )",4,55
+1,1,11,0,1,"(anonymous)@38-38@./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","(anonymous)","(anonymous)",38,38
+1,1,11,0,1,"(anonymous)@53-53@./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","(anonymous)","(anonymous)",53,53
+50,29,364,1,52,"OrderHistoryLine@13-64@./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","./Frontend\src\UI\Dashboard\OrderHistory\OrderHistoryLine.jsx","OrderHistoryLine","OrderHistoryLine ( {} order role onRefund onRate ratingScale activeForm onToggleForm feedback )",13,64
+4,3,33,2,4,"canRefund@4-7@./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","canRefund","canRefund ( order , role )",4,7
+4,3,24,2,4,"canRate@9-12@./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","./Frontend\src\UI\Dashboard\OrderHistory\orderRules.js","canRate","canRate ( order , role )",9,12
+1,1,6,1,1,"(anonymous)@23-23@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",23,23
+8,3,34,1,8,"(anonymous)@25-32@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",25,32
+11,2,52,0,18,"(anonymous)@16-33@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","(anonymous)","(anonymous)",16,33
+4,1,12,0,4,"handleLogout@35-38@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","handleLogout","handleLogout ( )",35,38
+31,11,191,0,64,"DashboardLayout@11-74@./Frontend\src\UI\Dashboard\DashboardLayout.jsx","./Frontend\src\UI\Dashboard\DashboardLayout.jsx","DashboardLayout","DashboardLayout ( )",11,74
+4,2,29,2,4,"(anonymous)@11-14@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",11,14
+3,1,38,1,6,"getLastActionTimestamp@10-15@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","getLastActionTimestamp","getLastActionTimestamp ( order )",10,15
+1,1,9,2,1,"(anonymous)@34-34@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",34,34
+16,2,87,0,18,"(anonymous)@26-43@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",26,43
+3,3,19,1,4,"(anonymous)@47-50@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",47,50
+6,1,19,2,8,"toggleForm@45-52@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","toggleForm","toggleForm ( orderId , component )",45,52
+13,2,83,3,13,"handleRefund@54-66@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","handleRefund","handleRefund ( orderId , amount , reason )",54,66
+13,2,83,3,13,"handleRate@68-80@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","handleRate","handleRate ( orderId , storeScore , courierScore )",68,80
+3,1,5,0,3,"(anonymous)@82-84@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",82,84
+1,1,7,1,1,"(anonymous)@88-88@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",88,88
+4,2,29,0,4,"(anonymous)@86-89@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",86,89
+1,1,5,1,1,"(anonymous)@97-97@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","(anonymous)","(anonymous)",97,97
+26,4,194,0,88,"OrderHistoryPage@17-104@./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","./Frontend\src\UI\Dashboard\OrderHistoryPage.jsx","OrderHistoryPage","OrderHistoryPage ( )",17,104
+4,1,14,0,4,"(anonymous)@22-25@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",22,25
+14,3,88,1,17,"(anonymous)@38-54@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",38,54
+5,2,18,1,5,"(anonymous)@55-59@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",55,59
+8,2,24,0,9,"(anonymous)@61-69@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",61,69
+11,1,57,0,43,"(anonymous)@28-70@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",28,70
+1,1,7,1,1,"(anonymous)@83-83@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",83,83
+5,1,26,1,5,"(anonymous)@87-91@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",87,91
+1,2,12,1,1,"(anonymous)@92-92@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",92,92
+5,1,26,1,5,"(anonymous)@95-99@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",95,99
+1,2,12,1,1,"(anonymous)@100-100@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",100,100
+26,7,142,4,31,"handleMarkerClick@109-139@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","handleMarkerClick","handleMarkerClick ( type , entity , marker , contentHtml )",109,139
+3,1,10,0,3,"(anonymous)@164-166@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",164,166
+22,3,123,1,28,"(anonymous)@142-169@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",142,169
+3,1,12,0,3,"(anonymous)@200-202@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",200,202
+27,3,125,1,34,"(anonymous)@172-205@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",172,205
+28,9,200,0,142,"(anonymous)@73-214@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",73,214
+1,1,9,1,1,"(anonymous)@218-218@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",218,218
+1,1,9,1,1,"(anonymous)@219-219@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","(anonymous)","(anonymous)",219,219
+91,15,455,1,302,"MapCanvas@7-308@./Frontend\src\UI\Map\MapCanvas.jsx","./Frontend\src\UI\Map\MapCanvas.jsx","MapCanvas","MapCanvas ( {} stores [ ] , couriers [ ] , user null , onSelectEntity null , )",7,308
+7,3,38,0,7,"script.onload@24-30@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","script.onload","script.onload ( )",24,30
+4,1,16,0,4,"script.onerror@32-35@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","script.onerror","script.onerror ( )",32,35
+13,2,65,2,26,"(anonymous)@13-38@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","(anonymous)","(anonymous)",13,38
+10,4,53,1,37,"loadGoogleMaps@5-41@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","loadGoogleMaps","loadGoogleMaps ( apiKey )",5,41
+14,7,66,1,15,"getStoreColor@44-58@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","getStoreColor","getStoreColor ( store )",44,58
+5,5,38,1,6,"parseCoordinate@61-66@./Frontend\src\UI\Map\mapUtils.js","./Frontend\src\UI\Map\mapUtils.js","parseCoordinate","parseCoordinate ( val )",61,66
+15,4,80,1,18,"(anonymous)@21-38@./Frontend\src\UI\Map\MapWrapper.jsx","./Frontend\src\UI\Map\MapWrapper.jsx","(anonymous)","(anonymous)",21,38
+3,1,5,0,3,"(anonymous)@40-42@./Frontend\src\UI\Map\MapWrapper.jsx","./Frontend\src\UI\Map\MapWrapper.jsx","(anonymous)","(anonymous)",40,42
+9,2,58,0,29,"(anonymous)@15-43@./Frontend\src\UI\Map\MapWrapper.jsx","./Frontend\src\UI\Map\MapWrapper.jsx","(anonymous)","(anonymous)",15,43
+13,2,86,0,45,"MapWrapper@9-53@./Frontend\src\UI\Map\MapWrapper.jsx","./Frontend\src\UI\Map\MapWrapper.jsx","MapWrapper","MapWrapper ( )",9,53
+15,4,106,1,19,"StorePopupContent@4-22@./Frontend\src\UI\Map\StorePopupContent.jsx","./Frontend\src\UI\Map\StorePopupContent.jsx","StorePopupContent","StorePopupContent ( {} store queueLength user )",4,22
+1,1,8,1,1,"(anonymous)@11-11@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",11,11
+1,1,15,1,1,"(anonymous)@13-13@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",13,13
+8,8,79,2,8,"(anonymous)@14-21@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",14,21
+9,2,41,1,9,"assignCourier@23-31@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","assignCourier","assignCourier ( courierId )",23,31
+1,1,3,1,1,"(anonymous)@51-51@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",51,51
+1,1,8,0,1,"(anonymous)@51-51@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",51,51
+1,1,7,0,1,"(anonymous)@65-65@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",65,65
+11,3,57,1,11,"(anonymous)@59-69@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",59,69
+5,2,21,0,5,"(anonymous)@72-76@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",72,76
+36,12,247,1,73,"OperatorOrderCard@8-80@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","OperatorOrderCard","OperatorOrderCard ( {} order tab handleOperation stores [ ] , idleCouriers [ ] } )",8,80
+1,1,4,1,1,"(anonymous)@87-87@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",87,87
+1,1,11,1,1,"radians@91-91@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","radians","radians ( degrees )",91,91
+17,2,176,2,18,"getDistanceKm@82-99@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","getDistanceKm","getDistanceKm ( store , courier )",82,99
+5,5,39,1,5,"parseCoordinate@101-105@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","parseCoordinate","parseCoordinate ( value )",101,105
+1,1,9,0,1,"(anonymous)@126-126@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",126,126
+1,1,9,0,1,"(anonymous)@133-133@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","(anonymous)","(anonymous)",133,133
+26,5,115,1,35,"OperatorStoreCard@107-141@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","OperatorStoreCard","OperatorStoreCard ( {} store handleOperation tab )",107,141
+13,2,48,1,15,"OperatorCourierCard@143-157@./Frontend\src\UI\OperatorPage\Cards.jsx","./Frontend\src\UI\OperatorPage\Cards.jsx","OperatorCourierCard","OperatorCourierCard ( {} courier )",143,157
+32,5,175,0,37,"(anonymous)@28-64@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",28,64
+1,1,5,0,1,"(anonymous)@69-69@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",69,69
+8,2,30,0,8,"(anonymous)@66-73@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",66,73
+12,2,47,2,13,"handleOperation@75-87@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","handleOperation","handleOperation ( operation , args )",75,87
+17,3,63,0,18,"handleResetSimulation@89-106@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","handleResetSimulation","handleResetSimulation ( )",89,106
+1,1,7,0,1,"(anonymous)@121-121@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",121,121
+1,1,7,0,1,"(anonymous)@122-122@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",122,122
+1,1,7,0,1,"(anonymous)@123-123@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",123,123
+1,1,8,1,1,"(anonymous)@128-128@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",128,128
+47,8,322,0,130,"OperatorPage@15-144@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","OperatorPage","OperatorPage ( )",15,144
+3,1,12,1,3,"(anonymous)@153-155@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",153,155
+1,1,8,1,1,"(anonymous)@159-159@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",159,159
+1,1,8,1,1,"(anonymous)@161-161@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",161,161
+3,1,12,1,3,"(anonymous)@161-163@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",161,163
+3,1,12,1,3,"(anonymous)@169-171@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",169,171
+20,1,93,1,31,"OverviewTab@146-176@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","OverviewTab","OverviewTab ( {} ordersReady stores couriersOnDuty )",146,176
+1,1,8,1,1,"(anonymous)@179-179@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",179,179
+1,1,8,1,1,"(anonymous)@180-180@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",180,180
+1,1,8,1,1,"(anonymous)@181-181@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",181,181
+1,1,8,2,1,"(anonymous)@189-189@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",189,189
+3,1,20,1,3,"(anonymous)@189-191@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",189,191
+3,1,20,1,3,"(anonymous)@197-199@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",197,199
+3,1,20,1,3,"(anonymous)@205-207@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",205,207
+23,1,119,1,35,"ManageStoresTab@178-212@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","ManageStoresTab","ManageStoresTab ( {} stores handleOperation )",178,212
+1,1,8,1,1,"(anonymous)@215-215@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",215,215
+1,1,8,1,1,"(anonymous)@216-216@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",216,216
+1,1,8,1,1,"(anonymous)@217-217@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",217,217
+3,1,26,1,3,"(anonymous)@224-226@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",224,226
+3,1,26,1,3,"(anonymous)@232-234@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",232,234
+3,1,26,1,3,"(anonymous)@240-242@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",240,242
+3,1,12,1,3,"(anonymous)@248-250@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","(anonymous)","(anonymous)",248,250
+25,1,134,1,41,"ManageOrdersTab@214-254@./Frontend\src\UI\OperatorPage\OperatorPage.jsx","./Frontend\src\UI\OperatorPage\OperatorPage.jsx","ManageOrdersTab","ManageOrdersTab ( {} orders stores idleCouriers handleOperation couriersOnDuty )",214,254
+9,4,43,1,10,"RatingSummary@3-12@./Frontend\src\UI\Rating\RatingSummary.jsx","./Frontend\src\UI\Rating\RatingSummary.jsx","RatingSummary","RatingSummary ( {} rating )",3,12
+1,1,4,2,1,"(anonymous)@5-5@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",5,5
+1,1,3,1,1,"(anonymous)@12-12@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",12,12
+1,1,3,1,1,"(anonymous)@15-15@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",15,15
+1,1,5,0,1,"(anonymous)@32-32@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",32,32
+1,1,5,0,1,"(anonymous)@33-33@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",33,33
+1,1,5,0,1,"(anonymous)@34-34@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",34,34
+10,3,33,1,13,"(anonymous)@24-36@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","(anonymous)","(anonymous)",24,36
+23,3,145,1,37,"StarRating@3-39@./Frontend\src\UI\Rating\StarRating.jsx","./Frontend\src\UI\Rating\StarRating.jsx","StarRating","StarRating ( {} value max onChange label )",3,39
+28,1,64,1,55,"CourierDetails@1-55@./Frontend\src\UI\RegisterPage\CourierDetails.jsx","./Frontend\src\UI\RegisterPage\CourierDetails.jsx","CourierDetails","CourierDetails ( {} formData handleChange )",1,55
+39,1,101,1,68,"CustomerDetails@1-68@./Frontend\src\UI\RegisterPage\CustomerDetails.jsx","./Frontend\src\UI\RegisterPage\CustomerDetails.jsx","CustomerDetails","CustomerDetails ( {} formData handleChange )",1,68
+3,1,18,1,3,"getNumeric@70-72@./Frontend\src\UI\RegisterPage\CustomerDetails.jsx","./Frontend\src\UI\RegisterPage\CustomerDetails.jsx","getNumeric","getNumeric ( number )",70,72
+17,3,86,1,19,"validateAuthTokenOnLauch@25-43@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","validateAuthTokenOnLauch","validateAuthTokenOnLauch ( token )",25,43
+6,3,32,0,25,"(anonymous)@22-46@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","(anonymous)","(anonymous)",22,46
+1,1,13,1,1,"(anonymous)@50-50@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","(anonymous)","(anonymous)",50,50
+6,1,31,1,6,"handleChange@48-53@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","handleChange","handleChange ( event )",48,53
+3,1,6,0,3,"(anonymous)@83-85@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","(anonymous)","(anonymous)",83,85
+31,8,182,1,38,"handleSubmit@55-92@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","handleSubmit","handleSubmit ( event )",55,92
+1,1,9,1,1,"(anonymous)@132-132@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","(anonymous)","(anonymous)",132,132
+45,4,178,0,137,"LoginPage@13-149@./Frontend\src\UI\RegisterPage\LoginPage.jsx","./Frontend\src\UI\RegisterPage\LoginPage.jsx","LoginPage","LoginPage ( )",13,149
+5,3,28,0,6,"(anonymous)@40-45@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","(anonymous)","(anonymous)",40,45
+1,1,13,1,1,"(anonymous)@49-49@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","(anonymous)","(anonymous)",49,49
+6,1,31,1,6,"handleChange@47-52@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","handleChange","handleChange ( event )",47,52
+3,1,6,0,3,"(anonymous)@91-93@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","(anonymous)","(anonymous)",91,93
+38,9,282,1,47,"handleSubmit@54-100@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","handleSubmit","handleSubmit ( event )",54,100
+5,1,14,1,5,"(anonymous)@178-182@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","(anonymous)","(anonymous)",178,182
+69,7,281,0,181,"RegisterPage@29-209@./Frontend\src\UI\RegisterPage\RegisterPage.jsx","./Frontend\src\UI\RegisterPage\RegisterPage.jsx","RegisterPage","RegisterPage ( )",29,209
+16,1,38,1,29,"StoreDetails@1-29@./Frontend\src\UI\RegisterPage\StoreDetails.jsx","./Frontend\src\UI\RegisterPage\StoreDetails.jsx","StoreDetails","StoreDetails ( {} formData handleChange )",1,29
+1,1,5,1,1,"money@1-1@./Frontend\src\UI\StorePage\OrderCard.jsx","./Frontend\src\UI\StorePage\OrderCard.jsx","money","money ( value )",1,1
+3,1,21,1,3,"(anonymous)@17-19@./Frontend\src\UI\StorePage\OrderCard.jsx","./Frontend\src\UI\StorePage\OrderCard.jsx","(anonymous)","(anonymous)",17,19
+18,2,96,1,23,"OrderCard@3-25@./Frontend\src\UI\StorePage\OrderCard.jsx","./Frontend\src\UI\StorePage\OrderCard.jsx","OrderCard","OrderCard ( {} order position children )",3,25
+14,1,67,1,16,"OrderReadyCard@27-42@./Frontend\src\UI\StorePage\OrderCard.jsx","./Frontend\src\UI\StorePage\OrderCard.jsx","OrderReadyCard","OrderReadyCard ( {} order )",27,42
+1,1,5,1,1,"money@7-7@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","money","money ( value )",7,7
+5,1,14,1,5,"(anonymous)@42-46@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",42,46
+1,1,7,1,1,"(anonymous)@47-47@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",47,47
+5,1,38,0,9,"(anonymous)@40-48@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",40,48
+3,1,5,0,3,"(anonymous)@50-52@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",50,52
+15,2,60,2,15,"runCommand@55-69@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","runCommand","runCommand ( command , successMessage )",55,69
+1,1,13,1,1,"(anonymous)@73-73@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",73,73
+5,1,27,1,5,"handleChange@71-75@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","handleChange","handleChange ( event )",71,75
+11,2,59,1,11,"startEditing@77-87@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","startEditing","startEditing ( product )",77,87
+5,1,17,0,5,"cancelEditing@89-93@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","cancelEditing","cancelEditing ( )",89,93
+1,1,5,0,1,"(anonymous)@110-110@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",110,110
+1,1,2,1,1,"(anonymous)@110-110@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",110,110
+1,1,7,0,1,"(anonymous)@111-111@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",111,111
+1,1,2,1,1,"(anonymous)@111-111@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",111,111
+18,7,134,1,20,"handleSubmit@95-114@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","handleSubmit","handleSubmit ( event )",95,114
+3,1,14,1,3,"(anonymous)@142-144@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",142,144
+1,1,5,0,1,"(anonymous)@206-206@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",206,206
+1,1,7,0,1,"(anonymous)@211-211@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",211,211
+1,1,2,1,1,"(anonymous)@211-211@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",211,211
+1,1,12,0,1,"(anonymous)@211-211@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",211,211
+1,1,7,0,1,"(anonymous)@216-216@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",216,216
+1,1,2,1,1,"(anonymous)@216-216@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",216,216
+1,1,12,0,1,"(anonymous)@216-216@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",216,216
+33,6,130,1,38,"(anonymous)@187-224@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","(anonymous)","(anonymous)",187,224
+73,6,318,0,200,"StoreCatalogPage@30-229@./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","./Frontend\src\UI\StorePage\StoreCatalogPage.jsx","StoreCatalogPage","StoreCatalogPage ( )",30,229
+7,1,22,1,7,"(anonymous)@29-35@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",29,35
+1,1,7,1,1,"(anonymous)@36-36@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",36,36
+5,1,50,0,11,"(anonymous)@27-37@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",27,37
+3,1,5,0,3,"(anonymous)@39-41@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",39,41
+5,1,16,1,5,"(anonymous)@44-48@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",44,48
+3,1,14,1,7,"stopRejecting@43-49@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","stopRejecting","stopRejecting ( orderId )",43,49
+14,2,57,2,14,"runCommand@51-64@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","runCommand","runCommand ( orderId , command )",51,64
+1,1,7,0,1,"(anonymous)@87-87@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",87,87
+1,1,11,0,1,"(anonymous)@87-87@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",87,87
+1,1,15,1,1,"(anonymous)@91-91@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",91,91
+1,1,8,0,1,"(anonymous)@91-91@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",91,91
+1,1,19,1,1,"(anonymous)@101-101@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",101,101
+1,1,8,1,1,"(anonymous)@101-101@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",101,101
+1,1,9,0,1,"(anonymous)@104-104@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",104,104
+1,1,11,0,1,"(anonymous)@104-104@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",104,104
+1,1,7,0,1,"(anonymous)@108-108@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",108,108
+28,3,97,1,37,"(anonymous)@79-115@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",79,115
+1,1,7,0,1,"(anonymous)@127-127@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",127,127
+1,1,11,0,1,"(anonymous)@127-127@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",127,127
+10,2,36,2,12,"(anonymous)@121-132@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",121,132
+1,1,7,0,1,"(anonymous)@142-142@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",142,142
+1,1,11,0,1,"(anonymous)@142-142@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",142,142
+9,1,28,1,10,"(anonymous)@138-147@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",138,147
+3,1,12,1,3,"(anonymous)@153-155@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","(anonymous)","(anonymous)",153,155
+41,2,254,0,144,"StoreOrdersPage@17-160@./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","./Frontend\src\UI\StorePage\StoreOrdersPage.jsx","StoreOrdersPage","StoreOrdersPage ( )",17,160
+1,1,7,1,1,"(anonymous)@13-13@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","(anonymous)","(anonymous)",13,13
+5,1,18,0,5,"(anonymous)@10-14@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","(anonymous)","(anonymous)",10,14
+13,2,52,1,13,"setStatus@16-28@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","setStatus","setStatus ( status )",16,28
+1,1,7,0,1,"(anonymous)@46-46@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","(anonymous)","(anonymous)",46,46
+1,1,7,0,1,"(anonymous)@54-54@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","(anonymous)","(anonymous)",54,54
+1,1,7,0,1,"(anonymous)@62-62@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","(anonymous)","(anonymous)",62,62
+28,7,144,0,64,"StoreStatusControl@5-68@./Frontend\src\UI\StorePage\StoreStatusControl.jsx","./Frontend\src\UI\StorePage\StoreStatusControl.jsx","StoreStatusControl","StoreStatusControl ( )",5,68
+3,1,6,0,3,"(anonymous)@14-16@./Frontend\src\UI\AccountInfo.jsx","./Frontend\src\UI\AccountInfo.jsx","(anonymous)","(anonymous)",14,16
+5,1,26,0,7,"logout@11-17@./Frontend\src\UI\AccountInfo.jsx","./Frontend\src\UI\AccountInfo.jsx","logout","logout ( )",11,17
+17,4,76,1,29,"AccountInfo@7-35@./Frontend\src\UI\AccountInfo.jsx","./Frontend\src\UI\AccountInfo.jsx","AccountInfo","AccountInfo ( user )",7,35
+22,4,112,1,23,"getUserData@17-39@./Frontend\src\UI\HomePage.jsx","./Frontend\src\UI\HomePage.jsx","getUserData","getUserData ( token )",17,39
+8,2,22,0,31,"(anonymous)@12-42@./Frontend\src\UI\HomePage.jsx","./Frontend\src\UI\HomePage.jsx","(anonymous)","(anonymous)",12,42
+11,2,73,0,45,"HomePage@6-50@./Frontend\src\UI\HomePage.jsx","./Frontend\src\UI\HomePage.jsx","HomePage","HomePage ( )",6,50
+22,4,112,1,23,"getUserData@20-42@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","getUserData","getUserData ( token )",20,42
+8,2,22,0,31,"(anonymous)@15-45@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","(anonymous)","(anonymous)",15,45
+3,1,6,0,3,"(anonymous)@50-52@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","(anonymous)","(anonymous)",50,52
+5,1,26,0,7,"logout@47-53@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","logout","logout ( )",47,53
+21,5,124,0,64,"TempAccountPage@8-71@./Frontend\src\UI\TempAccountPage.jsx","./Frontend\src\UI\TempAccountPage.jsx","TempAccountPage","TempAccountPage ( )",8,71
+1,1,10,1,1,"money@1-1@./Frontend\src\utils\format.js","./Frontend\src\utils\format.js","money","money ( value )",1,1
+1,1,13,1,1,"formatDateTime@3-3@./Frontend\src\utils\format.js","./Frontend\src\utils\format.js","formatDateTime","formatDateTime ( value )",3,3
+3,1,9,0,3,"App@37-39@./Frontend\src\App.jsx","./Frontend\src\App.jsx","App","App ( )",37,39
